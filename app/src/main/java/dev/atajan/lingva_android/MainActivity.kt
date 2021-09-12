@@ -1,38 +1,51 @@
 package dev.atajan.lingva_android
 
 import android.os.Bundle
+import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.graphics.toArgb
+import dev.atajan.lingva_android.ui.screens.TranslatenScreen
 import dev.atajan.lingva_android.ui.theme.LingvaandroidTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val window = window.apply {
+            setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        }
+
         setContent {
             LingvaandroidTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
-                    Greeting("Android")
-                }
+                ThemedSystemUI(window) // Adjust system ui to match the app theme
+                TranslatenScreen()
             }
         }
     }
-}
 
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
+    @Composable
+    private fun ThemedSystemUI(windows: Window) =
+        MaterialTheme {
+            windows.statusBarColor = MaterialTheme.colors.surface.toArgb()
+            windows.navigationBarColor = Color.Black.toArgb()
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    LingvaandroidTheme {
-        Greeting("Android")
-    }
+            @Suppress("DEPRECATION")
+            if (MaterialTheme.colors.surface.luminance() > 0.5f) {
+                windows.decorView.systemUiVisibility =
+                    windows.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            }
+
+            @Suppress("DEPRECATION")
+            if (MaterialTheme.colors.surface.luminance() > 0.5f) {
+                windows.decorView.systemUiVisibility =
+                    windows.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+            }
+        }
 }

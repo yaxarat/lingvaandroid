@@ -45,12 +45,11 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "$compose_version"
-        kotlinCompilerVersion = "$kotlin_compiler_version"
     }
-    packagingOptions {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
+    packagingOptions { // https://stackoverflow.com/a/47509465/8685398
+        resources.excludes.add("META-INF/DEPENDENCIES")
+        resources.excludes.add("META-INF/AL2.0")
+        resources.excludes.add("META-INF/LGPL2.1")
     }
 }
 
@@ -63,16 +62,21 @@ kotlin.sourceSets.all {
 }
 
 dependencies {
-    kapt("com.google.dagger:hilt-android-compiler:$hilt_agp_version")
     implementation("androidx.core:core-ktx:1.6.0")
     implementation("androidx.appcompat:appcompat:1.3.1")
     implementation("com.google.android.material:material:1.4.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
+    implementation("androidx.activity:activity-compose:1.3.1")
+
+    // Compose
     implementation("androidx.compose.ui:ui:$compose_version")
     implementation("androidx.compose.material:material:$compose_version")
     implementation("androidx.compose.ui:ui-tooling-preview:$compose_version")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
-    implementation("androidx.activity:activity-compose:1.3.1")
+
+    // Hilt
     implementation("com.google.dagger:hilt-android:$hilt_agp_version")
+    kapt("com.google.dagger:hilt-android-compiler:$hilt_agp_version")
+
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
