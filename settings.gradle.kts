@@ -7,4 +7,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "lingva-android"
-include ':app'
+include(":app")
