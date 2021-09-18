@@ -3,11 +3,11 @@ plugins {
     id("com.android.application")
     id("kotlin-android")
     id("dagger.hilt.android.plugin")
+    id("kotlinx-serialization")
 }
 
 // TODO: cosolidate to buildSrc
 val compose_version = "1.0.2"
-val kotlin_compiler_version = "1.5.21"
 val hilt_agp_version = "2.38.1"
 
 android {
@@ -44,7 +44,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "$compose_version"
+        kotlinCompilerExtensionVersion = compose_version
     }
     packagingOptions { // https://stackoverflow.com/a/47509465/8685398
         resources.excludes.add("META-INF/DEPENDENCIES")
@@ -67,6 +67,12 @@ dependencies {
     implementation("com.google.android.material:material:1.4.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
     implementation("androidx.activity:activity-compose:1.3.1")
+
+    // Ktor
+    implementation("io.ktor:ktor-client-android:1.5.0")
+    implementation("io.ktor:ktor-client-serialization:1.5.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1")
+    implementation("io.ktor:ktor-client-logging-jvm:1.5.0")
 
     // Compose
     implementation("androidx.compose.ui:ui:$compose_version")

@@ -6,15 +6,20 @@ import android.view.Window
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.toArgb
+import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel
 import dev.atajan.lingva_android.ui.screens.TranslatenScreen
 import dev.atajan.lingva_android.ui.theme.LingvaandroidTheme
 
 class MainActivity : ComponentActivity() {
+
+    private val translateScreenViewModel: TranslateScreenViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -25,7 +30,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             LingvaandroidTheme {
                 ThemedSystemUI(window) // Adjust system ui to match the app theme
-                TranslatenScreen()
+                TranslatenScreen(translateScreenViewModel)
             }
         }
     }
