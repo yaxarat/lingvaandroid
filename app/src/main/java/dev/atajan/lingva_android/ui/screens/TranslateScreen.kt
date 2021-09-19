@@ -32,7 +32,9 @@ fun TranslatenScreen(viewModel: TranslateScreenViewModel) {
     Column(modifier = Modifier.fillMaxSize()) {
         LanguageSelectionBar(
             modifier = Modifier.padding(all = 16.dp),
-            supportedLanguages = viewModel.supportedLanguages
+            supportedLanguages = viewModel.supportedLanguages,
+            sourceLanguage = viewModel.sourceLanguage,
+            targetLanguage = viewModel.targetLanguage,
         )
 
         OutlinedTextField(
@@ -54,7 +56,7 @@ fun TranslatenScreen(viewModel: TranslateScreenViewModel) {
 
         Divider(modifier = Modifier.padding(horizontal = 16.dp))
 
-        if (textToTranslateMutableState.value.isNotEmpty()) {
+        if (viewModel.translatedText.value.isNotEmpty()) {
             Card(
                 shape = MaterialTheme.shapes.medium,
                 border = BorderStroke(2.dp, Color(0xFF61FD96)),

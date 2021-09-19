@@ -25,6 +25,8 @@ import dev.atajan.lingva_android.api.entities.LanguageEntity
 @Composable
 fun LanguageSelectionBar(
     supportedLanguages: MutableState<List<LanguageEntity>>,
+    sourceLanguage: MutableState<LanguageEntity>,
+    targetLanguage: MutableState<LanguageEntity>,
     modifier: Modifier = Modifier
 ) {
     val sourceLanguagesPopUpShown = remember { mutableStateOf(false) }
@@ -43,7 +45,7 @@ fun LanguageSelectionBar(
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Target", modifier = Modifier.padding(end = 20.dp))
+                Text(targetLanguage.value.name, modifier = Modifier.padding(end = 20.dp))
             }
         }
 
@@ -58,13 +60,13 @@ fun LanguageSelectionBar(
                 modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Source", modifier = Modifier.padding(start = 20.dp))
+                Text(sourceLanguage.value.name, modifier = Modifier.padding(start = 20.dp))
             }
         }
 
-        LanguageListPopUp(sourceLanguagesPopUpShown, supportedLanguages.value)
+        LanguageListPopUp(sourceLanguagesPopUpShown, supportedLanguages.value, sourceLanguage)
 
         // Drop the first language, "Detect", since it won't make sense for target language
-        LanguageListPopUp(targetLanguagesPopUpShown, supportedLanguages.value.drop(1))
+        LanguageListPopUp(targetLanguagesPopUpShown, supportedLanguages.value.drop(1), targetLanguage)
     }
 }

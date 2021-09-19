@@ -1,7 +1,9 @@
 package dev.atajan.lingva_android.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -19,7 +21,11 @@ import androidx.compose.ui.window.Dialog
 import dev.atajan.lingva_android.api.entities.LanguageEntity
 
 @Composable
-fun LanguageListPopUp(openDialog: MutableState<Boolean>, languageList: List<LanguageEntity>) {
+fun LanguageListPopUp(
+    openDialog: MutableState<Boolean>,
+    languageList: List<LanguageEntity>,
+    selectedLanguage: MutableState<LanguageEntity>
+) {
     if (openDialog.value) {
         Dialog(onDismissRequest = { openDialog.value = false }) {
             Box(
@@ -33,19 +39,29 @@ fun LanguageListPopUp(openDialog: MutableState<Boolean>, languageList: List<Lang
             ) {
                 LazyColumn(modifier = Modifier.padding(8.dp)) {
                     itemsIndexed(items = languageList) { index, languageEntity ->
-                        Text(
-                            text = languageEntity.name,
-                            style = MaterialTheme.typography.button,
+                        Column(
                             modifier = Modifier
-                                .padding(horizontal = 16.dp)
-                                .padding(top = 8.dp)
-                        )
-                        if (index < languageList.size) {
-                            Divider(
+                                .fillParentMaxWidth()
+                                .clickable {
+                                    selectedLanguage.value = languageEntity
+                                    openDialog.value = false
+                                }
+                        ) {
+                            Text(
+                                text = languageEntity.name,
+                                style = MaterialTheme.typography.button,
                                 modifier = Modifier
-                                    .padding(horizontal = 8.dp)
+                                    .padding(horizontal = 16.dp)
                                     .padding(top = 8.dp)
+
                             )
+                            if (index < languageList.size) {
+                                Divider(
+                                    modifier = Modifier
+                                        .padding(horizontal = 8.dp)
+                                        .padding(top = 8.dp)
+                                )
+                            }
                         }
                     }
                 }
