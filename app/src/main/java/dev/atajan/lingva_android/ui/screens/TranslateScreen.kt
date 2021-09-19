@@ -16,6 +16,9 @@ import dev.atajan.lingva_android.ui.components.LanguageSelectionBar
 
 @Composable
 fun TranslatenScreen(viewModel: TranslateScreenViewModel) {
+//    viewModel.listLanguages()
+    viewModel.testTranslate()
+
     Column(modifier = Modifier.fillMaxSize()) {
         LanguageSelectionBar(modifier = Modifier.padding(all = 16.dp))
 

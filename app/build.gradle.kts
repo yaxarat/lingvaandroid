@@ -68,6 +68,9 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
     implementation("androidx.activity:activity-compose:1.3.1")
 
+    // Result
+    implementation("com.michael-bull.kotlin-result:kotlin-result:1.1.12")
+
     // Ktor
     implementation("io.ktor:ktor-client-android:1.5.0")
     implementation("io.ktor:ktor-client-serialization:1.5.0")

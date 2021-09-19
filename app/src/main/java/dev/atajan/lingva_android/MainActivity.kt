@@ -12,10 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.toArgb
+import dagger.hilt.android.AndroidEntryPoint
 import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel
 import dev.atajan.lingva_android.ui.screens.TranslatenScreen
 import dev.atajan.lingva_android.ui.theme.LingvaandroidTheme
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val translateScreenViewModel: TranslateScreenViewModel by viewModels()
