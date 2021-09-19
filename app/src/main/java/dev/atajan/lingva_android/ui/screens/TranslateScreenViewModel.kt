@@ -18,7 +18,8 @@ class TranslateScreenViewModel @Inject constructor(
     private val translate: GetTranslationUseCase
 ) : ViewModel() {
 
-    var supportedLanguages = mutableStateOf(emptyList<LanguageEntity>())
+    val supportedLanguages = mutableStateOf(emptyList<LanguageEntity>())
+    val translatedText = mutableStateOf("")
 
     fun listLanguages() {
         viewModelScope.launch {
@@ -39,6 +40,7 @@ class TranslateScreenViewModel @Inject constructor(
             translate(source = "en", target = "ja", query = "I am an android developer!").fold(
                 success = {
                     Log.d("y", it.translation)
+                    translatedText.value = it.translation
                 },
                 failure = {
                     Log.d("y", "getting langs failed with $it")

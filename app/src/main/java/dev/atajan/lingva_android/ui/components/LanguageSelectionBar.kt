@@ -27,11 +27,14 @@ fun LanguageSelectionBar(
     supportedLanguages: MutableState<List<LanguageEntity>>,
     modifier: Modifier = Modifier
 ) {
-    val fgf = remember { mutableStateOf(false) }
+    val sourceLanguagesPopUpShown = remember { mutableStateOf(false) }
+    val targetLanguagesPopUpShown = remember { mutableStateOf(false) }
 
     Box(modifier = modifier.fillMaxWidth().height(40.dp)) {
         Surface(
-            modifier = Modifier.fillMaxWidth().fillMaxHeight(),
+            modifier = Modifier.fillMaxWidth().fillMaxHeight().clickable {
+                targetLanguagesPopUpShown.value = true
+            },
             shape = RoundedCornerShape(20.dp),
             color = Color(0xFFE5E5E5)
         ) {
@@ -46,7 +49,7 @@ fun LanguageSelectionBar(
 
         Surface(
             modifier = Modifier.fillMaxWidth(0.55f).fillMaxHeight().clickable {
-                fgf.value = true
+                sourceLanguagesPopUpShown.value = true
             },
             shape = RoundedCornerShape(20.dp),
             color = Color(0xFF61FD96)
@@ -59,14 +62,9 @@ fun LanguageSelectionBar(
             }
         }
 
-        LanguageListPopUp(fgf, supportedLanguages.value)
+        LanguageListPopUp(sourceLanguagesPopUpShown, supportedLanguages.value)
+
+        // Drop the first language, "Detect", since it won't make sense for target language
+        LanguageListPopUp(targetLanguagesPopUpShown, supportedLanguages.value.drop(1))
     }
 }
-
-// @Preview
-// @Composable
-// fun LanguageSelectionBarPreview() {
-//    LanguageSelectionBar(modifier = Modifier.height(40.dp),
-//        supportedLanguages = emptyList<LanguageEntity>()
-//    )
-// }
