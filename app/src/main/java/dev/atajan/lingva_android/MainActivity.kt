@@ -9,7 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.toArgb
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,29 +30,33 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            LingvaandroidTheme {
+            val isDarkTheme = mutableStateOf(false)
+
+            LingvaandroidTheme() {
                 ThemedSystemUI(window) // Adjust system ui to match the app theme
-                TranslatenScreen(translateScreenViewModel)
+                TranslatenScreen(
+                    viewModel = translateScreenViewModel,
+                    isDarkTheme = isDarkTheme
+                )
             }
         }
     }
 
     @Composable
-    private fun ThemedSystemUI(windows: Window) =
-        MaterialTheme {
-            windows.statusBarColor = MaterialTheme.colors.surface.toArgb()
-            windows.navigationBarColor = Color.Black.toArgb()
+    private fun ThemedSystemUI(windows: Window) {
+        windows.statusBarColor = MaterialTheme.colors.surface.toArgb()
+        windows.navigationBarColor = MaterialTheme.colors.surface.toArgb()
 
-            @Suppress("DEPRECATION")
-            if (MaterialTheme.colors.surface.luminance() > 0.5f) {
-                windows.decorView.systemUiVisibility =
-                    windows.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-            }
-
-            @Suppress("DEPRECATION")
-            if (MaterialTheme.colors.surface.luminance() > 0.5f) {
-                windows.decorView.systemUiVisibility =
-                    windows.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-            }
+        @Suppress("DEPRECATION")
+        if (MaterialTheme.colors.surface.luminance() > 0.5f) {
+            windows.decorView.systemUiVisibility =
+                windows.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
+
+        @Suppress("DEPRECATION")
+        if (MaterialTheme.colors.surface.luminance() > 0.5f) {
+            windows.decorView.systemUiVisibility =
+                windows.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+        }
+    }
 }

@@ -50,6 +50,7 @@ fun LanguageListPopUp(
                             Text(
                                 text = languageEntity.name,
                                 style = MaterialTheme.typography.button,
+                                color = MaterialTheme.colors.onSurface,
                                 modifier = Modifier
                                     .padding(horizontal = 16.dp)
                                     .padding(top = 8.dp)

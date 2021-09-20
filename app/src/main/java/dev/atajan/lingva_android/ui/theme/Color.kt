@@ -2,7 +2,8 @@ package dev.atajan.lingva_android.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple200 = Color(0xFFBB86FC)
-val Purple500 = Color(0xFF6200EE)
-val Purple700 = Color(0xFF3700B3)
-val Teal200 = Color(0xFF03DAC5)
+val LingvaGreen = Color(0xFF61FD96)
+val LingvaGreenLighter = Color(0xFFc5fed3)
+val LingvaGreenDarker = Color(0xFF00cc49)
+val LingvaGray = Color(0xFFE5E5E5)
+val AccentMagenta = Color(0xFFfd61c9)

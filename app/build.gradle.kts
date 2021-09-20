@@ -82,6 +82,11 @@ dependencies {
     implementation("androidx.compose.material:material:$compose_version")
     implementation("androidx.compose.ui:ui-tooling-preview:$compose_version")
 
+    // note that due to the very large size of this dependency you should make sure to use
+    // R8 / ProGuard to remove unused icons from your application.
+    implementation("androidx.compose.material:material-icons-extended:$compose_version")
+
+
     // Hilt
     implementation("com.google.dagger:hilt-android:$hilt_agp_version")
     kapt("com.google.dagger:hilt-android-compiler:$hilt_agp_version")
