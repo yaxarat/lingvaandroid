@@ -6,6 +6,7 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorPalette = darkColors(
     primary = LingvaGreen,
@@ -19,7 +20,7 @@ private val DarkColorPalette = darkColors(
 )
 
 private val LightColorPalette = lightColors(
-    primary = LingvaGreen,
+    primary = LingvaGreenDarker,
     primaryVariant = LingvaGreenDarker,
     secondary = AccentMagenta,
     onPrimary = Color.Black,
@@ -27,15 +28,6 @@ private val LightColorPalette = lightColors(
     onSurface = Color.Black,
     background = Color.White,
     onBackground = Color.Black,
-
-    /* Other default colors to override
-    background = Color.White,
-    surface = Color.White,
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black,
-    */
 )
 
 @Composable
@@ -55,4 +47,16 @@ fun LingvaandroidTheme(
         shapes = Shapes,
         content = content
     )
+
+    val systemUiController = rememberSystemUiController()
+
+    if (darkTheme) {
+        systemUiController.setSystemBarsColor(
+            color = Color.Black
+        )
+    } else {
+        systemUiController.setSystemBarsColor(
+            color = Color.White
+        )
+    }
 }

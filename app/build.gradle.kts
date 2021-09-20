@@ -68,6 +68,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
     implementation("androidx.activity:activity-compose:1.3.1")
 
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.17.0")
+
     // Result
     implementation("com.michael-bull.kotlin-result:kotlin-result:1.1.12")
 
@@ -85,7 +87,6 @@ dependencies {
     // note that due to the very large size of this dependency you should make sure to use
     // R8 / ProGuard to remove unused icons from your application.
     implementation("androidx.compose.material:material-icons-extended:$compose_version")
-
 
     // Hilt
     implementation("com.google.dagger:hilt-android:$hilt_agp_version")

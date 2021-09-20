@@ -1,7 +1,6 @@
 package dev.atajan.lingva_android.ui.components
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -88,7 +87,7 @@ fun LanguageSelectionBar(
             Icon(
                 imageVector = Icons.Rounded.Brightness4,
                 contentDescription = "Add new subscription.",
-                tint = if (isSystemInDarkTheme()) Color.White else Color.Black,
+                tint = if (isDarkTheme.value) Color.White else Color.Black,
                 modifier = Modifier.fillMaxSize()
             )
         }
