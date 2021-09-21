@@ -17,9 +17,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -29,7 +28,8 @@ import dev.atajan.lingva_android.ui.components.LanguageSelectionBar
 @Composable
 fun TranslatenScreen(
     viewModel: TranslateScreenViewModel,
-    isDarkTheme: MutableState<Boolean>
+    isDarkTheme: State<Boolean>,
+    toggleTheme: () -> Unit
 ) {
     val scrollState = rememberScrollState(0)
     val softwareKeyboardController = LocalSoftwareKeyboardController.current
@@ -41,7 +41,8 @@ fun TranslatenScreen(
             supportedLanguages = viewModel.supportedLanguages,
             sourceLanguage = viewModel.sourceLanguage,
             targetLanguage = viewModel.targetLanguage,
-            isDarkTheme = isDarkTheme
+            isDarkTheme = isDarkTheme,
+            toggleTheme = toggleTheme
         )
 
         OutlinedTextField(
@@ -67,7 +68,7 @@ fun TranslatenScreen(
         if (viewModel.translatedText.value.isNotEmpty()) {
             Card(
                 shape = MaterialTheme.shapes.medium,
-                border = BorderStroke(2.dp, Color(0xFF61FD96)),
+                border = BorderStroke(2.dp, MaterialTheme.colors.primary),
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(all = 16.dp),

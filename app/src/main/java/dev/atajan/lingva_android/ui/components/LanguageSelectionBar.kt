@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Brightness4
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -31,7 +32,8 @@ fun LanguageSelectionBar(
     supportedLanguages: MutableState<List<LanguageEntity>>,
     sourceLanguage: MutableState<LanguageEntity>,
     targetLanguage: MutableState<LanguageEntity>,
-    isDarkTheme: MutableState<Boolean>,
+    isDarkTheme: State<Boolean>,
+    toggleTheme: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val sourceLanguagesPopUpShown = remember { mutableStateOf(false) }
@@ -81,7 +83,7 @@ fun LanguageSelectionBar(
         }
 
         IconButton(
-            onClick = { isDarkTheme.value = !isDarkTheme.value },
+            onClick = toggleTheme,
             modifier = Modifier.fillMaxWidth().padding(start = 16.dp)
         ) {
             Icon(
