@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -24,6 +25,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import dev.atajan.lingva_android.api.entities.LanguageEntity
 
@@ -46,29 +49,41 @@ fun LanguageSelectionBar(
                     targetLanguagesPopUpShown.value = true
                 },
                 shape = RoundedCornerShape(20.dp),
-                color = Color(0xFFE5E5E5)
+                color = MaterialTheme.colors.secondary
             ) {
                 Row(
-                    modifier = Modifier.fillMaxSize(),
                     horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text(targetLanguage.value.name, modifier = Modifier.padding(end = 20.dp))
+                    Text(
+                        text = targetLanguage.value.name,
+                        style = MaterialTheme.typography.button,
+                        textAlign = TextAlign.Center,
+                        softWrap = false,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.fillMaxWidth(0.5f).padding(horizontal = 8.dp)
+                    )
                 }
             }
 
             Surface(
-                modifier = Modifier.fillMaxWidth(0.55f).fillMaxHeight().clickable {
+                modifier = Modifier.fillMaxWidth(0.5f).fillMaxHeight().clickable {
                     sourceLanguagesPopUpShown.value = true
                 },
                 shape = RoundedCornerShape(20.dp),
-                color = Color(0xFF61FD96)
+                color = MaterialTheme.colors.primary
             ) {
                 Row(
-                    modifier = Modifier.fillMaxSize(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(sourceLanguage.value.name, modifier = Modifier.padding(start = 20.dp))
+                    Text(
+                        text = sourceLanguage.value.name,
+                        style = MaterialTheme.typography.button,
+                        textAlign = TextAlign.Center,
+                        softWrap = false,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)
+                    )
                 }
             }
 
@@ -76,9 +91,9 @@ fun LanguageSelectionBar(
 
             // Drop the first language, "Detect", since it won't make sense for target language
             LanguageListPopUp(
-                targetLanguagesPopUpShown,
-                supportedLanguages.value.drop(1),
-                targetLanguage
+                openDialog = targetLanguagesPopUpShown,
+                languageList = supportedLanguages.value.drop(1),
+                selectedLanguage = targetLanguage
             )
         }
 
@@ -88,7 +103,7 @@ fun LanguageSelectionBar(
         ) {
             Icon(
                 imageVector = Icons.Rounded.Brightness4,
-                contentDescription = "Add new subscription.",
+                contentDescription = "Toggle app theme.",
                 tint = if (isDarkTheme.value) Color.White else Color.Black,
                 modifier = Modifier.fillMaxSize()
             )
