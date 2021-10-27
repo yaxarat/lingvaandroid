@@ -1,13 +1,13 @@
 plugins {
-    kotlin("kapt")
     id("com.android.application")
-    id("kotlin-android")
     id("dagger.hilt.android.plugin")
-    id("kotlinx-serialization")
+    kotlin("kapt")
+    kotlin("android")
+    kotlin("plugin.serialization")
 }
 
 // TODO: cosolidate to buildSrc
-val compose_version = "1.0.2"
+val compose_version = "1.0.4"
 val hilt_agp_version = "2.38.1"
 
 android {
@@ -17,8 +17,8 @@ android {
         applicationId = "dev.atajan.lingva_android"
         minSdk = 26
         targetSdk = 31
-        versionCode = 2
-        versionName = "1.0.1"
+        versionCode = 3
+        versionName = "1.0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -28,20 +28,20 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
-            isShrinkResources = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            postprocessing {
+                isRemoveUnusedCode = true
+                isRemoveUnusedResources = true
+                isObfuscate = false
+                isOptimizeCode = true
+            }
         }
         debug {
-            isMinifyEnabled = false
-            isShrinkResources = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+//            postprocessing {
+//                isRemoveUnusedCode = true
+//                isRemoveUnusedResources = true
+//                isObfuscate = false
+//                isOptimizeCode = true
+//            }
         }
     }
     compileOptions {
@@ -50,7 +50,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-        useIR = true
     }
     buildFeatures {
         compose = true
@@ -90,10 +89,10 @@ dependencies {
     implementation("com.michael-bull.kotlin-result:kotlin-result:1.1.12")
 
     // Ktor
-    implementation("io.ktor:ktor-client-android:1.5.0")
-    implementation("io.ktor:ktor-client-serialization:1.5.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1")
-    implementation("io.ktor:ktor-client-logging-jvm:1.5.0")
+    implementation("io.ktor:ktor-client-android:1.5.2")
+    implementation("io.ktor:ktor-client-serialization:1.5.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
+    implementation("io.ktor:ktor-client-logging-jvm:1.5.2")
 
     // Compose
     implementation("androidx.compose.ui:ui:$compose_version")
