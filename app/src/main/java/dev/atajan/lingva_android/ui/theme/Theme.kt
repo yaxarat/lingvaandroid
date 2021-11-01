@@ -1,31 +1,39 @@
 package dev.atajan.lingva_android.ui.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
+import android.os.Build
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
-private val DarkColorPalette = darkColors(
+val canUseDynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+
+private val darkColorScheme = darkColorScheme(
     primary = LingvaGreen,
-    primaryVariant = LingvaGreenLighter,
+    primaryContainer = LingvaGreenLighter,
     secondary = LingvaGray,
-    secondaryVariant = AccentMagenta,
+    secondaryContainer = AccentMagenta,
     onPrimary = Color.Black,
+    onSecondary = Color.Black,
     surface = Color.Black,
     onSurface = Color.White,
     background = Color.Black,
     onBackground = Color.White,
 )
 
-private val LightColorPalette = lightColors(
+private val lightColorScheme = lightColorScheme(
     primary = LingvaGreenDarker,
-    primaryVariant = LingvaGreenDarker,
+    primaryContainer = LingvaGreenDarker,
     secondary = LingvaGray,
-    secondaryVariant = AccentMagenta,
+    secondaryContainer = AccentMagenta,
     onPrimary = Color.Black,
+    onSecondary = Color.Black,
     surface = Color.White,
     onSurface = Color.Black,
     background = Color.White,
@@ -33,32 +41,26 @@ private val LightColorPalette = lightColors(
 )
 
 @Composable
-fun LingvaandroidTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+fun LingvaAndroidTheme(
+    isSystemInDarkTheme: State<Boolean>,
     content: @Composable () -> Unit
 ) {
-    val colors = if (darkTheme) {
-        DarkColorPalette
-    } else {
-        LightColorPalette
-    }
-
-    MaterialTheme(
-        colors = colors,
-        typography = Typography,
-        shapes = Shapes,
-        content = content
-    )
-
     val systemUiController = rememberSystemUiController()
 
-    if (darkTheme) {
-        systemUiController.setSystemBarsColor(
-            color = Color.Black
-        )
-    } else {
-        systemUiController.setSystemBarsColor(
-            color = Color.White
-        )
+    val colorScheme = when {
+        canUseDynamicColor && isSystemInDarkTheme.value -> dynamicDarkColorScheme(LocalContext.current)
+        canUseDynamicColor && !isSystemInDarkTheme.value -> dynamicLightColorScheme(LocalContext.current)
+        isSystemInDarkTheme.value -> darkColorScheme
+        else -> lightColorScheme
     }
+
+    systemUiController.setSystemBarsColor(
+        color = colorScheme.background
+    )
+
+    MaterialTheme(
+        colorScheme = colorScheme,
+        typography = material3Typography,
+        content = content
+    )
 }

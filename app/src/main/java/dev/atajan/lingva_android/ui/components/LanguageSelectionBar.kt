@@ -12,11 +12,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Brightness4
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
@@ -35,7 +35,6 @@ fun LanguageSelectionBar(
     supportedLanguages: MutableState<List<LanguageEntity>>,
     sourceLanguage: MutableState<LanguageEntity>,
     targetLanguage: MutableState<LanguageEntity>,
-    isDarkTheme: State<Boolean>,
     toggleTheme: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -49,7 +48,7 @@ fun LanguageSelectionBar(
                     targetLanguagesPopUpShown.value = true
                 },
                 shape = RoundedCornerShape(20.dp),
-                color = MaterialTheme.colors.secondary
+                color = MaterialTheme.colorScheme.secondary
             ) {
                 Row(
                     horizontalArrangement = Arrangement.End,
@@ -57,10 +56,11 @@ fun LanguageSelectionBar(
                 ) {
                     Text(
                         text = targetLanguage.value.name,
-                        style = MaterialTheme.typography.button,
+                        style = MaterialTheme.typography.labelLarge,
                         textAlign = TextAlign.Center,
                         softWrap = false,
                         overflow = TextOverflow.Ellipsis,
+                        color = MaterialTheme.colorScheme.onSecondary,
                         modifier = Modifier.fillMaxWidth(0.5f).padding(horizontal = 8.dp)
                     )
                 }
@@ -71,17 +71,18 @@ fun LanguageSelectionBar(
                     sourceLanguagesPopUpShown.value = true
                 },
                 shape = RoundedCornerShape(20.dp),
-                color = MaterialTheme.colors.primary
+                color = MaterialTheme.colorScheme.primary
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = sourceLanguage.value.name,
-                        style = MaterialTheme.typography.button,
+                        style = MaterialTheme.typography.labelLarge,
                         textAlign = TextAlign.Center,
                         softWrap = false,
                         overflow = TextOverflow.Ellipsis,
+                        color = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)
                     )
                 }
@@ -104,7 +105,7 @@ fun LanguageSelectionBar(
             Icon(
                 imageVector = Icons.Rounded.Brightness4,
                 contentDescription = "Toggle app theme.",
-                tint = if (isDarkTheme.value) Color.White else Color.Black,
+                tint = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.fillMaxSize()
             )
         }

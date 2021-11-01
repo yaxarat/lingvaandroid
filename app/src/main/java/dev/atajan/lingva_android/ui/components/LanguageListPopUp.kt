@@ -11,7 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -33,7 +33,7 @@ fun LanguageListPopUp(
                     .fillMaxWidth()
                     .fillMaxHeight(0.95f)
                     .background(
-                        color = MaterialTheme.colors.background,
+                        color = MaterialTheme.colorScheme.background,
                         RoundedCornerShape(16.dp)
                     )
             ) {
@@ -49,8 +49,8 @@ fun LanguageListPopUp(
                         ) {
                             Text(
                                 text = languageEntity.name,
-                                style = MaterialTheme.typography.button,
-                                color = MaterialTheme.colors.onSurface,
+                                style = MaterialTheme.typography.labelLarge,
+                                color = MaterialTheme.colorScheme.onBackground,
                                 modifier = Modifier
                                     .padding(horizontal = 16.dp)
                                     .padding(top = 8.dp)
@@ -58,6 +58,7 @@ fun LanguageListPopUp(
                             )
                             if (index < languageList.size) {
                                 Divider(
+                                    color = MaterialTheme.colorScheme.secondary,
                                     modifier = Modifier
                                         .padding(horizontal = 8.dp)
                                         .padding(top = 8.dp)

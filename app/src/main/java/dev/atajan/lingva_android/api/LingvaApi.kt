@@ -3,15 +3,13 @@ package dev.atajan.lingva_android.api
 import android.util.Log
 import dev.atajan.lingva_android.api.entities.LanguagesEntity
 import dev.atajan.lingva_android.api.entities.TranslationEntity
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.android.Android
+import io.ktor.client.*
+import io.ktor.client.engine.android.*
 import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.features.json.serializer.KotlinxSerializer
-import io.ktor.client.features.logging.LogLevel
-import io.ktor.client.features.logging.Logger
-import io.ktor.client.features.logging.Logging
-import io.ktor.client.features.observer.ResponseObserver
-import io.ktor.client.request.get
+import io.ktor.client.features.json.serializer.*
+import io.ktor.client.features.logging.*
+import io.ktor.client.features.observer.*
+import io.ktor.client.request.*
 import kotlinx.serialization.json.Json
 
 object LingvaApi {
