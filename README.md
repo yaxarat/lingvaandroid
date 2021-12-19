@@ -1,5 +1,8 @@
 # Lingva Translate Android
  An Android client for the Lingva Translate
+ 
+ Available on the Google Play Store:
+ https://play.google.com/store/apps/details?id=dev.atajan.lingva_android&hl=en_US&gl=US
 
 For more information aout Lingva Translate:
 https://github.com/TheDavidDelta/lingva-translate
