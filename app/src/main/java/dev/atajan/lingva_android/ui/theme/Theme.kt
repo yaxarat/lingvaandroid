@@ -1,18 +1,22 @@
 package dev.atajan.lingva_android.ui.theme
 
 import android.os.Build
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 val canUseDynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+
+enum class ThemingOptions {
+    LIGHT, DARK, YOU
+}
 
 private val darkColorScheme = darkColorScheme(
     primary = LingvaGreen,
@@ -42,16 +46,17 @@ private val lightColorScheme = lightColorScheme(
 
 @Composable
 fun LingvaAndroidTheme(
-    isSystemInDarkTheme: State<Boolean>,
+    appTheme: ThemingOptions,
     content: @Composable () -> Unit
 ) {
     val systemUiController = rememberSystemUiController()
 
-    val colorScheme = when {
-        canUseDynamicColor && isSystemInDarkTheme.value -> dynamicDarkColorScheme(LocalContext.current)
-        canUseDynamicColor && !isSystemInDarkTheme.value -> dynamicLightColorScheme(LocalContext.current)
-        isSystemInDarkTheme.value -> darkColorScheme
-        else -> lightColorScheme
+    val colorScheme = when (appTheme) {
+        ThemingOptions.LIGHT -> lightColorScheme
+        ThemingOptions.DARK -> darkColorScheme
+        ThemingOptions.YOU -> {
+            if (isSystemInDarkTheme()) dynamicDarkColorScheme(LocalContext.current) else dynamicLightColorScheme(LocalContext.current)
+        }
     }
 
     systemUiController.setSystemBarsColor(

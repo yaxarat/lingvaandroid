@@ -3,7 +3,7 @@ package dev.atajan.lingva_android.datastore
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 
 /**
@@ -14,7 +14,7 @@ private const val PREFERENCE_NAME: String = "settings"
 /**
  * Corresponding key type function to define a key for each value that you need to store.
  */
-val IS_DARK_THEME: Preferences.Key<Boolean> = booleanPreferencesKey("is_dark_theme")
+val APP_THEME: Preferences.Key<String> = stringPreferencesKey("app_theme")
 
 /**
  * Use the property delegate to create an instance of Datastore<Preferences>.

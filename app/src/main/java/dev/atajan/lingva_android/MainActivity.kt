@@ -5,19 +5,24 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
-import dev.atajan.lingva_android.datastore.IS_DARK_THEME
+import dev.atajan.lingva_android.datastore.APP_THEME
 import dev.atajan.lingva_android.datastore.dataStore
 import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel
 import dev.atajan.lingva_android.ui.screens.TranslationScreen
 import dev.atajan.lingva_android.ui.theme.LingvaAndroidTheme
+import dev.atajan.lingva_android.ui.theme.ThemingOptions
+import dev.atajan.lingva_android.ui.theme.canUseDynamicColor
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
+@ExperimentalMaterialApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
@@ -27,31 +32,42 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val appTheme = isSystemInDarkTheme().let {
-                getAppTheme { it }.collectAsState(initial = it)
+            val selectedTheme: String? by checkIfThemeAlreadySet()
+                .collectAsState(initial = null)
+
+            val appTheme: ThemingOptions = if (selectedTheme.isNullOrBlank()) {
+                if (canUseDynamicColor) {
+                    ThemingOptions.YOU
+                } else if (isSystemInDarkTheme()) {
+                    ThemingOptions.DARK
+                } else {
+                ThemingOptions.LIGHT
+                }
+            } else {
+                ThemingOptions.valueOf(selectedTheme!!)
             }
 
-            LingvaAndroidTheme(appTheme) {
+            LingvaAndroidTheme(appTheme = appTheme) {
                 TranslationScreen(
                     viewModel = translateScreenViewModel,
-                    toggleTheme = this::toggleAppTheme
+                    toggleTheme = this::toggleAppTheme,
+                    getCurrentTheme = { appTheme }
                 )
             }
         }
     }
 
-    private fun getAppTheme(isSystemInDarkTheme: () -> Boolean): Flow<Boolean> {
+    private fun checkIfThemeAlreadySet(): Flow<String?> {
         return applicationContext.dataStore.data
             .map { preferences ->
-                preferences[IS_DARK_THEME] ?: isSystemInDarkTheme.invoke()
+                preferences[APP_THEME]
             }
     }
 
-    private fun toggleAppTheme() {
+    private fun toggleAppTheme(newTheme: ThemingOptions) {
         lifecycleScope.launch {
             applicationContext.dataStore.edit { preferences ->
-                val currentTheme = preferences[IS_DARK_THEME] ?: false
-                preferences[IS_DARK_THEME] = !currentTheme
+                preferences[APP_THEME] = newTheme.name
             }
         }
     }

@@ -16,31 +16,42 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Divider
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Translate
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import dev.atajan.lingva_android.ui.components.LanguageSelectionBar
+import dev.atajan.lingva_android.ui.components.SettingsBottomSheet
+import dev.atajan.lingva_android.ui.theme.ThemingOptions
 import dev.atajan.lingva_android.ui.theme.mediumRoundedCornerShape
+import kotlinx.coroutines.launch
 
+@ExperimentalMaterialApi
 @Composable
 fun TranslationScreen(
     viewModel: TranslateScreenViewModel,
-    toggleTheme: () -> Unit
+    toggleTheme: (ThemingOptions) -> Unit,
+    getCurrentTheme: () -> ThemingOptions
 ) {
     val scrollState = rememberScrollState(0)
     val softwareKeyboardController = LocalSoftwareKeyboardController.current
     val textToTranslateMutableState = viewModel.textToTranslate
+    val scope = rememberCoroutineScope()
+    val modalBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
 
     Column(
         modifier = Modifier
@@ -52,7 +63,15 @@ fun TranslationScreen(
             supportedLanguages = viewModel.supportedLanguages,
             sourceLanguage = viewModel.sourceLanguage,
             targetLanguage = viewModel.targetLanguage,
-            toggleTheme = toggleTheme
+            toggleTheme = {
+                scope.launch {
+                    if (modalBottomSheetState.isVisible) {
+                        modalBottomSheetState.hide()
+                    } else {
+                        modalBottomSheetState.show()
+                    }
+                }
+            }
         )
 
         Box(
@@ -136,4 +155,10 @@ fun TranslationScreen(
             }
         }
     }
+
+    SettingsBottomSheet(
+        modalBottomSheetState = modalBottomSheetState,
+        toggleTheme = toggleTheme,
+        getCurrentTheme = getCurrentTheme
+    )
 }

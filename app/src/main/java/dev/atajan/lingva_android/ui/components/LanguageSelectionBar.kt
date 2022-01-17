@@ -16,6 +16,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Brightness4
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -103,7 +104,7 @@ fun LanguageSelectionBar(
             modifier = Modifier.fillMaxWidth().padding(start = 16.dp)
         ) {
             Icon(
-                imageVector = Icons.Rounded.Brightness4,
+                imageVector = Icons.Rounded.Settings,
                 contentDescription = "Toggle app theme.",
                 tint = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.fillMaxSize()
