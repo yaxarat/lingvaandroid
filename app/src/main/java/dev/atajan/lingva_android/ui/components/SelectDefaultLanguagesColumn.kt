@@ -56,7 +56,7 @@ fun SelectDefaultLanguagesColumn(
             )
 
             Text(
-                text = defaultSourceLanguage.value.ifEmpty { "Not Set" },
+                text = defaultSourceLanguage.value.ifEmpty { "Tap here to select" },
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.labelLarge,
                 modifier = Modifier
@@ -84,7 +84,7 @@ fun SelectDefaultLanguagesColumn(
             )
 
             Text(
-                text = defaultTargetLanguage.value.ifEmpty { "Not Set" },
+                text = defaultTargetLanguage.value.ifEmpty { "Tap here to select" },
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.labelLarge,
                 modifier = Modifier
