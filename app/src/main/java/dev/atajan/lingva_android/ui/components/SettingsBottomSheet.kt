@@ -8,6 +8,7 @@ import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import dev.atajan.lingva_android.api.entities.LanguageEntity
 import dev.atajan.lingva_android.ui.theme.ThemingOptions
@@ -19,7 +20,10 @@ fun SettingsBottomSheet(
     toggleTheme: (ThemingOptions) -> Unit,
     getCurrentTheme: () -> ThemingOptions,
     setDefaultSourceLanguage: (LanguageEntity) -> Unit,
-    setDefaultTargetLanguage: (LanguageEntity) -> Unit
+    setDefaultTargetLanguage: (LanguageEntity) -> Unit,
+    supportedLanguages: MutableState<List<LanguageEntity>>,
+    defaultSourceLanguage: MutableState<String>,
+    defaultTargetLanguage: MutableState<String>,
 ) {
 
     ModalBottomSheetLayout(
@@ -35,10 +39,11 @@ fun SettingsBottomSheet(
                 )
 
                 SelectDefaultLanguagesColumn(
-                    defaultSourceLanguage = "",
-                    defaultTargetLanguage = "",
+                    defaultSourceLanguage = defaultSourceLanguage,
+                    defaultTargetLanguage = defaultTargetLanguage,
                     setDefaultSourceLanguage = setDefaultSourceLanguage,
-                    setDefaultTargetLanguage = setDefaultTargetLanguage
+                    setDefaultTargetLanguage = setDefaultTargetLanguage,
+                    supportedLanguages = supportedLanguages
                 )
             }
         }

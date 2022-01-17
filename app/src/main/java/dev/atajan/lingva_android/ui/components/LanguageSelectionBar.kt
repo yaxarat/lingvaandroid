@@ -89,14 +89,20 @@ fun LanguageSelectionBar(
                 }
             }
 
-            LanguageListPopUp(sourceLanguagesPopUpShown, supportedLanguages.value, sourceLanguage)
+            LanguageListPopUp(
+                openDialog = sourceLanguagesPopUpShown,
+                languageList = supportedLanguages.value
+            ) { selectedLanguage: LanguageEntity ->
+                sourceLanguage.value = selectedLanguage
+            }
 
             // Drop the first language, "Detect", since it won't make sense for target language
             LanguageListPopUp(
                 openDialog = targetLanguagesPopUpShown,
-                languageList = supportedLanguages.value.drop(1),
-                selectedLanguage = targetLanguage
-            )
+                languageList = supportedLanguages.value.drop(1)
+            ) { selectedLanguage: LanguageEntity ->
+                targetLanguage.value = selectedLanguage
+            }
         }
 
         IconButton(

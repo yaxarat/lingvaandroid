@@ -160,6 +160,9 @@ fun TranslationScreen(
         toggleTheme = viewModel::toggleAppTheme,
         getCurrentTheme = getCurrentTheme,
         setDefaultSourceLanguage = viewModel::setDefaultSourceLanguage,
-        setDefaultTargetLanguage = viewModel::setDefaultTargetLanguage
+        setDefaultTargetLanguage = viewModel::setDefaultTargetLanguage,
+        supportedLanguages = viewModel.supportedLanguages,
+        defaultSourceLanguage = viewModel.defaultSourceLanguage,
+        defaultTargetLanguage = viewModel.defaultTargetLanguage
     )
 }

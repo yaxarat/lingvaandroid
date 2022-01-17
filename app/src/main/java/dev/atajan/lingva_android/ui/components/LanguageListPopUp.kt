@@ -24,7 +24,7 @@ import dev.atajan.lingva_android.api.entities.LanguageEntity
 fun LanguageListPopUp(
     openDialog: MutableState<Boolean>,
     languageList: List<LanguageEntity>,
-    selectedLanguage: MutableState<LanguageEntity>
+    onLanguageSelected: ((LanguageEntity) -> Unit)
 ) {
     if (openDialog.value) {
         Dialog(onDismissRequest = { openDialog.value = false }) {
@@ -43,7 +43,7 @@ fun LanguageListPopUp(
                             modifier = Modifier
                                 .fillParentMaxWidth()
                                 .clickable {
-                                    selectedLanguage.value = languageEntity
+                                    onLanguageSelected(languageEntity)
                                     openDialog.value = false
                                 }
                         ) {

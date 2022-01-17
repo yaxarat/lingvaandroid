@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
 
             val appTheme: ThemingOptions = if (selectedTheme.isNullOrBlank()) {
                 if (canUseDynamicColor) {
-                    ThemingOptions.THEMED
+                    ThemingOptions.YOU
                 } else if (isSystemInDarkTheme()) {
                     ThemingOptions.DARK
                 } else {

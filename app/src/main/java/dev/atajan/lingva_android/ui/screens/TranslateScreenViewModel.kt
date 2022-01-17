@@ -38,10 +38,10 @@ class TranslateScreenViewModel @Inject constructor(
     val targetLanguage = mutableStateOf(LanguageEntity("es", "Spanish"))
     val textToTranslate = mutableStateOf("")
 
-    var defaultSourceLanguage = ""
+    var defaultSourceLanguage = mutableStateOf("")
         private set
 
-    var defaultTargetLanguage = ""
+    var defaultTargetLanguage = mutableStateOf("")
         private set
 
     init {
@@ -67,7 +67,7 @@ class TranslateScreenViewModel @Inject constructor(
                         }
                         ?.let {
                             sourceLanguage.value = it
-                            defaultSourceLanguage = it.name
+                            defaultSourceLanguage.value = it.name
                         }
                 }
                 .launchIn(this)
@@ -82,7 +82,7 @@ class TranslateScreenViewModel @Inject constructor(
                         }
                         ?.let {
                             targetLanguage.value = it
-                            defaultTargetLanguage = it.name
+                            defaultTargetLanguage.value = it.name
                         }
                 }
                 .launchIn(this)

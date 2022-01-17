@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.atajan.lingva_android.ui.theme.ThemingOptions
+import dev.atajan.lingva_android.ui.theme.canUseDynamicColor
 
 @Composable
 fun AppThemeSelectionRadioButtonRows(
@@ -35,32 +36,67 @@ fun AppThemeSelectionRadioButtonRows(
     )
 
     Column(modifier = Modifier.selectableGroup()) {
-        ThemingOptions.values().forEach { option ->
-            Row(
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp)
-            ) {
-                RadioButton(
-                    selected = radioButtonState == option.name,
-                    onClick = {
-                        toggleTheme(ThemingOptions.valueOf(option.name))
-                        radioButtonState = option.name
-                    },
-                    colors = RadioButtonDefaults.colors(
-                        selectedColor = MaterialTheme.colorScheme.primary,
-                        unselectedColor = MaterialTheme.colorScheme.onBackground,
-                        disabledColor = MaterialTheme.colorScheme.error
-                    ),
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
+        ThemingOptions.values()
+            .forEach { option ->
+                if (option == ThemingOptions.YOU) {
+                    if (canUseDynamicColor) {
+                        Row(
+                            horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp)
+                        ) {
+                            RadioButton(
+                                selected = radioButtonState == option.name,
+                                onClick = {
+                                    toggleTheme(ThemingOptions.valueOf(option.name))
+                                    radioButtonState = option.name
+                                },
+                                colors = RadioButtonDefaults.colors(
+                                    selectedColor = MaterialTheme.colorScheme.primary,
+                                    unselectedColor = MaterialTheme.colorScheme.onBackground,
+                                    disabledColor = MaterialTheme.colorScheme.error
+                                ),
+                                modifier = Modifier.padding(horizontal = 16.dp)
+                            )
 
-                Text(
-                    text = option.name.uppercase(),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
+                            Text(
+                                text = option.name.uppercase() + " - Based on your device wallpaper",
+                                style = MaterialTheme.typography.labelLarge,
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
+                        }
+                    }
+                } else {
+                    Row(
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 16.dp)
+                    ) {
+                        RadioButton(
+                            selected = radioButtonState == option.name,
+                            onClick = {
+                                toggleTheme(ThemingOptions.valueOf(option.name))
+                                radioButtonState = option.name
+                            },
+                            colors = RadioButtonDefaults.colors(
+                                selectedColor = MaterialTheme.colorScheme.primary,
+                                unselectedColor = MaterialTheme.colorScheme.onBackground,
+                                disabledColor = MaterialTheme.colorScheme.error
+                            ),
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+
+                        Text(
+                            text = option.name.uppercase(),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
+                }
             }
-        }
     }
 }

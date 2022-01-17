@@ -15,7 +15,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 val canUseDynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
 enum class ThemingOptions {
-    LIGHT, DARK, THEMED
+    LIGHT, DARK, YOU
 }
 
 private val darkColorScheme = darkColorScheme(
@@ -54,7 +54,7 @@ fun LingvaAndroidTheme(
     val colorScheme = when (appTheme) {
         ThemingOptions.LIGHT -> lightColorScheme
         ThemingOptions.DARK -> darkColorScheme
-        ThemingOptions.THEMED -> {
+        ThemingOptions.YOU -> {
             if (isSystemInDarkTheme()) dynamicDarkColorScheme(LocalContext.current) else dynamicLightColorScheme(LocalContext.current)
         }
     }
