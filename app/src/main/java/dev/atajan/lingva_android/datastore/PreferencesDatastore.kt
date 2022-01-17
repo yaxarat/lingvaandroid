@@ -16,6 +16,10 @@ private const val PREFERENCE_NAME: String = "settings"
  */
 val APP_THEME: Preferences.Key<String> = stringPreferencesKey("app_theme")
 
+val DEFAULT_SOURCE_LANGUAGE: Preferences.Key<String> = stringPreferencesKey("default_source_language")
+
+val DEFAULT_TARGET_LANGUAGE: Preferences.Key<String> = stringPreferencesKey("default_target_language")
+
 /**
  * Use the property delegate to create an instance of Datastore<Preferences>.
  * Call it once at the top level of your kotlin file, and access it through this property throughout the rest of your application.

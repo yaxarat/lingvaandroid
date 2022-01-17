@@ -8,8 +8,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.datastore.preferences.core.edit
-import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import dev.atajan.lingva_android.datastore.APP_THEME
 import dev.atajan.lingva_android.datastore.dataStore
@@ -20,7 +18,6 @@ import dev.atajan.lingva_android.ui.theme.ThemingOptions
 import dev.atajan.lingva_android.ui.theme.canUseDynamicColor
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
 @AndroidEntryPoint
@@ -37,11 +34,11 @@ class MainActivity : ComponentActivity() {
 
             val appTheme: ThemingOptions = if (selectedTheme.isNullOrBlank()) {
                 if (canUseDynamicColor) {
-                    ThemingOptions.YOU
+                    ThemingOptions.THEMED
                 } else if (isSystemInDarkTheme()) {
                     ThemingOptions.DARK
                 } else {
-                ThemingOptions.LIGHT
+                    ThemingOptions.LIGHT
                 }
             } else {
                 ThemingOptions.valueOf(selectedTheme!!)
@@ -50,7 +47,6 @@ class MainActivity : ComponentActivity() {
             LingvaAndroidTheme(appTheme = appTheme) {
                 TranslationScreen(
                     viewModel = translateScreenViewModel,
-                    toggleTheme = this::toggleAppTheme,
                     getCurrentTheme = { appTheme }
                 )
             }
@@ -62,13 +58,5 @@ class MainActivity : ComponentActivity() {
             .map { preferences ->
                 preferences[APP_THEME]
             }
-    }
-
-    private fun toggleAppTheme(newTheme: ThemingOptions) {
-        lifecycleScope.launch {
-            applicationContext.dataStore.edit { preferences ->
-                preferences[APP_THEME] = newTheme.name
-            }
-        }
     }
 }

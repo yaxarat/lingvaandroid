@@ -44,7 +44,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun TranslationScreen(
     viewModel: TranslateScreenViewModel,
-    toggleTheme: (ThemingOptions) -> Unit,
     getCurrentTheme: () -> ThemingOptions
 ) {
     val scrollState = rememberScrollState(0)
@@ -158,7 +157,9 @@ fun TranslationScreen(
 
     SettingsBottomSheet(
         modalBottomSheetState = modalBottomSheetState,
-        toggleTheme = toggleTheme,
-        getCurrentTheme = getCurrentTheme
+        toggleTheme = viewModel::toggleAppTheme,
+        getCurrentTheme = getCurrentTheme,
+        setDefaultSourceLanguage = viewModel::setDefaultSourceLanguage,
+        setDefaultTargetLanguage = viewModel::setDefaultTargetLanguage
     )
 }
