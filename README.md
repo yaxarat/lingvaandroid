@@ -1,10 +1,10 @@
 # Lentil Translate Android
- An Android client for the Lingva Translate
+ An un offcial Android client for the Lingva Translate
  
 Available on the Google Play Store:
 https://play.google.com/store/apps/details?id=dev.atajan.lingva_android&hl=en_US&gl=US
 
-For more information aout Lingva Translate:
+For more information about Lingva Translate:
 https://github.com/TheDavidDelta/lingva-translate
 
 To try ou the web client:
