@@ -37,6 +37,7 @@ class TranslateScreenViewModel @Inject constructor(
     val sourceLanguage = mutableStateOf(LanguageEntity("auto", "Detect"))
     val targetLanguage = mutableStateOf(LanguageEntity("es", "Spanish"))
     val textToTranslate = mutableStateOf("")
+    val errorDialogState = mutableStateOf(false)
 
     var defaultSourceLanguage = mutableStateOf("")
         private set
@@ -53,6 +54,7 @@ class TranslateScreenViewModel @Inject constructor(
                 },
                 failure = {
                     Log.d("${this::class}", "getting langs failed with $it")
+                    errorDialogState.value = true
                     return@launch // No point in going further since supportedLanguages will be empty
                 }
             )

@@ -35,6 +35,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import dev.atajan.lingva_android.ui.components.LanguageSelectionBar
+import dev.atajan.lingva_android.ui.components.NotificationDialog
 import dev.atajan.lingva_android.ui.components.SettingsBottomSheet
 import dev.atajan.lingva_android.ui.theme.ThemingOptions
 import dev.atajan.lingva_android.ui.theme.mediumRoundedCornerShape
@@ -51,6 +52,7 @@ fun TranslationScreen(
     val textToTranslateMutableState = viewModel.textToTranslate
     val scope = rememberCoroutineScope()
     val modalBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val errorDialogState = viewModel.errorDialogState
 
     Column(
         modifier = Modifier
@@ -165,4 +167,6 @@ fun TranslationScreen(
         defaultSourceLanguage = viewModel.defaultSourceLanguage,
         defaultTargetLanguage = viewModel.defaultTargetLanguage
     )
+
+    NotificationDialog(errorDialogState)
 }
