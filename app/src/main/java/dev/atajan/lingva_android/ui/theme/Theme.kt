@@ -21,10 +21,10 @@ enum class ThemingOptions {
 private val darkColorScheme = darkColorScheme(
     primary = LingvaGreen,
     primaryContainer = LingvaGreenLighter,
-    secondary = LingvaGray,
+    secondary = LingvaDarkGray,
     secondaryContainer = AccentMagenta,
     onPrimary = Color.Black,
-    onSecondary = Color.Black,
+    onSecondary = Color.White,
     surface = Color.Black,
     onSurface = Color.White,
     background = Color.Black,

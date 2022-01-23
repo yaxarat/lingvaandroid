@@ -15,17 +15,14 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Brightness4
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -36,6 +33,7 @@ fun LanguageSelectionBar(
     supportedLanguages: MutableState<List<LanguageEntity>>,
     sourceLanguage: MutableState<LanguageEntity>,
     targetLanguage: MutableState<LanguageEntity>,
+    toggleErrorDialogState: (Boolean) -> Unit,
     toggleTheme: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -43,11 +41,19 @@ fun LanguageSelectionBar(
     val targetLanguagesPopUpShown = remember { mutableStateOf(false) }
 
     Row(modifier = modifier.height(40.dp)) {
-        Box(modifier = Modifier.fillMaxWidth(0.9f).fillMaxHeight()) {
+        Box(modifier = Modifier
+            .fillMaxWidth(0.9f)
+            .fillMaxHeight()) {
             Surface(
-                modifier = Modifier.fillMaxSize().clickable {
-                    targetLanguagesPopUpShown.value = true
-                },
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable {
+                        if (supportedLanguages.value.isNotEmpty()) {
+                            targetLanguagesPopUpShown.value = true
+                        } else {
+                            toggleErrorDialogState(true)
+                        }
+                    },
                 shape = RoundedCornerShape(20.dp),
                 color = MaterialTheme.colorScheme.secondary
             ) {
@@ -62,15 +68,24 @@ fun LanguageSelectionBar(
                         softWrap = false,
                         overflow = TextOverflow.Ellipsis,
                         color = MaterialTheme.colorScheme.onSecondary,
-                        modifier = Modifier.fillMaxWidth(0.5f).padding(horizontal = 8.dp)
+                        modifier = Modifier
+                            .fillMaxWidth(0.5f)
+                            .padding(horizontal = 8.dp)
                     )
                 }
             }
 
             Surface(
-                modifier = Modifier.fillMaxWidth(0.5f).fillMaxHeight().clickable {
-                    sourceLanguagesPopUpShown.value = true
-                },
+                modifier = Modifier
+                    .fillMaxWidth(0.5f)
+                    .fillMaxHeight()
+                    .clickable {
+                        if (supportedLanguages.value.isNotEmpty()) {
+                            sourceLanguagesPopUpShown.value = true
+                        } else {
+                            toggleErrorDialogState(true)
+                        }
+                    },
                 shape = RoundedCornerShape(20.dp),
                 color = MaterialTheme.colorScheme.primary
             ) {
@@ -84,7 +99,9 @@ fun LanguageSelectionBar(
                         softWrap = false,
                         overflow = TextOverflow.Ellipsis,
                         color = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp)
                     )
                 }
             }
@@ -107,7 +124,9 @@ fun LanguageSelectionBar(
 
         IconButton(
             onClick = toggleTheme,
-            modifier = Modifier.fillMaxWidth().padding(start = 16.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp)
         ) {
             Icon(
                 imageVector = Icons.Rounded.Settings,

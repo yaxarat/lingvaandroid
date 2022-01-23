@@ -24,6 +24,7 @@ fun SelectDefaultLanguagesColumn(
     setDefaultSourceLanguage: (LanguageEntity) -> Unit,
     setDefaultTargetLanguage: (LanguageEntity) -> Unit,
     supportedLanguages: MutableState<List<LanguageEntity>>,
+    toggleErrorDialogState: (Boolean) -> Unit,
 ) {
     val sourceLanguagesPopUpShown = remember { mutableStateOf(false) }
     val targetLanguagesPopUpShown = remember { mutableStateOf(false) }
@@ -62,7 +63,11 @@ fun SelectDefaultLanguagesColumn(
                 modifier = Modifier
                     .padding(16.dp)
                     .clickable {
-                        sourceLanguagesPopUpShown.value = true
+                        if (supportedLanguages.value.isNotEmpty()) {
+                            sourceLanguagesPopUpShown.value = true
+                        } else {
+                            toggleErrorDialogState(true)
+                        }
                     }
             )
         }
@@ -95,7 +100,11 @@ fun SelectDefaultLanguagesColumn(
                         bottom = 32.dp,
                     )
                     .clickable {
-                        targetLanguagesPopUpShown.value = true
+                        if (supportedLanguages.value.isNotEmpty()) {
+                            targetLanguagesPopUpShown.value = true
+                        } else {
+                            toggleErrorDialogState(true)
+                        }
                     }
             )
         }
@@ -111,7 +120,7 @@ fun SelectDefaultLanguagesColumn(
     // Drop the first language, "Detect", since it won't make sense for target language
     LanguageListPopUp(
         openDialog = targetLanguagesPopUpShown,
-        languageList = supportedLanguages.value.drop(1)
+        languageList = supportedLanguages.value.drop(1),
     ) { selectedLanguage: LanguageEntity ->
         setDefaultTargetLanguage(selectedLanguage)
     }

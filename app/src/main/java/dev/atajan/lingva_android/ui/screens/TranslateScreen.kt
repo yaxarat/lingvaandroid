@@ -35,7 +35,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import dev.atajan.lingva_android.ui.components.LanguageSelectionBar
-import dev.atajan.lingva_android.ui.components.NotificationDialog
+import dev.atajan.lingva_android.ui.components.ErrorNotificationDialog
 import dev.atajan.lingva_android.ui.components.SettingsBottomSheet
 import dev.atajan.lingva_android.ui.theme.ThemingOptions
 import dev.atajan.lingva_android.ui.theme.mediumRoundedCornerShape
@@ -64,6 +64,9 @@ fun TranslationScreen(
             supportedLanguages = viewModel.supportedLanguages,
             sourceLanguage = viewModel.sourceLanguage,
             targetLanguage = viewModel.targetLanguage,
+            toggleErrorDialogState = {
+                viewModel.errorDialogState.value = it
+            },
             toggleTheme = {
                 scope.launch {
                     if (modalBottomSheetState.isVisible) {
@@ -165,8 +168,11 @@ fun TranslationScreen(
         setDefaultTargetLanguage = viewModel::setDefaultTargetLanguage,
         supportedLanguages = viewModel.supportedLanguages,
         defaultSourceLanguage = viewModel.defaultSourceLanguage,
-        defaultTargetLanguage = viewModel.defaultTargetLanguage
+        defaultTargetLanguage = viewModel.defaultTargetLanguage,
+        toggleErrorDialogState = {
+            viewModel.errorDialogState.value = it
+        }
     )
 
-    NotificationDialog(errorDialogState)
+    ErrorNotificationDialog(errorDialogState)
 }

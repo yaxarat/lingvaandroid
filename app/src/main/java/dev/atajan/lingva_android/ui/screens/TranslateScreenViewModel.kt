@@ -99,11 +99,11 @@ class TranslateScreenViewModel @Inject constructor(
                 query = textToTranslate.value
             ).fold(
                 success = {
-                    Log.d("${this::class}", it.translation)
                     translatedText.value = it.translation
                 },
                 failure = {
-                    Log.d("${this::class}", "getting langs failed with $it")
+                    Log.d("${this::class}", "translation failed with $it")
+                    errorDialogState.value = true
                 }
             )
         }

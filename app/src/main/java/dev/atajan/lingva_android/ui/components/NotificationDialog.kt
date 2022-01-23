@@ -11,7 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun NotificationDialog(shouldShowDialog: MutableState<Boolean>) {
+fun ErrorNotificationDialog(shouldShowDialog: MutableState<Boolean>) {
 
     if (shouldShowDialog.value) {
         AlertDialog(
@@ -32,7 +32,7 @@ fun NotificationDialog(shouldShowDialog: MutableState<Boolean>) {
                 )
             },
             confirmButton = {
-                // this component is meant only for a passive notification. No positive action should be here.
+                // this component is meant only for a passive error notification. No positive action should be here.
             },
             dismissButton = {
                 TextButton(
@@ -55,5 +55,5 @@ fun NotificationDialog(shouldShowDialog: MutableState<Boolean>) {
 @Composable
 fun PreviewNotificationDialog() {
     val state = remember{ mutableStateOf(true) }
-    NotificationDialog(state)
+    ErrorNotificationDialog(state)
 }

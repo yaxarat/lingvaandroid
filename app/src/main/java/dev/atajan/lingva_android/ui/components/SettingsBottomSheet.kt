@@ -24,6 +24,7 @@ fun SettingsBottomSheet(
     supportedLanguages: MutableState<List<LanguageEntity>>,
     defaultSourceLanguage: MutableState<String>,
     defaultTargetLanguage: MutableState<String>,
+    toggleErrorDialogState: (Boolean) -> Unit,
 ) {
 
     ModalBottomSheetLayout(
@@ -43,7 +44,8 @@ fun SettingsBottomSheet(
                     defaultTargetLanguage = defaultTargetLanguage,
                     setDefaultSourceLanguage = setDefaultSourceLanguage,
                     setDefaultTargetLanguage = setDefaultTargetLanguage,
-                    supportedLanguages = supportedLanguages
+                    supportedLanguages = supportedLanguages,
+                    toggleErrorDialogState = toggleErrorDialogState,
                 )
             }
         }
