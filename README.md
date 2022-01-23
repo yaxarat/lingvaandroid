@@ -11,7 +11,7 @@ To try ou the web client:
 https://lingva.ml
 
 ## Supports Multiple Themes, Including Matrial You
-Lingva Light | Lingva Dark
+Lentil Dark | Lentil Light
 :-------------------------:|:-------------------------:
 ![](https://user-images.githubusercontent.com/27980758/149836952-2b3ed4f3-a29f-416b-bf78-add98508e701.png)  |  ![](https://user-images.githubusercontent.com/27980758/149836964-1b7d4060-b429-44b0-b88f-b8d0f042b4d8.png)
 
