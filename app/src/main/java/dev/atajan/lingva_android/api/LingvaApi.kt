@@ -14,6 +14,9 @@ import kotlinx.serialization.json.Json
 
 object LingvaApi {
     private const val lingvaApiV1 = "https://lingva.ml/api/v1/"
+    private const val fallback1 = "https://translate.alefvanoon.xyz/api/v1/"
+    private const val fallback2 = "https://translate.igna.rocks/api/v1/"
+    private const val fallback3 = "https://lingva.pussthecat.org/api/v1/"
 
     private const val TIME_OUT = 3_000
 
@@ -50,15 +53,79 @@ object LingvaApi {
         }
     }
 
+    /**
+     * Super dirty fallback logic below.. will be cleaned up later
+     */
+
     suspend fun getTranslation(
         source: String,
         target: String,
         query: String
     ): TranslationEntity {
-        return ktorHttpClient.get("$lingvaApiV1$source/$target/$query")
+        return try {
+            ktorHttpClient.get<TranslationEntity>("$lingvaApiV1$source/$target/$query")
+        } catch (e: Exception) {
+            getTranslationWithFallback1(source, target, query)
+        }
+    }
+
+    private suspend fun getTranslationWithFallback1(
+        source: String,
+        target: String,
+        query: String
+    ): TranslationEntity {
+        return try {
+            ktorHttpClient.get<TranslationEntity>("$fallback1$source/$target/$query")
+        } catch (e: Exception) {
+            getTranslationWithFallback2(source, target, query)
+        }
+    }
+
+    private suspend fun getTranslationWithFallback2(
+        source: String,
+        target: String,
+        query: String
+    ): TranslationEntity {
+        return try {
+            ktorHttpClient.get<TranslationEntity>("$fallback2$source/$target/$query")
+        } catch (e: Exception) {
+            getTranslationWithFallback3(source, target, query)
+        }
+    }
+
+    private suspend fun getTranslationWithFallback3(
+        source: String,
+        target: String,
+        query: String
+    ): TranslationEntity {
+        return ktorHttpClient.get<TranslationEntity>("$fallback3$source/$target/$query")
     }
 
     suspend fun getSupportedLanguages(): LanguagesEntity {
-        return ktorHttpClient.get(lingvaApiV1 + "languages/?:(source|target)")
+        return  try {
+            ktorHttpClient.get(lingvaApiV1 + "languages/?:(source|target)")
+        } catch (e: Exception) {
+            getSupportedLanguagesWithFallback1()
+        }
+    }
+
+    private suspend fun getSupportedLanguagesWithFallback1(): LanguagesEntity {
+        return  try {
+            ktorHttpClient.get(fallback1 + "languages/?:(source|target)")
+        } catch (e: Exception) {
+            getSupportedLanguagesWithFallback2()
+        }
+    }
+
+    private suspend fun getSupportedLanguagesWithFallback2(): LanguagesEntity {
+        return  try {
+            ktorHttpClient.get(fallback2 + "languages/?:(source|target)")
+        } catch (e: Exception) {
+            getSupportedLanguagesWithFallback3()
+        }
+    }
+
+    private suspend fun getSupportedLanguagesWithFallback3(): LanguagesEntity {
+        return ktorHttpClient.get(fallback3 + "languages/?:(source|target)")
     }
 }

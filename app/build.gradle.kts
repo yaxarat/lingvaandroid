@@ -17,8 +17,8 @@ android {
         applicationId = "dev.atajan.lingva_android"
         minSdk = 26
         targetSdk = 31
-        versionCode = 7
-        versionName = "1.0.7"
+        versionCode = 9
+        versionName = "1.0.9"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

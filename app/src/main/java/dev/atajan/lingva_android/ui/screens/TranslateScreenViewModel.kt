@@ -103,7 +103,6 @@ class TranslateScreenViewModel @Inject constructor(
                 },
                 failure = {
                     Log.d("${this::class}", "translation failed with $it")
-                    errorDialogState.value = true
                 }
             )
         }
