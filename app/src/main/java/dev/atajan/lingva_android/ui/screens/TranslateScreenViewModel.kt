@@ -1,5 +1,8 @@
 package dev.atajan.lingva_android.ui.screens
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.preferences.core.edit
@@ -106,6 +109,14 @@ class TranslateScreenViewModel @Inject constructor(
                 }
             )
         }
+    }
+
+    fun copyTextToClipboard(context: Context) {
+
+        val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipData = ClipData.newPlainText("Translation", translatedText.value)
+
+        clipboardManager.setPrimaryClip(clipData)
     }
 
     fun toggleAppTheme(newTheme: ThemingOptions) {

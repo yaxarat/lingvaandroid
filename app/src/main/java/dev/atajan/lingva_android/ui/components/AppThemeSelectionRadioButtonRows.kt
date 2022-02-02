@@ -62,7 +62,7 @@ fun AppThemeSelectionRadioButtonRows(
                             )
 
                             Text(
-                                text = option.name.uppercase() + " - Based on your device wallpaper",
+                                text = option.name.uppercase() + " - Based on your device wallpaper & theme",
                                 style = MaterialTheme.typography.labelLarge,
                                 color = MaterialTheme.colorScheme.onBackground
                             )
