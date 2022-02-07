@@ -13,10 +13,12 @@ import io.ktor.client.request.*
 import kotlinx.serialization.json.Json
 
 object LingvaApi {
-    private const val lingvaApiV1 = "https://lingva.ml/api/v1/"
-    private const val fallback1 = "https://translate.alefvanoon.xyz/api/v1/"
-    private const val fallback2 = "https://translate.igna.rocks/api/v1/"
-    private const val fallback3 = "https://lingva.pussthecat.org/api/v1/"
+    private const val lingva = "https://lingva.ml/api/v1/"
+    private const val alefvanoon = "https://translate.alefvanoon.xyz/api/v1/"
+    private const val igna = "https://translate.igna.rocks/api/v1/"
+    private const val pussthecat = "https://lingva.pussthecat.org/api/v1/"
+
+    private val endpointList = listOf(lingva, alefvanoon, igna, pussthecat)
 
     private const val TIME_OUT = 3_000
 
@@ -53,79 +55,75 @@ object LingvaApi {
         }
     }
 
-    /**
-     * Super dirty fallback logic below.. will be cleaned up later
-     */
-
     suspend fun getTranslation(
         source: String,
         target: String,
         query: String
     ): TranslationEntity {
         return try {
-            ktorHttpClient.get<TranslationEntity>("$lingvaApiV1$source/$target/$query")
+            attemptTranslationRequest(
+                source = source,
+                target = target,
+                query = query
+            )
         } catch (e: Exception) {
-            getTranslationWithFallback1(source, target, query)
+            // TODO: add proper error logging
+            TranslationEntity("Error Occurred")
         }
     }
 
-    private suspend fun getTranslationWithFallback1(
+    private suspend fun attemptTranslationRequest(
         source: String,
         target: String,
-        query: String
+        query: String,
+        endpointIndex: Int = 0,
+        exception: Throwable? = null
     ): TranslationEntity {
+
+        // Throw only when all fallback endpoints have been exhausted
+        if (endpointIndex > endpointList.lastIndex) {
+            throw exception ?: Throwable("attemptTranslationRequest failed for all endpoints")
+        }
+
         return try {
-            ktorHttpClient.get<TranslationEntity>("$fallback1$source/$target/$query")
+            ktorHttpClient.get("${endpointList[endpointIndex]}$source/$target/$query")
         } catch (e: Exception) {
-            getTranslationWithFallback2(source, target, query)
+            attemptTranslationRequest(
+                source = source,
+                target = target,
+                query = query,
+                endpointIndex = endpointIndex + 1,
+                exception = e
+            )
         }
-    }
-
-    private suspend fun getTranslationWithFallback2(
-        source: String,
-        target: String,
-        query: String
-    ): TranslationEntity {
-        return try {
-            ktorHttpClient.get<TranslationEntity>("$fallback2$source/$target/$query")
-        } catch (e: Exception) {
-            getTranslationWithFallback3(source, target, query)
-        }
-    }
-
-    private suspend fun getTranslationWithFallback3(
-        source: String,
-        target: String,
-        query: String
-    ): TranslationEntity {
-        return ktorHttpClient.get<TranslationEntity>("$fallback3$source/$target/$query")
     }
 
     suspend fun getSupportedLanguages(): LanguagesEntity {
         return  try {
-            ktorHttpClient.get(lingvaApiV1 + "languages/?:(source|target)")
+            attemptSupportedLanguagesRequest()
         } catch (e: Exception) {
-            getSupportedLanguagesWithFallback1()
+            // TODO: add proper error logging
+            LanguagesEntity(emptyList())
         }
     }
 
-    private suspend fun getSupportedLanguagesWithFallback1(): LanguagesEntity {
-        return  try {
-            ktorHttpClient.get(fallback1 + "languages/?:(source|target)")
-        } catch (e: Exception) {
-            getSupportedLanguagesWithFallback2()
-        }
-    }
+    private suspend fun attemptSupportedLanguagesRequest(
+        endpointIndex: Int = 0,
+        exception: Throwable? = null
+    ): LanguagesEntity {
 
-    private suspend fun getSupportedLanguagesWithFallback2(): LanguagesEntity {
-        return  try {
-            ktorHttpClient.get(fallback2 + "languages/?:(source|target)")
-        } catch (e: Exception) {
-            getSupportedLanguagesWithFallback3()
+        // Throw only when all fallback endpoints have been exhausted
+        if (endpointIndex > endpointList.lastIndex) {
+            throw exception ?: Throwable("attemptSupportedLanguagesRequest failed for all endpoints")
         }
-    }
 
-    private suspend fun getSupportedLanguagesWithFallback3(): LanguagesEntity {
-        return ktorHttpClient.get(fallback3 + "languages/?:(source|target)")
+        return try {
+            ktorHttpClient.get(endpointList[endpointIndex] + "languages/?:(source|target)")
+        } catch (e: Exception) {
+            attemptSupportedLanguagesRequest(
+                endpointIndex = endpointIndex + 1,
+                exception = e
+            )
+        }
     }
 }

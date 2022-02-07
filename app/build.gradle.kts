@@ -35,14 +35,7 @@ android {
                 isOptimizeCode = true
             }
         }
-        debug {
-//            postprocessing {
-//                isRemoveUnusedCode = true
-//                isRemoveUnusedResources = true
-//                isObfuscate = false
-//                isOptimizeCode = true
-//            }
-        }
+        debug { }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
