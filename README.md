@@ -10,6 +10,9 @@ https://github.com/TheDavidDelta/lingva-translate
 To try ou the web client:
 https://lingva.ml
 
+See the upcoming changes on the public roadmap:
+https://github.com/users/yaxarat/projects/1
+
 ## Supports Multiple Themes, Including Matrial You
 Lentil Dark | Lentil Light
 :-------------------------:|:-------------------------:
