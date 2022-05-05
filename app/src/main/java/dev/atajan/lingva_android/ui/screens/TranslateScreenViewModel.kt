@@ -119,6 +119,14 @@ class TranslateScreenViewModel @Inject constructor(
         clipboardManager.setPrimaryClip(clipData)
     }
 
+    fun trySwapLanguages() {
+        if (sourceLanguage.value != LanguageEntity("auto", "Detect")) {
+            val currentSourceLanguageValue = sourceLanguage.value
+            sourceLanguage.value = targetLanguage.value
+            targetLanguage.value = currentSourceLanguageValue
+        }
+    }
+
     fun toggleAppTheme(newTheme: ThemingOptions) {
         viewModelScope.launch {
             application.applicationContext.dataStore.edit { preferences ->

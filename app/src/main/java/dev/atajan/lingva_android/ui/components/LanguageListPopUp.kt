@@ -52,7 +52,7 @@ fun LanguageListPopUp(
                             ) {
                                 Text(
                                     text = languageEntity.name,
-                                    style = MaterialTheme.typography.labelLarge,
+                                    style = MaterialTheme.typography.titleMedium,
                                     color = MaterialTheme.colorScheme.onBackground,
                                     modifier = Modifier
                                         .padding(horizontal = 16.dp)
