@@ -2,20 +2,20 @@ package dev.atajan.lingva_android.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material.icons.rounded.SwapHoriz
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -34,106 +34,99 @@ fun LanguageSelectionBar(
     sourceLanguage: MutableState<LanguageEntity>,
     targetLanguage: MutableState<LanguageEntity>,
     toggleErrorDialogState: (Boolean) -> Unit,
-    toggleTheme: () -> Unit,
+    onSwapLanguageTap: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val sourceLanguagesPopUpShown = remember { mutableStateOf(false) }
     val targetLanguagesPopUpShown = remember { mutableStateOf(false) }
 
-    Row(modifier = modifier.height(40.dp)) {
-        Box(modifier = Modifier
-            .fillMaxWidth(0.9f)
-            .fillMaxHeight()) {
-            Surface(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clickable {
-                        if (supportedLanguages.value.isNotEmpty()) {
-                            targetLanguagesPopUpShown.value = true
-                        } else {
-                            toggleErrorDialogState(true)
-                        }
-                    },
-                shape = RoundedCornerShape(20.dp),
-                color = MaterialTheme.colorScheme.secondary
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        text = targetLanguage.value.name,
-                        style = MaterialTheme.typography.labelLarge,
-                        textAlign = TextAlign.Center,
-                        softWrap = false,
-                        overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colorScheme.onSecondary,
-                        modifier = Modifier
-                            .fillMaxWidth(0.5f)
-                            .padding(horizontal = 8.dp)
-                    )
-                }
-            }
-
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth(0.5f)
-                    .fillMaxHeight()
-                    .clickable {
-                        if (supportedLanguages.value.isNotEmpty()) {
-                            sourceLanguagesPopUpShown.value = true
-                        } else {
-                            toggleErrorDialogState(true)
-                        }
-                    },
-                shape = RoundedCornerShape(20.dp),
-                color = MaterialTheme.colorScheme.primary
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = sourceLanguage.value.name,
-                        style = MaterialTheme.typography.labelLarge,
-                        textAlign = TextAlign.Center,
-                        softWrap = false,
-                        overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp)
-                    )
-                }
-            }
-
-            LanguageListPopUp(
-                openDialog = sourceLanguagesPopUpShown,
-                languageList = supportedLanguages.value
-            ) { selectedLanguage: LanguageEntity ->
-                sourceLanguage.value = selectedLanguage
-            }
-
-            // Drop the first language, "Detect", since it won't make sense for target language
-            LanguageListPopUp(
-                openDialog = targetLanguagesPopUpShown,
-                languageList = supportedLanguages.value.drop(1)
-            ) { selectedLanguage: LanguageEntity ->
-                targetLanguage.value = selectedLanguage
+    Row(
+        modifier = modifier.height(50.dp).fillMaxSize(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Surface(
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(130.dp)
+                .clickable {
+                    if (supportedLanguages.value.isNotEmpty()) {
+                        sourceLanguagesPopUpShown.value = true
+                    } else {
+                        toggleErrorDialogState(true)
+                    }
+                },
+            shape = RoundedCornerShape(20.dp),
+            color = MaterialTheme.colorScheme.secondary
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = sourceLanguage.value.name,
+                    style = MaterialTheme.typography.labelLarge,
+                    textAlign = TextAlign.Center,
+                    softWrap = false,
+                    overflow = TextOverflow.Ellipsis,
+                    color = MaterialTheme.colorScheme.onSecondary,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp)
+                )
             }
         }
 
         IconButton(
-            onClick = toggleTheme,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp)
+            onClick = onSwapLanguageTap,
+            modifier = Modifier.fillMaxHeight().width(60.dp)
         ) {
             Icon(
-                imageVector = Icons.Rounded.Settings,
+                imageVector = Icons.Rounded.SwapHoriz,
                 contentDescription = "Toggle app theme.",
                 tint = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.fillMaxSize()
             )
         }
+
+        Surface(
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(130.dp)
+                .clickable {
+                    if (supportedLanguages.value.isNotEmpty()) {
+                        targetLanguagesPopUpShown.value = true
+                    } else {
+                        toggleErrorDialogState(true)
+                    }
+                },
+            shape = RoundedCornerShape(20.dp),
+            color = MaterialTheme.colorScheme.secondary
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = targetLanguage.value.name,
+                    style = MaterialTheme.typography.labelLarge,
+                    textAlign = TextAlign.Center,
+                    softWrap = false,
+                    overflow = TextOverflow.Ellipsis,
+                    color = MaterialTheme.colorScheme.onSecondary,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp)
+                )
+            }
+        }
+    }
+
+    LanguageListPopUp(
+        openDialog = sourceLanguagesPopUpShown,
+        languageList = supportedLanguages.value
+    ) { selectedLanguage: LanguageEntity ->
+        sourceLanguage.value = selectedLanguage
+    }
+
+    // Drop the first language, "Detect", since it won't make sense for target language
+    LanguageListPopUp(
+        openDialog = targetLanguagesPopUpShown,
+        languageList = supportedLanguages.value.drop(1)
+    ) { selectedLanguage: LanguageEntity ->
+        targetLanguage.value = selectedLanguage
     }
 }

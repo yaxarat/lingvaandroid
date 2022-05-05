@@ -5,10 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -24,7 +24,6 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ContentCopy
-import androidx.compose.material.icons.rounded.CopyAll
 import androidx.compose.material.icons.rounded.Translate
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.Icon
@@ -32,17 +31,19 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.currentCompositionLocalContext
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import dev.atajan.lingva_android.api.entities.LanguageEntity
 import dev.atajan.lingva_android.ui.components.LanguageSelectionBar
 import dev.atajan.lingva_android.ui.components.ErrorNotificationDialog
 import dev.atajan.lingva_android.ui.components.SettingsBottomSheet
+import dev.atajan.lingva_android.ui.components.TitleBar
 import dev.atajan.lingva_android.ui.theme.ThemingOptions
 import dev.atajan.lingva_android.ui.theme.mediumRoundedCornerShape
 import kotlinx.coroutines.launch
@@ -66,15 +67,9 @@ fun TranslationScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        LanguageSelectionBar(
-            modifier = Modifier.padding(all = 16.dp),
-            supportedLanguages = viewModel.supportedLanguages,
-            sourceLanguage = viewModel.sourceLanguage,
-            targetLanguage = viewModel.targetLanguage,
-            toggleErrorDialogState = {
-                viewModel.errorDialogState.value = it
-            },
-            toggleTheme = {
+        TitleBar(
+            title = "Lentil Translate",
+            onEndIconTap = {
                 scope.launch {
                     if (modalBottomSheetState.isVisible) {
                         modalBottomSheetState.hide()
@@ -82,7 +77,8 @@ fun TranslationScreen(
                         modalBottomSheetState.show()
                     }
                 }
-            }
+            },
+            modifier = Modifier.padding(all = 16.dp)
         )
 
         Box(
@@ -103,7 +99,7 @@ fun TranslationScreen(
                         viewModel.translate()
                     }
                 ),
-                textStyle = MaterialTheme.typography.bodyLarge,
+                textStyle = MaterialTheme.typography.titleMedium,
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = MaterialTheme.colorScheme.primary.copy(alpha = ContentAlpha.high),
                     unfocusedBorderColor = MaterialTheme.colorScheme.primary.copy(alpha = ContentAlpha.disabled),
@@ -144,7 +140,8 @@ fun TranslationScreen(
         if (viewModel.translatedText.value.isNotEmpty()) {
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.7f)
                     .padding(all = 16.dp)
             ) {
                 Card(
@@ -161,7 +158,7 @@ fun TranslationScreen(
                         Text(
                             viewModel.translatedText.value,
                             color = MaterialTheme.colorScheme.onBackground,
-                            style = MaterialTheme.typography.bodyLarge,
+                            style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier
                                 .padding(16.dp)
                                 .verticalScroll(scrollState)
@@ -190,6 +187,17 @@ fun TranslationScreen(
                 }
             }
         }
+
+        LanguageSelectionBar(
+            modifier = Modifier.padding(all = 16.dp),
+            supportedLanguages = viewModel.supportedLanguages,
+            sourceLanguage = viewModel.sourceLanguage,
+            targetLanguage = viewModel.targetLanguage,
+            toggleErrorDialogState = {
+                viewModel.errorDialogState.value = it
+            },
+            onSwapLanguageTap = viewModel::trySwapLanguages
+        )
     }
 
     SettingsBottomSheet(
