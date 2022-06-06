@@ -4,9 +4,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.preferences.core.edit
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.michaelbull.result.fold
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,13 +14,18 @@ import dev.atajan.lingva_android.datastore.APP_THEME
 import dev.atajan.lingva_android.datastore.DEFAULT_SOURCE_LANGUAGE
 import dev.atajan.lingva_android.datastore.DEFAULT_TARGET_LANGUAGE
 import dev.atajan.lingva_android.datastore.dataStore
+import dev.atajan.lingva_android.mvi.MVIViewModel
+import dev.atajan.lingva_android.mvi.MiddleWare
+import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention
+import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.SideEffect
+import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.State
 import dev.atajan.lingva_android.ui.theme.ThemingOptions
 import dev.atajan.lingva_android.usecases.GetSupportedLanguagesUseCase
 import dev.atajan.lingva_android.usecases.GetTranslationUseCase
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -32,99 +35,144 @@ import javax.inject.Inject
 class TranslateScreenViewModel @Inject constructor(
     private val application: MainApplication,
     private val getSupportedLanguages: GetSupportedLanguagesUseCase,
-    private val translate: GetTranslationUseCase
-) : ViewModel() {
+    private val translate: GetTranslationUseCase,
+    applicationScope: CoroutineScope
+) : MVIViewModel<State, Intention, SideEffect>(
+    scope = applicationScope,
+    initialState = State()
+) {
 
-    val supportedLanguages = mutableStateOf(emptyList<LanguageEntity>())
-    val translatedText = mutableStateOf("")
-    val sourceLanguage = mutableStateOf(LanguageEntity("auto", "Detect"))
-    val targetLanguage = mutableStateOf(LanguageEntity("es", "Spanish"))
-    val textToTranslate = mutableStateOf("")
-    val errorDialogState = mutableStateOf(false)
+    override fun reduce(
+        currentState: State,
+        intention: Intention,
+        middleWares: List<MiddleWare<State, Intention>>
+    ): State {
+        Log.d("yaxar - state", currentState.toString())
+        Log.d("yaxar - intention", intention.toString())
 
-    var defaultSourceLanguage = mutableStateOf("")
-        private set
+        return when (intention) {
+            Intention.FetchSupportedLanguages -> {
+                fetchSupportedLanguages()
+                currentState
+            }
+            is Intention.ShowErrorDialog -> currentState.copy(errorDialogState = intention.show)
+            is Intention.SupportedLanguagesReceived -> {
+                send(Intention.SetDefaultLanguages)
+                currentState.copy(supportedLanguages = intention.languages)
+            }
+            Intention.SetDefaultLanguages -> {
+                val defaultSourceLanguage = getDefaultSourceLanguageIfProvided(currentState.supportedLanguages)
+                val defaultTargetLanguage = getDefaultTargetLanguageIfProvided(currentState.supportedLanguages)
 
-    var defaultTargetLanguage = mutableStateOf("")
-        private set
+                currentState.copy(
+                    sourceLanguage = defaultSourceLanguage ?: currentState.sourceLanguage,
+                    defaultSourceLanguage = defaultSourceLanguage?.name ?: currentState.defaultSourceLanguage,
+                    targetLanguage = defaultTargetLanguage ?: currentState.targetLanguage,
+                    defaultTargetLanguage = defaultTargetLanguage?.name ?: currentState.defaultTargetLanguage
+                )
+            }
+            is Intention.Translate -> {
+                requestTranslation(
+                    sourceLanguageCode = currentState.sourceLanguage.code,
+                    targetLanguageCode = currentState.targetLanguage.code,
+                    textToTranslate = currentState.textToTranslate
+                )
+                currentState
+            }
+            Intention.TranslationFailure -> {
+                // TODO: should probably show error
+                currentState
+            }
+            is Intention.TranslationSuccess -> currentState.copy(translatedText = intention.result)
+            Intention.CopyTextToClipboard -> {
+                copyTextToClipboard(currentState.translatedText)
+                currentState
+            }
+            Intention.TrySwapLanguages -> {
+                return if (currentState.sourceLanguage != LanguageEntity("auto", "Detect")) {
+                    currentState.copy(
+                        sourceLanguage = currentState.targetLanguage,
+                        targetLanguage = currentState.sourceLanguage
+                    )
+                } else {
+                    currentState
+                }
+            }
+            is Intention.OnTextToTranslateChange -> currentState.copy(textToTranslate = intention.newValue)
+            is Intention.SetNewSourceLanguage -> currentState.copy(sourceLanguage = intention.language)
+            is Intention.SetNewTargetLanguage -> currentState.copy(targetLanguage = intention.language)
+        }
+    }
 
-    init {
+    private fun fetchSupportedLanguages() {
         viewModelScope.launch {
             getSupportedLanguages().fold(
                 success = {
-                    Log.d("${this::class}", "${it.languages}")
-                    supportedLanguages.value = it.languages
+                    send(Intention.SupportedLanguagesReceived(it.languages))
                 },
                 failure = {
-                    Log.d("${this::class}", "getting langs failed with $it")
-                    errorDialogState.value = true
-                    return@launch // No point in going further since supportedLanguages will be empty
+                    send(Intention.ShowErrorDialog(true))
                 }
             )
-
-            getDefaultSourceLanguageOrNull()
-                .filterNotNull()
-                .distinctUntilChanged()
-                .onEach { defaultSourceLanguageName ->
-                    supportedLanguages.value
-                        .find { languageEntity ->
-                            languageEntity.name == defaultSourceLanguageName
-                        }
-                        ?.let {
-                            sourceLanguage.value = it
-                            defaultSourceLanguage.value = it.name
-                        }
-                }
-                .launchIn(this)
-
-            getDefaultTargetLanguageOrNull()
-                .filterNotNull()
-                .distinctUntilChanged()
-                .onEach { defaultTargetLanguageName ->
-                    supportedLanguages.value
-                        .find { languageEntity ->
-                            languageEntity.name == defaultTargetLanguageName
-                        }
-                        ?.let {
-                            targetLanguage.value = it
-                            defaultTargetLanguage.value = it.name
-                        }
-                }
-                .launchIn(this)
         }
     }
 
-    fun translate() {
+    private fun getDefaultSourceLanguageIfProvided(supportedLanguages: List<LanguageEntity>): LanguageEntity? {
+        var defaultSourceLanguage: LanguageEntity? = null
+
+        getDefaultSourceLanguageOrNull()
+            .filterNotNull()
+            .distinctUntilChanged()
+            .onEach { defaultSourceLanguageName ->
+                supportedLanguages
+                    .find { it.name == defaultSourceLanguageName }
+                    ?.let { defaultSourceLanguage = it }
+            }
+
+        return defaultSourceLanguage
+    }
+
+    private fun getDefaultTargetLanguageIfProvided(supportedLanguages: List<LanguageEntity>): LanguageEntity? {
+        var defaultTargetLanguage: LanguageEntity? = null
+
+        getDefaultTargetLanguageOrNull()
+            .filterNotNull()
+            .distinctUntilChanged()
+            .onEach { defaultTargetLanguageName ->
+                supportedLanguages
+                    .find { it.name == defaultTargetLanguageName }
+                    ?.let { defaultTargetLanguage = it }
+            }
+
+        return defaultTargetLanguage
+    }
+
+    private fun requestTranslation(
+        sourceLanguageCode: String,
+        targetLanguageCode: String,
+        textToTranslate: String
+    ) {
         viewModelScope.launch {
             translate(
-                source = sourceLanguage.value.code,
-                target = targetLanguage.value.code,
-                query = textToTranslate.value
+                source = sourceLanguageCode,
+                target = targetLanguageCode,
+                query = textToTranslate
             ).fold(
                 success = {
-                    translatedText.value = it.translation
+                    send(Intention.TranslationSuccess(it.translation))
                 },
                 failure = {
-                    Log.d("${this::class}", "translation failed with $it")
+                    send(Intention.TranslationFailure)
                 }
             )
         }
     }
 
-    fun copyTextToClipboard(context: Context) {
-
-        val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clipData = ClipData.newPlainText("Translation", translatedText.value)
+    private fun copyTextToClipboard(translatedText: String) {
+        val clipboardManager = application.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipData = ClipData.newPlainText("Translation", translatedText)
 
         clipboardManager.setPrimaryClip(clipData)
-    }
-
-    fun trySwapLanguages() {
-        if (sourceLanguage.value != LanguageEntity("auto", "Detect")) {
-            val currentSourceLanguageValue = sourceLanguage.value
-            sourceLanguage.value = targetLanguage.value
-            targetLanguage.value = currentSourceLanguageValue
-        }
     }
 
     fun toggleAppTheme(newTheme: ThemingOptions) {
@@ -162,4 +210,32 @@ class TranslateScreenViewModel @Inject constructor(
             preferences[DEFAULT_TARGET_LANGUAGE]
         }
     }
+
+    data class State(
+        val supportedLanguages: List<LanguageEntity> = emptyList(),
+        val translatedText: String = "",
+        val sourceLanguage: LanguageEntity = LanguageEntity("auto", "Detect"),
+        val targetLanguage: LanguageEntity = LanguageEntity("es", "Spanish"),
+        val textToTranslate: String = "",
+        val errorDialogState: Boolean = false,
+        val defaultSourceLanguage: String = "",
+        val defaultTargetLanguage: String = "",
+    )
+
+    sealed class Intention {
+        object FetchSupportedLanguages : Intention()
+        object SetDefaultLanguages : Intention()
+        class SupportedLanguagesReceived(val languages: List<LanguageEntity>) : Intention()
+        class SetNewSourceLanguage(val language: LanguageEntity) : Intention()
+        class SetNewTargetLanguage(val language: LanguageEntity) : Intention()
+        class ShowErrorDialog(val show: Boolean) : Intention()
+        object Translate : Intention()
+        class TranslationSuccess(val result: String) : Intention()
+        object TranslationFailure : Intention()
+        object CopyTextToClipboard : Intention()
+        object TrySwapLanguages : Intention()
+        class OnTextToTranslateChange(val newValue: String) : Intention()
+    }
+
+    sealed class SideEffect
 }
