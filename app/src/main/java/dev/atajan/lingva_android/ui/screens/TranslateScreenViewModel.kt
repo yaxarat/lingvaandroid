@@ -47,8 +47,6 @@ class TranslateScreenViewModel @Inject constructor(
         intention: Intention,
         middleWares: List<MiddleWare<State, Intention>>
     ): State {
-        Log.d("yaxar - state", currentState.toString())
-        Log.d("yaxar - intention", intention.toString())
 
         return when (intention) {
             Intention.FetchSupportedLanguages -> {
@@ -223,18 +221,18 @@ class TranslateScreenViewModel @Inject constructor(
     )
 
     sealed class Intention {
-        object FetchSupportedLanguages : Intention()
-        object SetDefaultLanguages : Intention()
-        class SupportedLanguagesReceived(val languages: List<LanguageEntity>) : Intention()
+        class OnTextToTranslateChange(val newValue: String) : Intention()
         class SetNewSourceLanguage(val language: LanguageEntity) : Intention()
         class SetNewTargetLanguage(val language: LanguageEntity) : Intention()
         class ShowErrorDialog(val show: Boolean) : Intention()
-        object Translate : Intention()
+        class SupportedLanguagesReceived(val languages: List<LanguageEntity>) : Intention()
         class TranslationSuccess(val result: String) : Intention()
-        object TranslationFailure : Intention()
         object CopyTextToClipboard : Intention()
+        object FetchSupportedLanguages : Intention()
+        object SetDefaultLanguages : Intention()
+        object Translate : Intention()
+        object TranslationFailure : Intention()
         object TrySwapLanguages : Intention()
-        class OnTextToTranslateChange(val newValue: String) : Intention()
     }
 
     sealed class SideEffect
