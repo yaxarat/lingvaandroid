@@ -19,11 +19,11 @@ import dev.atajan.lingva_android.api.entities.LanguageEntity
 
 @Composable
 fun SelectDefaultLanguagesColumn(
-    defaultSourceLanguage: MutableState<String>,
-    defaultTargetLanguage: MutableState<String>,
+    defaultSourceLanguage: String,
+    defaultTargetLanguage: String,
     setDefaultSourceLanguage: (LanguageEntity) -> Unit,
     setDefaultTargetLanguage: (LanguageEntity) -> Unit,
-    supportedLanguages: MutableState<List<LanguageEntity>>,
+    supportedLanguages: List<LanguageEntity>,
     toggleErrorDialogState: (Boolean) -> Unit,
 ) {
     val sourceLanguagesPopUpShown = remember { mutableStateOf(false) }
@@ -57,13 +57,13 @@ fun SelectDefaultLanguagesColumn(
             )
 
             Text(
-                text = defaultSourceLanguage.value.ifEmpty { "Tap here to select" },
+                text = defaultSourceLanguage.ifEmpty { "Tap here to select" },
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.labelLarge,
                 modifier = Modifier
                     .padding(16.dp)
                     .clickable {
-                        if (supportedLanguages.value.isNotEmpty()) {
+                        if (supportedLanguages.isNotEmpty()) {
                             sourceLanguagesPopUpShown.value = true
                         } else {
                             toggleErrorDialogState(true)
@@ -89,7 +89,7 @@ fun SelectDefaultLanguagesColumn(
             )
 
             Text(
-                text = defaultTargetLanguage.value.ifEmpty { "Tap here to select" },
+                text = defaultTargetLanguage.ifEmpty { "Tap here to select" },
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.labelLarge,
                 modifier = Modifier
@@ -100,7 +100,7 @@ fun SelectDefaultLanguagesColumn(
                         bottom = 32.dp,
                     )
                     .clickable {
-                        if (supportedLanguages.value.isNotEmpty()) {
+                        if (supportedLanguages.isNotEmpty()) {
                             targetLanguagesPopUpShown.value = true
                         } else {
                             toggleErrorDialogState(true)
@@ -112,7 +112,7 @@ fun SelectDefaultLanguagesColumn(
 
     LanguageListPopUp(
         openDialog = sourceLanguagesPopUpShown,
-        languageList = supportedLanguages.value,
+        languageList = supportedLanguages,
     ) { selectedLanguage: LanguageEntity ->
         setDefaultSourceLanguage(selectedLanguage)
     }
@@ -120,7 +120,7 @@ fun SelectDefaultLanguagesColumn(
     // Drop the first language, "Detect", since it won't make sense for target language
     LanguageListPopUp(
         openDialog = targetLanguagesPopUpShown,
-        languageList = supportedLanguages.value.drop(1),
+        languageList = supportedLanguages.drop(1),
     ) { selectedLanguage: LanguageEntity ->
         setDefaultTargetLanguage(selectedLanguage)
     }

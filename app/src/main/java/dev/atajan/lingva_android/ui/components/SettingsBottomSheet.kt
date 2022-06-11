@@ -21,9 +21,9 @@ fun SettingsBottomSheet(
     getCurrentTheme: () -> ThemingOptions,
     setDefaultSourceLanguage: (LanguageEntity) -> Unit,
     setDefaultTargetLanguage: (LanguageEntity) -> Unit,
-    supportedLanguages: MutableState<List<LanguageEntity>>,
-    defaultSourceLanguage: MutableState<String>,
-    defaultTargetLanguage: MutableState<String>,
+    supportedLanguages: List<LanguageEntity>,
+    defaultSourceLanguage: String,
+    defaultTargetLanguage: String,
     toggleErrorDialogState: (Boolean) -> Unit,
 ) {
 

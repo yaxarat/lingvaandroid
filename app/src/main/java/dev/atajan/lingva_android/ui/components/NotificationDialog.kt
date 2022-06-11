@@ -11,9 +11,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ErrorNotificationDialog(shouldShowDialog: MutableState<Boolean>) {
+fun ErrorNotificationDialog(
+    shouldShowDialog: Boolean,
+    onDismissRequest: () -> Unit
+) {
 
-    if (shouldShowDialog.value) {
+    if (shouldShowDialog) {
         AlertDialog(
             backgroundColor = MaterialTheme.colorScheme.secondary,
             contentColor = MaterialTheme.colorScheme.onSecondary,
@@ -21,10 +24,13 @@ fun ErrorNotificationDialog(shouldShowDialog: MutableState<Boolean>) {
                 // Dismiss the dialog when the user clicks outside the dialog or on the back
                 // button. If you want to disable that functionality, simply use an empty
                 // onCloseRequest.
-                shouldShowDialog.value = false
+                onDismissRequest()
             },
             title = {
-                Text(text = "Uh oh :(", style = MaterialTheme.typography.headlineLarge)
+                Text(
+                    text = "Uh oh :(",
+                    style = MaterialTheme.typography.headlineLarge
+                )
             },
             text = {
                 Text(
@@ -37,7 +43,7 @@ fun ErrorNotificationDialog(shouldShowDialog: MutableState<Boolean>) {
             dismissButton = {
                 TextButton(
                     onClick = {
-                        shouldShowDialog.value = false
+                        onDismissRequest()
                     }
                 ) {
                     Text(
@@ -54,6 +60,8 @@ fun ErrorNotificationDialog(shouldShowDialog: MutableState<Boolean>) {
 @Preview
 @Composable
 fun PreviewNotificationDialog() {
-    val state = remember{ mutableStateOf(true) }
-    ErrorNotificationDialog(state)
+    ErrorNotificationDialog(
+        shouldShowDialog = true,
+        onDismissRequest = {}
+    )
 }

@@ -18,7 +18,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.SwapHoriz
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -30,11 +29,13 @@ import dev.atajan.lingva_android.api.entities.LanguageEntity
 
 @Composable
 fun LanguageSelectionBar(
-    supportedLanguages: MutableState<List<LanguageEntity>>,
-    sourceLanguage: MutableState<LanguageEntity>,
-    targetLanguage: MutableState<LanguageEntity>,
+    supportedLanguages: List<LanguageEntity>,
+    sourceLanguage: LanguageEntity,
+    targetLanguage: LanguageEntity,
     toggleErrorDialogState: (Boolean) -> Unit,
     onSwapLanguageTap: () -> Unit,
+    onNewSourceLanguageSelected: (LanguageEntity) -> Unit,
+    onNewTargetLanguageSelected: (LanguageEntity) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val sourceLanguagesPopUpShown = remember { mutableStateOf(false) }
@@ -49,7 +50,7 @@ fun LanguageSelectionBar(
                 .fillMaxHeight()
                 .width(130.dp)
                 .clickable {
-                    if (supportedLanguages.value.isNotEmpty()) {
+                    if (supportedLanguages.isNotEmpty()) {
                         sourceLanguagesPopUpShown.value = true
                     } else {
                         toggleErrorDialogState(true)
@@ -60,7 +61,7 @@ fun LanguageSelectionBar(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = sourceLanguage.value.name,
+                    text = sourceLanguage.name,
                     style = MaterialTheme.typography.labelLarge,
                     textAlign = TextAlign.Center,
                     softWrap = false,
@@ -90,7 +91,7 @@ fun LanguageSelectionBar(
                 .fillMaxHeight()
                 .width(130.dp)
                 .clickable {
-                    if (supportedLanguages.value.isNotEmpty()) {
+                    if (supportedLanguages.isNotEmpty()) {
                         targetLanguagesPopUpShown.value = true
                     } else {
                         toggleErrorDialogState(true)
@@ -101,7 +102,7 @@ fun LanguageSelectionBar(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = targetLanguage.value.name,
+                    text = targetLanguage.name,
                     style = MaterialTheme.typography.labelLarge,
                     textAlign = TextAlign.Center,
                     softWrap = false,
@@ -117,16 +118,12 @@ fun LanguageSelectionBar(
 
     LanguageListPopUp(
         openDialog = sourceLanguagesPopUpShown,
-        languageList = supportedLanguages.value
-    ) { selectedLanguage: LanguageEntity ->
-        sourceLanguage.value = selectedLanguage
-    }
+        languageList = supportedLanguages
+    ) { onNewSourceLanguageSelected(it) }
 
     // Drop the first language, "Detect", since it won't make sense for target language
     LanguageListPopUp(
         openDialog = targetLanguagesPopUpShown,
-        languageList = supportedLanguages.value.drop(1)
-    ) { selectedLanguage: LanguageEntity ->
-        targetLanguage.value = selectedLanguage
-    }
+        languageList = supportedLanguages.drop(1)
+    ) { onNewTargetLanguageSelected(it) }
 }
