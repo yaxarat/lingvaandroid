@@ -27,7 +27,10 @@ fun ErrorNotificationDialog(
                 onDismissRequest()
             },
             title = {
-                Text(text = "Uh oh :(", style = MaterialTheme.typography.headlineLarge)
+                Text(
+                    text = "Uh oh :(",
+                    style = MaterialTheme.typography.headlineLarge
+                )
             },
             text = {
                 Text(
