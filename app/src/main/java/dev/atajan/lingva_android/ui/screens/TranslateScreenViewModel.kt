@@ -47,7 +47,6 @@ class TranslateScreenViewModel @Inject constructor(
         intention: Intention,
         middleWares: List<MiddleWare<State, Intention>>
     ): State {
-
         return when (intention) {
             Intention.FetchSupportedLanguages -> {
                 fetchSupportedLanguages()
@@ -99,6 +98,7 @@ class TranslateScreenViewModel @Inject constructor(
             is Intention.OnTextToTranslateChange -> currentState.copy(textToTranslate = intention.newValue)
             is Intention.SetNewSourceLanguage -> currentState.copy(sourceLanguage = intention.language)
             is Intention.SetNewTargetLanguage -> currentState.copy(targetLanguage = intention.language)
+            Intention.ClearInputField -> currentState.copy(textToTranslate = "")
         }
     }
 
@@ -233,6 +233,7 @@ class TranslateScreenViewModel @Inject constructor(
         object Translate : Intention()
         object TranslationFailure : Intention()
         object TrySwapLanguages : Intention()
+        object ClearInputField : Intention()
     }
 
     sealed class SideEffect

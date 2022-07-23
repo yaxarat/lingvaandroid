@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,13 +17,13 @@ import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.ContentAlpha
-import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ContentCopy
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Translate
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.Icon
@@ -31,6 +32,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,11 +43,13 @@ import dev.atajan.lingva_android.ui.components.ErrorNotificationDialog
 import dev.atajan.lingva_android.ui.components.LanguageSelectionBar
 import dev.atajan.lingva_android.ui.components.SettingsBottomSheet
 import dev.atajan.lingva_android.ui.components.TitleBar
+import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.ClearInputField
 import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.CopyTextToClipboard
 import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.FetchSupportedLanguages
 import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.OnTextToTranslateChange
 import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.SetNewSourceLanguage
 import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.SetNewTargetLanguage
+import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.ShowErrorDialog
 import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.Translate
 import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.TrySwapLanguages
 import dev.atajan.lingva_android.ui.theme.ThemingOptions
@@ -62,8 +66,7 @@ fun TranslationScreen(
     val softwareKeyboardController = LocalSoftwareKeyboardController.current
     val scope = rememberCoroutineScope()
     val modalBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
-
-    val translationScreenState = viewModel.states.collectAsState()
+    val translationScreenState by viewModel.states.collectAsState()
 
     // TODO: move to init?
     viewModel.send(FetchSupportedLanguages)
@@ -94,7 +97,7 @@ fun TranslationScreen(
                 .padding(all = 16.dp)
         ) {
             OutlinedTextField(
-                value = translationScreenState.value.textToTranslate,
+                value = translationScreenState.textToTranslate,
                 onValueChange = { newValue: String ->
                     viewModel.send(OnTextToTranslateChange(newValue))
                 },
@@ -123,29 +126,46 @@ fun TranslationScreen(
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.Bottom
             ) {
-                IconButton(
-                    onClick = {
-                        softwareKeyboardController?.hide()
-                        viewModel.send(Translate)
-                    },
-                    modifier = Modifier
-                        .padding(bottom = 16.dp)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Icon(
-                        imageVector = Icons.Rounded.Translate,
-                        contentDescription = "Translate",
-                        tint = MaterialTheme.colorScheme.primary,
-                    )
+                    if (translationScreenState.textToTranslate.isNotEmpty()) {
+                        IconButton(
+                            onClick = {
+                                softwareKeyboardController?.hide()
+                                viewModel.send(ClearInputField)
+                            },
+                            modifier = Modifier
+                                .padding(bottom = 16.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.Delete,
+                                contentDescription = "Clear input text",
+                                tint = MaterialTheme.colorScheme.primary,
+                            )
+                        }
+
+                        IconButton(
+                            onClick = {
+                                softwareKeyboardController?.hide()
+                                viewModel.send(Translate)
+                            },
+                            modifier = Modifier
+                                .padding(bottom = 16.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.Translate,
+                                contentDescription = "Translate",
+                                tint = MaterialTheme.colorScheme.primary,
+                            )
+                        }
+                    }
                 }
             }
         }
 
-        Divider(
-            color = MaterialTheme.colorScheme.secondary,
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
-
-        if (translationScreenState.value.translatedText.isNotEmpty()) {
+        if (translationScreenState.translatedText.isNotEmpty()) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -164,7 +184,7 @@ fun TranslationScreen(
                 ) {
                     SelectionContainer {
                         Text(
-                            translationScreenState.value.translatedText,
+                            translationScreenState.translatedText,
                             color = MaterialTheme.colorScheme.onBackground,
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier
@@ -198,11 +218,11 @@ fun TranslationScreen(
 
         LanguageSelectionBar(
             modifier = Modifier.padding(all = 16.dp),
-            supportedLanguages = translationScreenState.value.supportedLanguages,
-            sourceLanguage = translationScreenState.value.sourceLanguage,
-            targetLanguage = translationScreenState.value.targetLanguage,
+            supportedLanguages = translationScreenState.supportedLanguages,
+            sourceLanguage = translationScreenState.sourceLanguage,
+            targetLanguage = translationScreenState.targetLanguage,
             toggleErrorDialogState = {
-                viewModel.send(TranslateScreenViewModel.Intention.ShowErrorDialog(it))
+                viewModel.send(ShowErrorDialog(it))
             },
             onSwapLanguageTap = { viewModel.send(TrySwapLanguages) },
             onNewSourceLanguageSelected = { viewModel.send(SetNewSourceLanguage(it)) },
@@ -216,16 +236,16 @@ fun TranslationScreen(
         getCurrentTheme = getCurrentTheme,
         setDefaultSourceLanguage = viewModel::setDefaultSourceLanguage,
         setDefaultTargetLanguage = viewModel::setDefaultTargetLanguage,
-        supportedLanguages = translationScreenState.value.supportedLanguages,
-        defaultSourceLanguage = translationScreenState.value.defaultSourceLanguage,
-        defaultTargetLanguage = translationScreenState.value.defaultTargetLanguage,
+        supportedLanguages = translationScreenState.supportedLanguages,
+        defaultSourceLanguage = translationScreenState.defaultSourceLanguage,
+        defaultTargetLanguage = translationScreenState.defaultTargetLanguage,
         toggleErrorDialogState = {
-            viewModel.send(TranslateScreenViewModel.Intention.ShowErrorDialog(it))
+            viewModel.send(ShowErrorDialog(it))
         }
     )
 
-    ErrorNotificationDialog(translationScreenState.value.errorDialogState
+    ErrorNotificationDialog(translationScreenState.errorDialogState
     ) {
-        viewModel.send(TranslateScreenViewModel.Intention.ShowErrorDialog(false))
+        viewModel.send(ShowErrorDialog(false))
     }
 }
