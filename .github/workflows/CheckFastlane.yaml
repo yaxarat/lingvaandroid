@@ -1,4 +1,4 @@
-name: Check fastlane
+name: CheckFastlane
 
 on:
   push:
