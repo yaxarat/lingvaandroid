@@ -18,7 +18,7 @@ https://github.com/users/yaxarat/projects/1
 ## Supports Multiple Themes, Including Matrial You
 Lentil Dark | Lentil Light
 :-------------------------:|:-------------------------:
-![](/Users/yasharatajan/Developer/Personal/lingvaandroid/fastlane/metadata/android/en-US/images/phoneScreenshots/1.png)  |  ![](/Users/yasharatajan/Developer/Personal/lingvaandroid/fastlane/metadata/android/en-US/images/phoneScreenshots/2.png)
+![](./fastlane/metadata/android/en-US/images/phoneScreenshots/1.png)  |  ![](./fastlane/metadata/android/en-US/images/phoneScreenshots/2.png)
 
 ### Material You
-![](/Users/yasharatajan/Developer/Personal/lingvaandroid/fastlane/metadata/android/en-US/images/phoneScreenshots/3.png)
+![](./fastlane/metadata/android/en-US/images/phoneScreenshots/3.png)
