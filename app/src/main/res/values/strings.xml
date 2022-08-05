@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">Lentil Translate</string>
+    <string name="source_text">Source text</string>
+    <string name="app_theme_setting_title">App Theme</string>
+    <string name="material_you_descriptor">Based on your device wallpaper and theme</string>
+    <string name="error_dialog_body">Something went wrong. Please try again later.</string>
+    <string name="error_dialog_dismiss_button">Okay</string>
+    <string name="default_settings_title">Default settings</string>
+    <string name="default_language_source">Source Language:</string>
+    <string name="default_language_target">Target Language:</string>
+    <string name="tap_to_select">Tap here to select</string>
+    <string name="detect_language">Detect</string>
+
+    <!--  Accessibility strings  -->
+    <string name="swap_icon_ax">Swap source and target languages</string>
+    <string name="setting_icon_ax">Setting</string>
+    <string name="delete_icon_ax">Clear input text</string>
+    <string name="translate_icon_ax">Translate</string>
+    <string name="copy_icon_ax">Copy</string>
 </resources>

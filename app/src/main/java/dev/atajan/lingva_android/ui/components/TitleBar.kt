@@ -14,9 +14,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import dev.atajan.lingva_android.R
 
 @Composable
 fun TitleBar(
@@ -24,6 +26,8 @@ fun TitleBar(
     onEndIconTap: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+
     Row(
         modifier = modifier.height(30.dp).fillMaxSize(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -44,7 +48,7 @@ fun TitleBar(
         ) {
             Icon(
                 imageVector = Icons.Rounded.Settings,
-                contentDescription = "Toggle app theme.",
+                contentDescription = context.getString(R.string.setting_icon_ax),
                 tint = MaterialTheme.colorScheme.onBackground
             )
         }

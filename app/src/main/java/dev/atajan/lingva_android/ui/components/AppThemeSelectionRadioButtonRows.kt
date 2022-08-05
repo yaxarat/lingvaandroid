@@ -17,7 +17,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import dev.atajan.lingva_android.R
 import dev.atajan.lingva_android.ui.theme.ThemingOptions
 import dev.atajan.lingva_android.ui.theme.canUseDynamicColor
 
@@ -26,12 +28,13 @@ fun AppThemeSelectionRadioButtonRows(
     toggleTheme: (ThemingOptions) -> Unit,
     getCurrentTheme: () -> ThemingOptions
 ) {
+    val context = LocalContext.current
     var radioButtonState by remember { mutableStateOf(getCurrentTheme.invoke().name) }
 
     Text(
-        text = "App Theme",
+        text = context.getString(R.string.app_theme_setting_title),
         color = MaterialTheme.colorScheme.primary,
-        style = MaterialTheme.typography.labelLarge,
+        style = MaterialTheme.typography.titleLarge,
         modifier = Modifier.padding(16.dp)
     )
 
@@ -62,7 +65,7 @@ fun AppThemeSelectionRadioButtonRows(
                             )
 
                             Text(
-                                text = option.name.uppercase() + " - Based on your device wallpaper & theme",
+                                text = option.name.uppercase() + " - " + context.getString(R.string.material_you_descriptor),
                                 style = MaterialTheme.typography.labelLarge,
                                 color = MaterialTheme.colorScheme.onBackground
                             )

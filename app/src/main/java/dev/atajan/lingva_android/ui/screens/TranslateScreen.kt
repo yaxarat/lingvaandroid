@@ -36,9 +36,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import dev.atajan.lingva_android.R
 import dev.atajan.lingva_android.ui.components.ErrorNotificationDialog
 import dev.atajan.lingva_android.ui.components.LanguageSelectionBar
 import dev.atajan.lingva_android.ui.components.SettingsBottomSheet
@@ -62,10 +64,14 @@ fun TranslationScreen(
     viewModel: TranslateScreenViewModel,
     getCurrentTheme: () -> ThemingOptions
 ) {
+    val context = LocalContext.current
     val scrollState = rememberScrollState(0)
     val softwareKeyboardController = LocalSoftwareKeyboardController.current
     val scope = rememberCoroutineScope()
-    val modalBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val modalBottomSheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden,
+        confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded }
+    )
     val translationScreenState by viewModel.states.collectAsState()
 
     // TODO: move to init?
@@ -77,7 +83,7 @@ fun TranslationScreen(
             .background(MaterialTheme.colorScheme.background)
     ) {
         TitleBar(
-            title = "Lentil Translate",
+            title = context.getString(R.string.app_name),
             onEndIconTap = {
                 scope.launch {
                     if (modalBottomSheetState.isVisible) {
@@ -101,7 +107,12 @@ fun TranslationScreen(
                 onValueChange = { newValue: String ->
                     viewModel.send(OnTextToTranslateChange(newValue))
                 },
-                label = { Text("Source text", color = MaterialTheme.colorScheme.primary) },
+                label = {
+                    Text(
+                        text = context.getString(R.string.source_text),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                },
                 modifier = Modifier.fillMaxSize(),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(
@@ -141,7 +152,7 @@ fun TranslationScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Rounded.Delete,
-                                contentDescription = "Clear input text",
+                                contentDescription = context.getString(R.string.delete_icon_ax),
                                 tint = MaterialTheme.colorScheme.primary,
                             )
                         }
@@ -156,7 +167,7 @@ fun TranslationScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Rounded.Translate,
-                                contentDescription = "Translate",
+                                contentDescription = context.getString(R.string.translate_icon_ax),
                                 tint = MaterialTheme.colorScheme.primary,
                             )
                         }
@@ -208,7 +219,7 @@ fun TranslationScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.ContentCopy,
-                            contentDescription = "Translate",
+                            contentDescription = context.getString(R.string.copy_icon_ax),
                             tint = MaterialTheme.colorScheme.primary,
                         )
                     }

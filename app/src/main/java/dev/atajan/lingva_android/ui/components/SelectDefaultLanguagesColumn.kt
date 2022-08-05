@@ -9,12 +9,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import dev.atajan.lingva_android.R
 import dev.atajan.lingva_android.api.entities.LanguageEntity
 
 @Composable
@@ -26,6 +27,7 @@ fun SelectDefaultLanguagesColumn(
     supportedLanguages: List<LanguageEntity>,
     toggleErrorDialogState: (Boolean) -> Unit,
 ) {
+    val context = LocalContext.current
     val sourceLanguagesPopUpShown = remember { mutableStateOf(false) }
     val targetLanguagesPopUpShown = remember { mutableStateOf(false) }
 
@@ -34,9 +36,9 @@ fun SelectDefaultLanguagesColumn(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Default Source and Target Languages",
+            text = context.getString(R.string.default_settings_title),
             color = MaterialTheme.colorScheme.primary,
-            style = MaterialTheme.typography.labelLarge,
+            style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(16.dp)
         )
 
@@ -46,7 +48,7 @@ fun SelectDefaultLanguagesColumn(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = "Source Language:",
+                text = context.getString(R.string.default_language_source),
                 color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.labelLarge,
                 modifier = Modifier.padding(
@@ -57,7 +59,7 @@ fun SelectDefaultLanguagesColumn(
             )
 
             Text(
-                text = defaultSourceLanguage.ifEmpty { "Tap here to select" },
+                text = defaultSourceLanguage.ifEmpty { context.getString(R.string.tap_to_select) },
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.labelLarge,
                 modifier = Modifier
@@ -78,7 +80,7 @@ fun SelectDefaultLanguagesColumn(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = "Target Language:",
+                text = context.getString(R.string.default_language_target),
                 color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.labelLarge,
                 modifier = Modifier.padding(
@@ -89,7 +91,7 @@ fun SelectDefaultLanguagesColumn(
             )
 
             Text(
-                text = defaultTargetLanguage.ifEmpty { "Tap here to select" },
+                text = defaultTargetLanguage.ifEmpty { context.getString(R.string.tap_to_select) },
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.labelLarge,
                 modifier = Modifier
