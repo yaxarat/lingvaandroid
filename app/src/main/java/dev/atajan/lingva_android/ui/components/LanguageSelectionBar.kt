@@ -22,9 +22,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import dev.atajan.lingva_android.R
 import dev.atajan.lingva_android.api.entities.LanguageEntity
 
 @Composable
@@ -38,11 +40,14 @@ fun LanguageSelectionBar(
     onNewTargetLanguageSelected: (LanguageEntity) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     val sourceLanguagesPopUpShown = remember { mutableStateOf(false) }
     val targetLanguagesPopUpShown = remember { mutableStateOf(false) }
 
     Row(
-        modifier = modifier.height(50.dp).fillMaxSize(),
+        modifier = modifier
+            .height(50.dp)
+            .fillMaxSize(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Surface(
@@ -61,7 +66,11 @@ fun LanguageSelectionBar(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = sourceLanguage.name,
+                    text = if (sourceLanguage.name == "Detect") {
+                        context.getString(R.string.detect_language)
+                    } else {
+                        sourceLanguage.name
+                    },
                     style = MaterialTheme.typography.labelLarge,
                     textAlign = TextAlign.Center,
                     softWrap = false,
@@ -76,11 +85,13 @@ fun LanguageSelectionBar(
 
         IconButton(
             onClick = onSwapLanguageTap,
-            modifier = Modifier.fillMaxHeight().width(60.dp)
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(60.dp)
         ) {
             Icon(
                 imageVector = Icons.Rounded.SwapHoriz,
-                contentDescription = "Toggle app theme.",
+                contentDescription = context.getString(R.string.swap_icon_ax),
                 tint = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.fillMaxSize()
             )

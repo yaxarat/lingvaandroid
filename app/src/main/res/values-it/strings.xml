@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Lentil Translate</string>
+    <string name="source_text">Testo sorgente</string>
+    <string name="app_theme_setting_title">Tema dell\'app</string>
+    <string name="material_you_descriptor">In base allo sfondo e al tema del tuo dispositivo</string>
+    <string name="error_dialog_body">Qualcosa è andato storto. Per favore riprova più tardi.</string>
+    <string name="error_dialog_dismiss_button">Bene</string>
+    <string name="default_settings_title">Impostazioni predefinite</string>
+    <string name="default_language_source">Linguaggio del codice:</string>
+    <string name="default_language_target">Lingua di destinazione:</string>
+    <string name="tap_to_select">Tocca qui per selezionare</string>
+    <string name="detect_language">Rileva</string>
+
+    <string name="swap_icon_ax">Scambia le lingue di origine e di destinazione</string>
+    <string name="setting_icon_ax">Ambientazione</string>
+    <string name="delete_icon_ax">Cancella il testo di input</string>
+    <string name="translate_icon_ax">Tradurre</string>
+    <string name="copy_icon_ax">copia</string>
+</resources>
