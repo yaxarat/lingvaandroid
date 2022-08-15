@@ -1,5 +1,6 @@
 package dev.atajan.lingva_android.ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -47,11 +48,13 @@ import dev.atajan.lingva_android.ui.components.SettingsBottomSheet
 import dev.atajan.lingva_android.ui.components.TitleBar
 import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.ClearInputField
 import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.CopyTextToClipboard
-import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.FetchSupportedLanguages
+import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.DefaultSourceLanguageSelected
+import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.DefaultTargetLanguageSelected
 import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.OnTextToTranslateChange
 import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.SetNewSourceLanguage
 import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.SetNewTargetLanguage
 import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.ShowErrorDialog
+import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.ToggleAppTheme
 import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.Translate
 import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.TrySwapLanguages
 import dev.atajan.lingva_android.ui.theme.ThemingOptions
@@ -73,9 +76,6 @@ fun TranslationScreen(
         confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded }
     )
     val translationScreenState by viewModel.states.collectAsState()
-
-    // TODO: move to init?
-    viewModel.send(FetchSupportedLanguages)
 
     Column(
         modifier = Modifier
@@ -137,11 +137,11 @@ fun TranslationScreen(
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.Bottom
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    if (translationScreenState.textToTranslate.isNotEmpty()) {
+                AnimatedVisibility(translationScreenState.textToTranslate.isNotEmpty()) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
                         IconButton(
                             onClick = {
                                 softwareKeyboardController?.hide()
@@ -176,7 +176,7 @@ fun TranslationScreen(
             }
         }
 
-        if (translationScreenState.translatedText.isNotEmpty()) {
+        AnimatedVisibility(translationScreenState.translatedText.isNotEmpty()) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -243,10 +243,16 @@ fun TranslationScreen(
 
     SettingsBottomSheet(
         modalBottomSheetState = modalBottomSheetState,
-        toggleTheme = viewModel::toggleAppTheme,
+        toggleTheme = {
+            viewModel.send(ToggleAppTheme(it))
+        },
         getCurrentTheme = getCurrentTheme,
-        setDefaultSourceLanguage = viewModel::setDefaultSourceLanguage,
-        setDefaultTargetLanguage = viewModel::setDefaultTargetLanguage,
+        setDefaultSourceLanguage = {
+            viewModel.send(DefaultSourceLanguageSelected(it))
+        },
+        setDefaultTargetLanguage = {
+            viewModel.send(DefaultTargetLanguageSelected(it))
+        },
         supportedLanguages = translationScreenState.supportedLanguages,
         defaultSourceLanguage = translationScreenState.defaultSourceLanguage,
         defaultTargetLanguage = translationScreenState.defaultTargetLanguage,
@@ -255,8 +261,7 @@ fun TranslationScreen(
         }
     )
 
-    ErrorNotificationDialog(translationScreenState.errorDialogState
-    ) {
+    ErrorNotificationDialog(translationScreenState.errorDialogState) {
         viewModel.send(ShowErrorDialog(false))
     }
 }

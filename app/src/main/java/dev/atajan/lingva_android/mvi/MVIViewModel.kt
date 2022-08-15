@@ -29,7 +29,7 @@ abstract class MVIViewModel<State, Intention, SideEffect>(
     val sideEffects: SharedFlow<SideEffect> = _sideEffects.asSharedFlow()
     val middleWareList: List<MiddleWare<State, Intention>> = _middleWareList.toList()
 
-    private val actor = scope.actor<Intention> {
+    private val actor = scope.actor<Intention>(capacity = Channel.UNLIMITED) {
         channel.consumeEach { intention ->
             _states.value = reduce(
                 currentState = _states.value,
@@ -53,7 +53,7 @@ abstract class MVIViewModel<State, Intention, SideEffect>(
         actor.trySend(intention)
     }
 
-    fun provideMiddleWares(middleWares: List<MiddleWare<State, Intention>>) {
+    fun provideMiddleWares(vararg middleWares: MiddleWare<State, Intention>) {
         _middleWareList.addAll(middleWares)
     }
 }

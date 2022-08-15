@@ -90,6 +90,7 @@ dependencies {
     // Compose
     implementation("androidx.compose.ui:ui:$compose_version")
     implementation("androidx.compose.material:material:$compose_version")
+    implementation("androidx.compose.animation:animation:$compose_version")
     implementation("androidx.compose.ui:ui-tooling-preview:$compose_version")
     implementation("androidx.compose.material3:material3:1.0.0-alpha13")
 
