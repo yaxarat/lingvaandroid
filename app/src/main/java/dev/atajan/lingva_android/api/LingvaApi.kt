@@ -68,7 +68,10 @@ object LingvaApi {
             )
         } catch (e: Exception) {
             // TODO: add proper error logging
-            TranslationEntity("Error Occurred")
+            TranslationEntity(
+                translation = "Error Occurred",
+                info = null
+            )
         }
     }
 
