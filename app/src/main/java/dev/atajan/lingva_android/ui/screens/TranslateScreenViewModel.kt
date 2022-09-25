@@ -17,6 +17,22 @@ import dev.atajan.lingva_android.mvi.MVIViewModel
 import dev.atajan.lingva_android.mvi.MiddleWare
 import dev.atajan.lingva_android.mvi.stateLogger
 import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention
+import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.ClearInputField
+import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.CopyTextToClipboard
+import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.DefaultSourceLanguageSelected
+import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.DefaultTargetLanguageSelected
+import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.OnTextToTranslateChange
+import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.SetDefaultSourceLanguage
+import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.SetDefaultTargetLanguage
+import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.SetNewSourceLanguage
+import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.SetNewTargetLanguage
+import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.ShowErrorDialog
+import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.SupportedLanguagesReceived
+import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.ToggleAppTheme
+import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.Translate
+import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.TranslationFailure
+import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.TranslationSuccess
+import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.TrySwapLanguages
 import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.SideEffect
 import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.State
 import dev.atajan.lingva_android.ui.theme.ThemingOptions
@@ -59,10 +75,10 @@ class TranslateScreenViewModel @Inject constructor(
         viewModelScope.launch {
             getSupportedLanguages().fold(
                 success = {
-                    send(Intention.SupportedLanguagesReceived(it.languages))
+                    send(SupportedLanguagesReceived(it.languages))
                 },
                 failure = {
-                    send(Intention.ShowErrorDialog(true))
+                    send(ShowErrorDialog(true))
                 }
             )
 
@@ -71,7 +87,7 @@ class TranslateScreenViewModel @Inject constructor(
             }
                 .distinctUntilChanged()
                 .onEach {
-                    send(Intention.SetDefaultSourceLanguage(it))
+                    send(SetDefaultSourceLanguage(it))
                 }
                 .launchIn(this)
 
@@ -80,7 +96,7 @@ class TranslateScreenViewModel @Inject constructor(
             }
                 .distinctUntilChanged()
                 .onEach {
-                    send(Intention.SetDefaultTargetLanguage(it))
+                    send(SetDefaultTargetLanguage(it))
                 }
                 .launchIn(this)
         }
@@ -97,36 +113,37 @@ class TranslateScreenViewModel @Inject constructor(
         }
 
         return when (intention) {
-            is Intention.ShowErrorDialog -> currentState.copy(errorDialogState = intention.show)
-            is Intention.SupportedLanguagesReceived -> {
+            is ShowErrorDialog -> currentState.copy(errorDialogState = intention.show)
+            is SupportedLanguagesReceived -> {
                 currentState.copy(supportedLanguages = intention.languages)
             }
-            is Intention.DefaultSourceLanguageSelected -> {
+            is DefaultSourceLanguageSelected -> {
                 setDefaultSourceLanguage(intention.language)
                 currentState
             }
-            is Intention.DefaultTargetLanguageSelected -> {
+            is DefaultTargetLanguageSelected -> {
                 setDefaultTargetLanguage(intention.language)
                 currentState
             }
-            is Intention.Translate -> {
+            is Translate -> {
                 requestTranslation(
                     sourceLanguageCode = currentState.sourceLanguage.code,
                     targetLanguageCode = currentState.targetLanguage.code,
-                    textToTranslate = currentState.textToTranslate
+                    textToTranslate = currentState.textToTranslate,
+                    supportedLanguages = currentState.supportedLanguages
                 )
                 currentState
             }
-            Intention.TranslationFailure -> {
-                // TODO: should probably show error
+            TranslationFailure -> {
+                // TODO: should probably show & log the error
                 currentState
             }
-            is Intention.TranslationSuccess -> currentState.copy(translatedText = intention.result)
-            Intention.CopyTextToClipboard -> {
+            is TranslationSuccess -> currentState.copy(translatedText = intention.result)
+            CopyTextToClipboard -> {
                 copyTextToClipboard(currentState.translatedText)
                 currentState
             }
-            Intention.TrySwapLanguages -> {
+            TrySwapLanguages -> {
                 return if (currentState.sourceLanguage != LanguageEntity("auto", "Detect")) {
                     currentState.copy(
                         sourceLanguage = currentState.targetLanguage,
@@ -136,15 +153,15 @@ class TranslateScreenViewModel @Inject constructor(
                     currentState
                 }
             }
-            is Intention.OnTextToTranslateChange -> currentState.copy(textToTranslate = intention.newValue)
-            is Intention.SetNewSourceLanguage -> currentState.copy(sourceLanguage = intention.language)
-            is Intention.SetNewTargetLanguage -> currentState.copy(targetLanguage = intention.language)
-            Intention.ClearInputField -> currentState.copy(textToTranslate = "")
-            is Intention.ToggleAppTheme -> {
+            is OnTextToTranslateChange -> currentState.copy(textToTranslate = intention.newValue)
+            is SetNewSourceLanguage -> currentState.copy(sourceLanguage = intention.language)
+            is SetNewTargetLanguage -> currentState.copy(targetLanguage = intention.language)
+            ClearInputField -> currentState.copy(textToTranslate = "")
+            is ToggleAppTheme -> {
                 toggleAppTheme(newTheme = intention.newTheme)
                 currentState
             }
-            is Intention.SetDefaultSourceLanguage -> {
+            is SetDefaultSourceLanguage -> {
                 if (currentState.defaultSourceLanguage != intention.languageName) {
                     getDefaultLanguageIfProvided(
                         supportedLanguages = currentState.supportedLanguages,
@@ -159,7 +176,7 @@ class TranslateScreenViewModel @Inject constructor(
                     currentState
                 }
             }
-            is Intention.SetDefaultTargetLanguage -> {
+            is SetDefaultTargetLanguage -> {
                 if (currentState.defaultTargetLanguage != intention.languageName) {
                     getDefaultLanguageIfProvided(
                         supportedLanguages = currentState.supportedLanguages,
@@ -187,7 +204,8 @@ class TranslateScreenViewModel @Inject constructor(
     private fun requestTranslation(
         sourceLanguageCode: String,
         targetLanguageCode: String,
-        textToTranslate: String
+        textToTranslate: String,
+        supportedLanguages: List<LanguageEntity>
     ) {
         viewModelScope.launch {
             translate(
@@ -196,10 +214,22 @@ class TranslateScreenViewModel @Inject constructor(
                 query = textToTranslate
             ).fold(
                 success = {
-                    send(Intention.TranslationSuccess(it.translation))
+                    send(TranslationSuccess(it.translation))
+
+                    if (sourceLanguageCode == "auto") {
+                        it.info?.detectedSource?.let { detectedSourceLanguageCode ->
+                            supportedLanguages
+                                .find { languageEntity ->
+                                    languageEntity.code == detectedSourceLanguageCode
+                                }
+                                ?.let { detectedSourceLanguage ->
+                                    send(SetNewSourceLanguage(detectedSourceLanguage))
+                                }
+                        }
+                    }
                 },
                 failure = {
-                    send(Intention.TranslationFailure)
+                    send(TranslationFailure)
                 }
             )
         }
