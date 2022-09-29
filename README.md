@@ -1,5 +1,3 @@
-![Checks](https://github.com/yaxarat/lingvaandroid/actions/workflows/fastlane-metadata/badge.svg)
-
 # Lentil Translate Android
  An un official Android client for the Lingva Translate
  

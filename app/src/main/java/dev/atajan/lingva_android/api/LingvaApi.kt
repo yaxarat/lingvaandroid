@@ -5,23 +5,33 @@ import dev.atajan.lingva_android.api.entities.LanguagesEntity
 import dev.atajan.lingva_android.api.entities.TranslationEntity
 import io.ktor.client.*
 import io.ktor.client.engine.android.*
+import io.ktor.client.features.*
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.*
 import io.ktor.client.features.logging.*
 import io.ktor.client.features.observer.*
 import io.ktor.client.request.*
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 
 object LingvaApi {
     private const val lingva = "https://lingva.ml/api/v1/"
-    private const val alefvanoon = "https://translate.alefvanoon.xyz/api/v1/"
-    private const val igna = "https://translate.igna.rocks/api/v1/"
-    private const val pussthecat = "https://lingva.pussthecat.org/api/v1/"
+    private const val plausibility = "https://translate.plausibility.cloud/api/v1/"
+    private const val projectsegfau = "https://translate.projectsegfau.lt/api/v1/"
+    private const val dr460nf1r3 = "https://translate.dr460nf1r3.org/api/v1/"
+    private const val garudalinux = "https://lingva.garudalinux.org/api/v1/"
 
-    private val endpointList = listOf(lingva, alefvanoon, igna, pussthecat)
+    private val endpointList = listOf(
+        lingva,
+        plausibility,
+        projectsegfau,
+        dr460nf1r3,
+        garudalinux
+    )
 
-    private const val TIME_OUT = 3_000
+    private const val TIME_OUT = 5_000
 
+    @OptIn(ExperimentalSerializationApi::class)
     private val ktorHttpClient = HttpClient(Android) {
 
         install(JsonFeature) {
@@ -30,6 +40,7 @@ object LingvaApi {
                     prettyPrint = true
                     isLenient = true
                     ignoreUnknownKeys = true
+                    explicitNulls = false
                 }
             )
 

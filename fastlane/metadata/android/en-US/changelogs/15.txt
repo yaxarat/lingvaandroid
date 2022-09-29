@@ -1,0 +1,3 @@
+# Changelog
+* Fixed issue where kotlinx serializer considered nullable field required even though you marked as nullable.
+* Removed shutdown API endpoints and added few new ones.
