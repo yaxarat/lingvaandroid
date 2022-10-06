@@ -7,9 +7,6 @@ https://github.com/TheDavidDelta/lingva-translate
 To try ou the web client:
 https://lingva.ml
 
-See the upcoming changes on the public roadmap:
-https://github.com/users/yaxarat/projects/1
-
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
      alt="Get it on F-Droid"
      height="80">](https://f-droid.org/packages/dev.atajan.lingva_android)
