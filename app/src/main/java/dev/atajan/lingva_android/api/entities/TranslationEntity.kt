@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class TranslationEntity(
     val translation: String,
-    val info: TranslationInfoEntity?
+    val info: TranslationInfoEntity? = null
 )
