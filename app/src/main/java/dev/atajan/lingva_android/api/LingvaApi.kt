@@ -3,14 +3,17 @@ package dev.atajan.lingva_android.api
 import android.util.Log
 import dev.atajan.lingva_android.api.entities.LanguagesEntity
 import dev.atajan.lingva_android.api.entities.TranslationEntity
-import io.ktor.client.*
-import io.ktor.client.engine.android.*
-import io.ktor.client.features.*
-import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.features.json.serializer.*
-import io.ktor.client.features.logging.*
-import io.ktor.client.features.observer.*
-import io.ktor.client.request.*
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.engine.android.Android
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.request.get
+import io.ktor.http.ContentType
+import io.ktor.http.appendPathSegments
+import io.ktor.serialization.kotlinx.KotlinxSerializationConverter
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 
@@ -29,13 +32,11 @@ object LingvaApi {
         garudalinux
     )
 
-    private const val TIME_OUT = 5_000
-
     @OptIn(ExperimentalSerializationApi::class)
     private val ktorHttpClient = HttpClient(Android) {
 
-        install(JsonFeature) {
-            serializer = KotlinxSerializer(
+        install(ContentNegotiation) {
+            val converter = KotlinxSerializationConverter(
                 Json {
                     prettyPrint = true
                     isLenient = true
@@ -43,28 +44,19 @@ object LingvaApi {
                     explicitNulls = false
                 }
             )
-
-            engine {
-                connectTimeout = TIME_OUT
-                socketTimeout = TIME_OUT
-            }
+            register(ContentType.Application.Json, converter)
         }
 
         install(Logging) {
             logger = object : Logger {
                 override fun log(message: String) {
-                    Log.v("Logger Ktor =>", message)
+                    Log.d("Logger Ktor =>", message)
                 }
             }
             level = LogLevel.ALL
         }
-
-        install(ResponseObserver) {
-            onResponse { response ->
-                Log.d("HTTP status:", "${response.status.value}")
-            }
-        }
     }
+
 
     suspend fun getTranslation(
         source: String,
@@ -100,7 +92,11 @@ object LingvaApi {
         }
 
         return try {
-            ktorHttpClient.get("${endpointList[endpointIndex]}$source/$target/$query")
+            ktorHttpClient.get(endpointList[endpointIndex]) {
+                url {
+                    appendPathSegments(source, target, escapeQuery(query))
+                }
+            }.body()
         } catch (e: Exception) {
             attemptTranslationRequest(
                 source = source,
@@ -132,12 +128,16 @@ object LingvaApi {
         }
 
         return try {
-            ktorHttpClient.get(endpointList[endpointIndex] + "languages/?:(source|target)")
+            ktorHttpClient.get(endpointList[endpointIndex] + "languages/?:(source|target)").body()
         } catch (e: Exception) {
             attemptSupportedLanguagesRequest(
                 endpointIndex = endpointIndex + 1,
                 exception = e
             )
         }
+    }
+
+    private fun escapeQuery(query: String): String {
+        return query.replace("/", "%2F")
     }
 }

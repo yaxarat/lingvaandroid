@@ -7,16 +7,16 @@ plugins {
 }
 
 // TODO: consolidate to buildSrc
-val compose_version = "1.0.4"
-val hilt_agp_version = "2.38.1"
+val compose_version = "1.2.1"
+val hilt_agp_version = "2.44"
 
 android {
-    compileSdk = 32
+    compileSdk = 33
 
     defaultConfig {
         applicationId = "dev.atajan.lingva_android"
         minSdk = 26
-        targetSdk = 32
+        targetSdk = 33
         versionCode = 15
         versionName = "1.2.4"
 
@@ -48,13 +48,14 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = compose_version
+        kotlinCompilerExtensionVersion = "1.3.2"
     }
     packagingOptions { // https://stackoverflow.com/a/47509465/8685398
         resources.excludes.add("META-INF/DEPENDENCIES")
         resources.excludes.add("META-INF/AL2.0")
         resources.excludes.add("META-INF/LGPL2.1")
     }
+    namespace = "dev.atajan.lingva_android"
 }
 
 kotlin.sourceSets.all {
@@ -82,17 +83,18 @@ dependencies {
     implementation("com.michael-bull.kotlin-result:kotlin-result:1.1.14")
 
     // Ktor
-    implementation("io.ktor:ktor-client-android:1.5.2")
-    implementation("io.ktor:ktor-client-serialization:1.5.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
-    implementation("io.ktor:ktor-client-logging-jvm:1.5.2")
+    implementation("io.ktor:ktor-client-android:2.1.2")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.1.2")
+    implementation("io.ktor:ktor-client-logging-jvm:2.1.2")
+    implementation("io.ktor:ktor-client-content-negotiation-jvm:2.1.2")
+//    implementation("io.ktor:ktor-client-serialization:2.1.2")
 
     // Compose
     implementation("androidx.compose.ui:ui:$compose_version")
     implementation("androidx.compose.material:material:$compose_version")
     implementation("androidx.compose.animation:animation:$compose_version")
     implementation("androidx.compose.ui:ui-tooling-preview:$compose_version")
-    implementation("androidx.compose.material3:material3:1.0.0-alpha13")
+    implementation("androidx.compose.material3:material3:1.0.0-rc01")
 
     // note that due to the very large size of this dependency you should make sure to use
     // R8 / ProGuard to remove unused icons from your application.
