@@ -37,6 +37,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
@@ -99,7 +100,7 @@ fun TranslationScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.35f)
+                .fillMaxHeight(0.40f)
                 .padding(all = 16.dp)
         ) {
             OutlinedTextField(
@@ -114,13 +115,7 @@ fun TranslationScreen(
                     )
                 },
                 modifier = Modifier.fillMaxSize(),
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        softwareKeyboardController?.hide()
-                        viewModel.send(Translate)
-                    }
-                ),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Default),
                 textStyle = MaterialTheme.typography.titleMedium,
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = MaterialTheme.colorScheme.primary.copy(alpha = ContentAlpha.high),
