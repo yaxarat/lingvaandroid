@@ -67,11 +67,11 @@ kotlin.sourceSets.all {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.8.0")
-    implementation("androidx.appcompat:appcompat:1.4.2")
+    implementation("androidx.core:core-ktx:1.9.0")
+    implementation("androidx.appcompat:appcompat:1.5.1")
     implementation("com.google.android.material:material:1.6.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.1")
-    implementation("androidx.activity:activity-compose:1.4.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
+    implementation("androidx.activity:activity-compose:1.6.0")
 
     // Accompanist
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.17.0")
@@ -87,7 +87,6 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.1.2")
     implementation("io.ktor:ktor-client-logging-jvm:2.1.2")
     implementation("io.ktor:ktor-client-content-negotiation-jvm:2.1.2")
-//    implementation("io.ktor:ktor-client-serialization:2.1.2")
 
     // Compose
     implementation("androidx.compose.ui:ui:$compose_version")

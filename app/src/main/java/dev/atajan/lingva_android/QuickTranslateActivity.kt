@@ -1,16 +1,19 @@
 package dev.atajan.lingva_android
 
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import dagger.hilt.android.AndroidEntryPoint
-import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel
-import dev.atajan.lingva_android.ui.screens.TranslationScreen
+import dev.atajan.lingva_android.ui.screens.QuickTranslateScreen
+import dev.atajan.lingva_android.ui.screens.QuickTranslateScreenViewModel
 import dev.atajan.lingva_android.ui.theme.LingvaAndroidTheme
 import dev.atajan.lingva_android.ui.theme.ThemingOptions
 import dev.atajan.lingva_android.ui.theme.canUseDynamicColor
@@ -18,9 +21,9 @@ import dev.atajan.lingva_android.ui.theme.selectedThemeFlow
 
 @ExperimentalMaterialApi
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class QuickTranslateActivity : ComponentActivity() {
 
-    private val viewModel: TranslateScreenViewModel by viewModels()
+    private val viewModel: QuickTranslateScreenViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,11 +45,27 @@ class MainActivity : ComponentActivity() {
             }
 
             LingvaAndroidTheme(appTheme = appTheme) {
-                TranslationScreen(
-                    viewModel = viewModel,
-                    getCurrentTheme = { appTheme }
+                QuickTranslateScreen(
+                    textToTranslate = getTextToTranslate(),
+                    viewModel = viewModel
                 )
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        finish()
+    }
+
+
+    private fun getTextToTranslate(): String {
+        val textToQuickTranslate = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            intent.getCharSequenceExtra(Intent.EXTRA_TEXT)
+        } else {
+            null
+        }
+
+        return (textToQuickTranslate ?: intent.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)) as String
     }
 }
