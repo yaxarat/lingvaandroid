@@ -14,14 +14,13 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.SwapHoriz
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -35,9 +34,10 @@ fun LanguageSelectionBar(
     sourceLanguage: LanguageEntity,
     targetLanguage: LanguageEntity,
     toggleErrorDialogState: (Boolean) -> Unit,
-    onSwapLanguageTap: () -> Unit,
     onNewSourceLanguageSelected: (LanguageEntity) -> Unit,
     onNewTargetLanguageSelected: (LanguageEntity) -> Unit,
+    middleIcon: ImageVector,
+    onMiddleIconTap: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -84,13 +84,13 @@ fun LanguageSelectionBar(
         }
 
         IconButton(
-            onClick = onSwapLanguageTap,
+            onClick = onMiddleIconTap,
             modifier = Modifier
                 .fillMaxHeight()
-                .width(60.dp)
+                .fillMaxWidth(0.25f)
         ) {
             Icon(
-                imageVector = Icons.Rounded.SwapHoriz,
+                imageVector = middleIcon,
                 contentDescription = context.getString(R.string.swap_icon_ax),
                 tint = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.fillMaxSize()

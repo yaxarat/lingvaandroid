@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
@@ -25,6 +24,7 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ContentCopy
 import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.SwapHoriz
 import androidx.compose.material.icons.rounded.Translate
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.Icon
@@ -37,7 +37,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
@@ -94,13 +93,15 @@ fun TranslationScreen(
                     }
                 }
             },
-            modifier = Modifier.padding(all = 16.dp)
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .padding(top = 16.dp)
         )
 
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.40f)
+                .fillMaxHeight(0.4f)
                 .padding(all = 16.dp)
         ) {
             OutlinedTextField(
@@ -175,7 +176,7 @@ fun TranslationScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.7f)
+                    .fillMaxHeight(0.75f)
                     .padding(all = 16.dp)
             ) {
                 Card(
@@ -230,7 +231,8 @@ fun TranslationScreen(
             toggleErrorDialogState = {
                 viewModel.send(ShowErrorDialog(it))
             },
-            onSwapLanguageTap = { viewModel.send(TrySwapLanguages) },
+            middleIcon = Icons.Rounded.SwapHoriz,
+            onMiddleIconTap = { viewModel.send(TrySwapLanguages) },
             onNewSourceLanguageSelected = { viewModel.send(SetNewSourceLanguage(it)) },
             onNewTargetLanguageSelected = { viewModel.send(SetNewTargetLanguage(it)) }
         )

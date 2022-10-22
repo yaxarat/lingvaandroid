@@ -56,7 +56,6 @@ class TranslateScreenViewModel @Inject constructor(
     scope = applicationScope,
     initialState = State()
 ) {
-
     private val dataStore = application.applicationContext.dataStore
 
     private val stateLogger: MiddleWare<State, Intention> by lazy {
@@ -114,9 +113,7 @@ class TranslateScreenViewModel @Inject constructor(
 
         return when (intention) {
             is ShowErrorDialog -> currentState.copy(errorDialogState = intention.show)
-            is SupportedLanguagesReceived -> {
-                currentState.copy(supportedLanguages = intention.languages)
-            }
+            is SupportedLanguagesReceived -> currentState.copy(supportedLanguages = intention.languages)
             is DefaultSourceLanguageSelected -> {
                 setDefaultSourceLanguage(intention.language)
                 currentState
@@ -278,23 +275,23 @@ class TranslateScreenViewModel @Inject constructor(
     )
 
     sealed interface Intention {
-        class OnTextToTranslateChange(val newValue: String) : Intention
-        class DefaultSourceLanguageSelected(val language: LanguageEntity) : Intention
-        class DefaultTargetLanguageSelected(val language: LanguageEntity) : Intention
-        class SetDefaultTargetLanguage(val languageName: String) : Intention
-        class SetDefaultSourceLanguage(val languageName: String) : Intention
-        class SetNewSourceLanguage(val language: LanguageEntity) : Intention
-        class SetNewTargetLanguage(val language: LanguageEntity) : Intention
-        class ShowErrorDialog(val show: Boolean) : Intention
-        class SupportedLanguagesReceived(val languages: List<LanguageEntity>) : Intention
-        class TranslationSuccess(val result: String) : Intention
+        data class OnTextToTranslateChange(val newValue: String) : Intention
+        data class DefaultSourceLanguageSelected(val language: LanguageEntity) : Intention
+        data class DefaultTargetLanguageSelected(val language: LanguageEntity) : Intention
+        data class SetDefaultTargetLanguage(val languageName: String) : Intention
+        data class SetDefaultSourceLanguage(val languageName: String) : Intention
+        data class SetNewSourceLanguage(val language: LanguageEntity) : Intention
+        data class SetNewTargetLanguage(val language: LanguageEntity) : Intention
+        data class ShowErrorDialog(val show: Boolean) : Intention
+        data class SupportedLanguagesReceived(val languages: List<LanguageEntity>) : Intention
+        data class TranslationSuccess(val result: String) : Intention
         object ClearInputField : Intention
         object CopyTextToClipboard : Intention
         object Translate : Intention
         object TranslationFailure : Intention
         object TrySwapLanguages : Intention
-        class ToggleAppTheme(val newTheme: ThemingOptions) : Intention
+        data class ToggleAppTheme(val newTheme: ThemingOptions) : Intention
     }
 
-    sealed class SideEffect
+    sealed interface SideEffect
 }
