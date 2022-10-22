@@ -1,0 +1,4 @@
+# Changelog
+* Fixed issue were translation would error out when forward slash was used in the translation string. https://github.com/yaxarat/lingvaandroid/pull/26
+* Enter key will now create new line. https://github.com/yaxarat/lingvaandroid/pull/27
+* Added quick translate shortcut. You can now highlight a text and directly translate from context action. https://github.com/yaxarat/lingvaandroid/pull/28
