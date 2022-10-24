@@ -17,8 +17,9 @@ android {
         applicationId = "dev.atajan.lingva_android"
         minSdk = 26
         targetSdk = 33
-        versionCode = 16
         versionName = "1.2.5"
+        versionCode = 17
+        versionName = "1.2.6"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -29,7 +30,7 @@ android {
     buildTypes {
         release {
             postprocessing {
-                isRemoveUnusedCode = true
+                isRemoveUnusedCode = false
                 isRemoveUnusedResources = true
                 isObfuscate = false
                 isOptimizeCode = true

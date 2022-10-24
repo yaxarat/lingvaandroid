@@ -1,0 +1,2 @@
+# Changelog
+* Fixed issue that affected translations in the release build.
