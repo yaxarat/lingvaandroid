@@ -4,7 +4,7 @@ An un official Android client for the Lingva Translate
 For more information about Lingva Translate:
 https://github.com/TheDavidDelta/lingva-translate
 
-To try ou the web client:
+To try on the web client:
 https://lingva.ml
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
