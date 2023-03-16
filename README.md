@@ -8,11 +8,11 @@ To try on the web client:
 https://lingva.ml
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
-     alt="Get it on F-Droid"
-     height="80">](https://f-droid.org/packages/dev.atajan.lingva_android)
+alt="Get it on F-Droid"
+height="80">](https://f-droid.org/packages/dev.atajan.lingva_android)
 [<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png"
-     alt="Get it on Google Play"
-     height="80">](https://play.google.com/store/apps/details?id=dev.atajan.lingva_android)
+alt="Get it on Google Play"
+height="80">](https://play.google.com/store/apps/details?id=dev.atajan.lingva_android)
 
 ## Supports Multiple Themes, Including Material You
 Lentil Dark | Lentil Light
