@@ -1,8 +1,8 @@
-package dev.atajan.lingva_android.datasource
+package dev.atajan.lingva_android.common.data.datasource
 
 import com.github.michaelbull.result.Result
-import dev.atajan.lingva_android.api.entities.LanguagesEntity
-import dev.atajan.lingva_android.api.entities.TranslationEntity
+import dev.atajan.lingva_android.common.data.api.entities.LanguagesEntity
+import dev.atajan.lingva_android.common.data.api.entities.TranslationEntity
 
 typealias ApiResult<T> = Result<T, Throwable>
 

@@ -6,12 +6,12 @@ import android.content.Context
 import androidx.lifecycle.viewModelScope
 import com.github.michaelbull.result.fold
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.atajan.lingva_android.MainApplication
-import dev.atajan.lingva_android.api.entities.LanguageEntity
-import dev.atajan.lingva_android.datastore.DEFAULT_TARGET_LANGUAGE
-import dev.atajan.lingva_android.datastore.dataStore
-import dev.atajan.lingva_android.mvi.MVIViewModel
-import dev.atajan.lingva_android.mvi.MiddleWare
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dev.atajan.lingva_android.common.data.api.entities.LanguageEntity
+import dev.atajan.lingva_android.common.data.datastore.DEFAULT_TARGET_LANGUAGE
+import dev.atajan.lingva_android.common.data.datastore.dataStore
+import dev.atajan.lingva_android.common.mvi.MVIViewModel
+import dev.atajan.lingva_android.common.mvi.MiddleWare
 import dev.atajan.lingva_android.ui.screens.QuickTranslateScreenViewModel.Intention
 import dev.atajan.lingva_android.ui.screens.QuickTranslateScreenViewModel.Intention.CopyTextToClipboard
 import dev.atajan.lingva_android.ui.screens.QuickTranslateScreenViewModel.Intention.OnTextToTranslateChange
@@ -37,15 +37,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class QuickTranslateScreenViewModel @Inject constructor(
-    private val application: MainApplication,
+    @ApplicationContext application: Context,
+    applicationScope: CoroutineScope,
     private val getSupportedLanguages: GetSupportedLanguagesUseCase,
     private val translate: GetTranslationUseCase,
-    applicationScope: CoroutineScope,
 ) : MVIViewModel<State, Intention, SideEffect>(
     scope = applicationScope,
     initialState = State()
 ) {
     private val dataStore = application.applicationContext.dataStore
+    private val clipboardManager = application.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
     init {
         viewModelScope.launch {
@@ -157,7 +158,6 @@ class QuickTranslateScreenViewModel @Inject constructor(
     }
 
     private fun copyTextToClipboard(translatedText: String) {
-        val clipboardManager = application.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clipData = ClipData.newPlainText("Translation", translatedText)
 
         clipboardManager.setPrimaryClip(clipData)

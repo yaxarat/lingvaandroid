@@ -1,64 +1,19 @@
-package dev.atajan.lingva_android.api
+package dev.atajan.lingva_android.common.data.api
 
-import android.util.Log
-import dev.atajan.lingva_android.api.entities.LanguagesEntity
-import dev.atajan.lingva_android.api.entities.TranslationEntity
+import dev.atajan.lingva_android.common.data.api.entities.LanguagesEntity
+import dev.atajan.lingva_android.common.data.api.entities.TranslationEntity
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.engine.android.Android
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.logging.LogLevel
-import io.ktor.client.plugins.logging.Logger
-import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.get
-import io.ktor.http.ContentType
 import io.ktor.http.appendPathSegments
-import io.ktor.serialization.kotlinx.KotlinxSerializationConverter
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.Json
+import javax.inject.Inject
 
-object LingvaApi {
-    private const val lingva = "https://lingva.ml/api/v1/"
-    private const val plausibility = "https://translate.plausibility.cloud/api/v1/"
-    private const val projectsegfau = "https://translate.projectsegfau.lt/api/v1/"
-    private const val dr460nf1r3 = "https://translate.dr460nf1r3.org/api/v1/"
-    private const val garudalinux = "https://lingva.garudalinux.org/api/v1/"
+class KtorLingvaApi @Inject constructor(
+    private val androidHttpClient: HttpClient,
+    private val endpoints: List<String>
+) : LingvaApi {
 
-    private val endpointList = listOf(
-        lingva,
-        plausibility,
-        projectsegfau,
-        dr460nf1r3,
-        garudalinux
-    )
-
-    @OptIn(ExperimentalSerializationApi::class)
-    private val ktorHttpClient = HttpClient(Android) {
-
-        install(ContentNegotiation) {
-            val converter = KotlinxSerializationConverter(
-                Json {
-                    prettyPrint = true
-                    isLenient = true
-                    ignoreUnknownKeys = true
-                    explicitNulls = false
-                }
-            )
-            register(ContentType.Application.Json, converter)
-        }
-
-        install(Logging) {
-            logger = object : Logger {
-                override fun log(message: String) {
-                    Log.d("Logger Ktor =>", message)
-                }
-            }
-            level = LogLevel.ALL
-        }
-    }
-
-
-    suspend fun getTranslation(
+    override suspend fun getTranslation(
         source: String,
         target: String,
         query: String
@@ -87,12 +42,12 @@ object LingvaApi {
     ): TranslationEntity {
 
         // Throw only when all fallback endpoints have been exhausted
-        if (endpointIndex > endpointList.lastIndex) {
+        if (endpointIndex > endpoints.lastIndex) {
             throw exception ?: Throwable("attemptTranslationRequest failed for all endpoints")
         }
 
         return try {
-            ktorHttpClient.get(endpointList[endpointIndex]) {
+            androidHttpClient.get(endpoints[endpointIndex]) {
                 url {
                     appendPathSegments(source, target, escapeQuery(query))
                 }
@@ -108,7 +63,7 @@ object LingvaApi {
         }
     }
 
-    suspend fun getSupportedLanguages(): LanguagesEntity {
+    override suspend fun getSupportedLanguages(): LanguagesEntity {
         return  try {
             attemptSupportedLanguagesRequest()
         } catch (e: Exception) {
@@ -123,12 +78,12 @@ object LingvaApi {
     ): LanguagesEntity {
 
         // Throw only when all fallback endpoints have been exhausted
-        if (endpointIndex > endpointList.lastIndex) {
+        if (endpointIndex > endpoints.lastIndex) {
             throw exception ?: Throwable("attemptSupportedLanguagesRequest failed for all endpoints")
         }
 
         return try {
-            ktorHttpClient.get(endpointList[endpointIndex] + "languages/?:(source|target)").body()
+            androidHttpClient.get(endpoints[endpointIndex] + "languages/?:(source|target)").body()
         } catch (e: Exception) {
             attemptSupportedLanguagesRequest(
                 endpointIndex = endpointIndex + 1,

@@ -10,7 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
-import dev.atajan.lingva_android.api.entities.LanguageEntity
+import dev.atajan.lingva_android.common.data.api.entities.LanguageEntity
 import dev.atajan.lingva_android.ui.theme.ThemingOptions
 
 @ExperimentalMaterialApi

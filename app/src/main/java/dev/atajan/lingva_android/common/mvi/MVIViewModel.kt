@@ -1,4 +1,4 @@
-package dev.atajan.lingva_android.mvi
+package dev.atajan.lingva_android.common.mvi
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope

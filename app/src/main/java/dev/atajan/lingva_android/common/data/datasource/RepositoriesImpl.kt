@@ -1,11 +1,11 @@
-package dev.atajan.lingva_android.datasource
+package dev.atajan.lingva_android.common.data.datasource
 
 import com.github.michaelbull.result.runCatching
-import dev.atajan.lingva_android.api.LingvaApi
-import dev.atajan.lingva_android.api.entities.LanguagesEntity
-import dev.atajan.lingva_android.api.entities.TranslationEntity
+import dev.atajan.lingva_android.common.data.api.KtorLingvaApi
+import dev.atajan.lingva_android.common.data.api.entities.LanguagesEntity
+import dev.atajan.lingva_android.common.data.api.entities.TranslationEntity
 
-class LanguagesRepositoryImpl(private val api: LingvaApi) : LanguagesRepository {
+class LanguagesRepositoryImpl(private val api: KtorLingvaApi) : LanguagesRepository {
     override suspend fun getSupportedLanguages(): ApiResult<LanguagesEntity> {
         return runCatching {
             api.getSupportedLanguages()
@@ -13,7 +13,7 @@ class LanguagesRepositoryImpl(private val api: LingvaApi) : LanguagesRepository 
     }
 }
 
-class TranslationRepositoryImpl(private val api: LingvaApi) : TranslationRepository {
+class TranslationRepositoryImpl(private val api: KtorLingvaApi) : TranslationRepository {
     override suspend fun getTranslation(
         source: String,
         target: String,

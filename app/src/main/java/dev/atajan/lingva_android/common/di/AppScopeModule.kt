@@ -1,4 +1,4 @@
-package dev.atajan.lingva_android.di
+package dev.atajan.lingva_android.common.di
 
 import dagger.Module
 import dagger.Provides

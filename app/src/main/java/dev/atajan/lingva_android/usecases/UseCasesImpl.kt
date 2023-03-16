@@ -1,10 +1,10 @@
 package dev.atajan.lingva_android.usecases
 
-import dev.atajan.lingva_android.api.entities.LanguagesEntity
-import dev.atajan.lingva_android.api.entities.TranslationEntity
-import dev.atajan.lingva_android.datasource.ApiResult
-import dev.atajan.lingva_android.datasource.LanguagesRepository
-import dev.atajan.lingva_android.datasource.TranslationRepository
+import dev.atajan.lingva_android.common.data.api.entities.LanguagesEntity
+import dev.atajan.lingva_android.common.data.api.entities.TranslationEntity
+import dev.atajan.lingva_android.common.data.datasource.ApiResult
+import dev.atajan.lingva_android.common.data.datasource.LanguagesRepository
+import dev.atajan.lingva_android.common.data.datasource.TranslationRepository
 
 class GetSupportedLanguagesUseCaseImpl(private val languagesRepository: LanguagesRepository) : GetSupportedLanguagesUseCase {
     override suspend fun invoke(): ApiResult<LanguagesEntity> {

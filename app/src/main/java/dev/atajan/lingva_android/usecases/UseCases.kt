@@ -1,8 +1,8 @@
 package dev.atajan.lingva_android.usecases
 
-import dev.atajan.lingva_android.api.entities.LanguagesEntity
-import dev.atajan.lingva_android.api.entities.TranslationEntity
-import dev.atajan.lingva_android.datasource.ApiResult
+import dev.atajan.lingva_android.common.data.api.entities.LanguagesEntity
+import dev.atajan.lingva_android.common.data.api.entities.TranslationEntity
+import dev.atajan.lingva_android.common.data.datasource.ApiResult
 
 interface GetSupportedLanguagesUseCase {
     suspend operator fun invoke(): ApiResult<LanguagesEntity>

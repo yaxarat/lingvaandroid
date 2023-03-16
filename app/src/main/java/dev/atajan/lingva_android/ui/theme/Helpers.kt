@@ -1,8 +1,8 @@
 package dev.atajan.lingva_android.ui.theme
 
 import android.content.Context
-import dev.atajan.lingva_android.datastore.APP_THEME
-import dev.atajan.lingva_android.datastore.dataStore
+import dev.atajan.lingva_android.common.data.datastore.APP_THEME
+import dev.atajan.lingva_android.common.data.datastore.dataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

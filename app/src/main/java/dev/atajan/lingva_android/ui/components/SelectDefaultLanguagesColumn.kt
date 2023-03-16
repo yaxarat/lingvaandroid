@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import dev.atajan.lingva_android.R
-import dev.atajan.lingva_android.api.entities.LanguageEntity
+import dev.atajan.lingva_android.common.data.api.entities.LanguageEntity
 
 @Composable
 fun SelectDefaultLanguagesColumn(

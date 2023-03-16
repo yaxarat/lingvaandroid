@@ -1,4 +1,4 @@
-package dev.atajan.lingva_android.api.entities
+package dev.atajan.lingva_android.common.data.api.entities
 
 import androidx.annotation.Keep
 import kotlinx.serialization.Serializable

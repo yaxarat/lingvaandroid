@@ -26,7 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import dev.atajan.lingva_android.R
-import dev.atajan.lingva_android.api.entities.LanguageEntity
+import dev.atajan.lingva_android.common.data.api.entities.LanguageEntity
 
 @Composable
 fun LanguageSelectionBar(

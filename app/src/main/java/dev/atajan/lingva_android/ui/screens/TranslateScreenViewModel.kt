@@ -7,15 +7,16 @@ import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.viewModelScope
 import com.github.michaelbull.result.fold
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.atajan.lingva_android.MainApplication
-import dev.atajan.lingva_android.api.entities.LanguageEntity
-import dev.atajan.lingva_android.datastore.APP_THEME
-import dev.atajan.lingva_android.datastore.DEFAULT_SOURCE_LANGUAGE
-import dev.atajan.lingva_android.datastore.DEFAULT_TARGET_LANGUAGE
-import dev.atajan.lingva_android.datastore.dataStore
-import dev.atajan.lingva_android.mvi.MVIViewModel
-import dev.atajan.lingva_android.mvi.MiddleWare
-import dev.atajan.lingva_android.mvi.stateLogger
+import dev.atajan.lingva_android.common.data.api.entities.LanguageEntity
+import dev.atajan.lingva_android.common.data.datastore.APP_THEME
+import dev.atajan.lingva_android.common.data.datastore.DEFAULT_SOURCE_LANGUAGE
+import dev.atajan.lingva_android.common.data.datastore.DEFAULT_TARGET_LANGUAGE
+import dev.atajan.lingva_android.common.data.datastore.dataStore
+import dev.atajan.lingva_android.common.mvi.MVIViewModel
+import dev.atajan.lingva_android.common.mvi.MiddleWare
+import dev.atajan.lingva_android.common.mvi.stateLogger
 import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention
 import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.ClearInputField
 import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel.Intention.CopyTextToClipboard
@@ -48,7 +49,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TranslateScreenViewModel @Inject constructor(
-    private val application: MainApplication,
+    @ApplicationContext application: Context,
     private val getSupportedLanguages: GetSupportedLanguagesUseCase,
     private val translate: GetTranslationUseCase,
     applicationScope: CoroutineScope
@@ -57,6 +58,7 @@ class TranslateScreenViewModel @Inject constructor(
     initialState = State()
 ) {
     private val dataStore = application.applicationContext.dataStore
+    private val clipboardManager = application.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
     private val stateLogger: MiddleWare<State, Intention> by lazy {
         object : MiddleWare<State, Intention> {
@@ -233,7 +235,6 @@ class TranslateScreenViewModel @Inject constructor(
     }
 
     private fun copyTextToClipboard(translatedText: String) {
-        val clipboardManager = application.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clipData = ClipData.newPlainText("Translation", translatedText)
 
         clipboardManager.setPrimaryClip(clipData)
