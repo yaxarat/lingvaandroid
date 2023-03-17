@@ -1,15 +1,15 @@
 package dev.atajan.lingva_android.common.data.api
 
-import dev.atajan.lingva_android.common.data.api.entities.LanguagesEntity
-import dev.atajan.lingva_android.common.data.api.entities.TranslationEntity
+import dev.atajan.lingva_android.common.data.api.lingvaDTOs.language.LanguagesDTO
+import dev.atajan.lingva_android.common.data.api.lingvaDTOs.translation.TranslationDTO
 
 interface LingvaApi {
 
-    suspend fun getTranslation(
+    suspend fun translate(
         source: String,
         target: String,
         query: String
-    ): TranslationEntity
+    ): TranslationDTO
 
-    suspend fun getSupportedLanguages(): LanguagesEntity
+    suspend fun getSupportedLanguages(): LanguagesDTO
 }

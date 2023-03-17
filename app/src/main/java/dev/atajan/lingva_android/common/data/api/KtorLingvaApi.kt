@@ -1,7 +1,9 @@
 package dev.atajan.lingva_android.common.data.api
 
-import dev.atajan.lingva_android.common.data.api.entities.LanguagesEntity
-import dev.atajan.lingva_android.common.data.api.entities.TranslationEntity
+import dev.atajan.lingva_android.common.data.api.lingvaDTOs.language.LanguagesDTO
+import dev.atajan.lingva_android.common.data.api.lingvaDTOs.translation.TranslationDTO
+import dev.atajan.lingva_android.common.domain.errors.LingvaApiError.BadEndpoints
+import dev.atajan.lingva_android.common.domain.errors.LingvaApiError.TranslationFailure
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -13,38 +15,27 @@ class KtorLingvaApi @Inject constructor(
     private val endpoints: List<String>
 ) : LingvaApi {
 
-    override suspend fun getTranslation(
+    override suspend fun translate(
         source: String,
         target: String,
         query: String
-    ): TranslationEntity {
-        return try {
-            attemptTranslationRequest(
-                source = source,
-                target = target,
-                query = query
-            )
-        } catch (e: Exception) {
-            // TODO: add proper error logging
-            TranslationEntity(
-                translation = "Error Occurred",
-                info = null
-            )
-        }
-    }
+    ) = attemptTranslationRequest(
+        source = source,
+        target = target,
+        query = query
+    )
+
+    override suspend fun getSupportedLanguages() = attemptSupportedLanguagesRequest()
 
     private suspend fun attemptTranslationRequest(
         source: String,
         target: String,
         query: String,
-        endpointIndex: Int = 0,
-        exception: Throwable? = null
-    ): TranslationEntity {
+        endpointIndex: Int = 0
+    ): TranslationDTO {
 
         // Throw only when all fallback endpoints have been exhausted
-        if (endpointIndex > endpoints.lastIndex) {
-            throw exception ?: Throwable("attemptTranslationRequest failed for all endpoints")
-        }
+        if (endpointIndex > endpoints.lastIndex) throw TranslationFailure
 
         return try {
             androidHttpClient.get(endpoints[endpointIndex]) {
@@ -57,38 +48,20 @@ class KtorLingvaApi @Inject constructor(
                 source = source,
                 target = target,
                 query = query,
-                endpointIndex = endpointIndex + 1,
-                exception = e
+                endpointIndex = endpointIndex + 1
             )
         }
     }
 
-    override suspend fun getSupportedLanguages(): LanguagesEntity {
-        return  try {
-            attemptSupportedLanguagesRequest()
-        } catch (e: Exception) {
-            // TODO: add proper error logging
-            LanguagesEntity(emptyList())
-        }
-    }
-
-    private suspend fun attemptSupportedLanguagesRequest(
-        endpointIndex: Int = 0,
-        exception: Throwable? = null
-    ): LanguagesEntity {
+    private suspend fun attemptSupportedLanguagesRequest(endpointIndex: Int = 0): LanguagesDTO {
 
         // Throw only when all fallback endpoints have been exhausted
-        if (endpointIndex > endpoints.lastIndex) {
-            throw exception ?: Throwable("attemptSupportedLanguagesRequest failed for all endpoints")
-        }
+        if (endpointIndex > endpoints.lastIndex) throw BadEndpoints
 
         return try {
             androidHttpClient.get(endpoints[endpointIndex] + "languages/?:(source|target)").body()
         } catch (e: Exception) {
-            attemptSupportedLanguagesRequest(
-                endpointIndex = endpointIndex + 1,
-                exception = e
-            )
+            attemptSupportedLanguagesRequest(endpointIndex = endpointIndex + 1)
         }
     }
 

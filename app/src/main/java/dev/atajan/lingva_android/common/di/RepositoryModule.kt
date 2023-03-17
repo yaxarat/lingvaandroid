@@ -4,11 +4,12 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dev.atajan.lingva_android.common.data.datasource.LanguagesRepository
-import dev.atajan.lingva_android.common.data.datasource.LanguagesRepositoryImpl
 import dev.atajan.lingva_android.common.data.api.KtorLingvaApi
+import dev.atajan.lingva_android.common.data.datasource.KtorLanguagesRepository
+import dev.atajan.lingva_android.common.data.datasource.KtorTranslationRepository
+import dev.atajan.lingva_android.common.data.datasource.LanguagesRepository
 import dev.atajan.lingva_android.common.data.datasource.TranslationRepository
-import dev.atajan.lingva_android.common.data.datasource.TranslationRepositoryImpl
+import kotlinx.coroutines.CoroutineScope
 import javax.inject.Singleton
 
 @Module
@@ -17,13 +18,25 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideLanguagesRepository(api: KtorLingvaApi): LanguagesRepository {
-        return LanguagesRepositoryImpl(api)
+    fun provideLanguagesRepository(
+        api: KtorLingvaApi,
+        applicationScope: CoroutineScope
+    ): LanguagesRepository {
+        return KtorLanguagesRepository(
+            api = api,
+            applicationScope = applicationScope
+        )
     }
 
     @Singleton
     @Provides
-    fun provideTranslationRepository(api: KtorLingvaApi): TranslationRepository {
-        return TranslationRepositoryImpl(api)
+    fun provideTranslationRepository(
+        api: KtorLingvaApi,
+        applicationScope: CoroutineScope
+    ): TranslationRepository {
+        return KtorTranslationRepository(
+            api = api,
+            applicationScope = applicationScope
+        )
     }
 }
