@@ -8,9 +8,8 @@ import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
-import dev.atajan.lingva_android.common.data.api.entities.LanguageEntity
+import dev.atajan.lingva_android.common.domain.models.language.Language
 import dev.atajan.lingva_android.ui.theme.ThemingOptions
 
 @ExperimentalMaterialApi
@@ -19,9 +18,9 @@ fun SettingsBottomSheet(
     modalBottomSheetState: ModalBottomSheetState,
     toggleTheme: (ThemingOptions) -> Unit,
     getCurrentTheme: () -> ThemingOptions,
-    setDefaultSourceLanguage: (LanguageEntity) -> Unit,
-    setDefaultTargetLanguage: (LanguageEntity) -> Unit,
-    supportedLanguages: List<LanguageEntity>,
+    setDefaultSourceLanguage: (Language) -> Unit,
+    setDefaultTargetLanguage: (Language) -> Unit,
+    supportedLanguages: List<Language>,
     defaultSourceLanguage: String,
     defaultTargetLanguage: String,
     toggleErrorDialogState: (Boolean) -> Unit,

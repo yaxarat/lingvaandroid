@@ -1,4 +1,4 @@
-package dev.atajan.lingva_android.ui.screens
+package dev.atajan.lingva_android.quicktranslatefeature.screens
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -34,12 +34,12 @@ import androidx.compose.ui.unit.dp
 import dev.atajan.lingva_android.R
 import dev.atajan.lingva_android.ui.components.ErrorNotificationDialog
 import dev.atajan.lingva_android.ui.components.LanguageSelectionBar
-import dev.atajan.lingva_android.ui.screens.QuickTranslateScreenViewModel.Intention.CopyTextToClipboard
-import dev.atajan.lingva_android.ui.screens.QuickTranslateScreenViewModel.Intention.OnTextToTranslateChange
-import dev.atajan.lingva_android.ui.screens.QuickTranslateScreenViewModel.Intention.SetNewSourceLanguage
-import dev.atajan.lingva_android.ui.screens.QuickTranslateScreenViewModel.Intention.SetNewTargetLanguage
-import dev.atajan.lingva_android.ui.screens.QuickTranslateScreenViewModel.Intention.ShowErrorDialog
-import dev.atajan.lingva_android.ui.screens.QuickTranslateScreenViewModel.Intention.Translate
+import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreenViewModel.Intention.CopyTextToClipboard
+import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreenViewModel.Intention.OnTextToTranslateChange
+import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreenViewModel.Intention.SetNewSourceLanguage
+import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreenViewModel.Intention.SetNewTargetLanguage
+import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreenViewModel.Intention.ShowErrorDialog
+import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreenViewModel.Intention.Translate
 import dev.atajan.lingva_android.ui.theme.mediumRoundedCornerShape
 
 @ExperimentalMaterialApi

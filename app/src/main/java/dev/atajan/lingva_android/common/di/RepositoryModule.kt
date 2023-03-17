@@ -18,14 +18,8 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideLanguagesRepository(
-        api: KtorLingvaApi,
-        applicationScope: CoroutineScope
-    ): LanguagesRepository {
-        return KtorLanguagesRepository(
-            api = api,
-            applicationScope = applicationScope
-        )
+    fun provideLanguagesRepository(api: KtorLingvaApi): LanguagesRepository {
+        return KtorLanguagesRepository(api)
     }
 
     @Singleton

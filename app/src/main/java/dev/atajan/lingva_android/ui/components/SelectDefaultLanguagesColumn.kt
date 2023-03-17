@@ -16,15 +16,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import dev.atajan.lingva_android.R
-import dev.atajan.lingva_android.common.data.api.entities.LanguageEntity
+import dev.atajan.lingva_android.common.domain.models.language.Language
 
 @Composable
 fun SelectDefaultLanguagesColumn(
     defaultSourceLanguage: String,
     defaultTargetLanguage: String,
-    setDefaultSourceLanguage: (LanguageEntity) -> Unit,
-    setDefaultTargetLanguage: (LanguageEntity) -> Unit,
-    supportedLanguages: List<LanguageEntity>,
+    setDefaultSourceLanguage: (Language) -> Unit,
+    setDefaultTargetLanguage: (Language) -> Unit,
+    supportedLanguages: List<Language>,
     toggleErrorDialogState: (Boolean) -> Unit,
 ) {
     val context = LocalContext.current
@@ -115,7 +115,7 @@ fun SelectDefaultLanguagesColumn(
     LanguageListPopUp(
         openDialog = sourceLanguagesPopUpShown,
         languageList = supportedLanguages,
-    ) { selectedLanguage: LanguageEntity ->
+    ) { selectedLanguage: Language ->
         setDefaultSourceLanguage(selectedLanguage)
     }
 
@@ -123,7 +123,7 @@ fun SelectDefaultLanguagesColumn(
     LanguageListPopUp(
         openDialog = targetLanguagesPopUpShown,
         languageList = supportedLanguages.drop(1),
-    ) { selectedLanguage: LanguageEntity ->
+    ) { selectedLanguage: Language ->
         setDefaultTargetLanguage(selectedLanguage)
     }
 }

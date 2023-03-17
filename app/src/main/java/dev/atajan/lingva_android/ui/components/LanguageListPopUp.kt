@@ -18,13 +18,13 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import dev.atajan.lingva_android.common.data.api.entities.LanguageEntity
+import dev.atajan.lingva_android.common.domain.models.language.Language
 
 @Composable
 fun LanguageListPopUp(
     openDialog: MutableState<Boolean>,
-    languageList: List<LanguageEntity>,
-    onLanguageSelected: ((LanguageEntity) -> Unit),
+    languageList: List<Language>,
+    onLanguageSelected: ((Language) -> Unit),
 ) {
     if (languageList.isEmpty()) {
         openDialog.value = false
@@ -41,17 +41,17 @@ fun LanguageListPopUp(
                         )
                 ) {
                     LazyColumn(modifier = Modifier.padding(8.dp)) {
-                        itemsIndexed(items = languageList) { index, languageEntity ->
+                        itemsIndexed(items = languageList) { index, language ->
                             Column(
                                 modifier = Modifier
                                     .fillParentMaxWidth()
                                     .clickable {
-                                        onLanguageSelected(languageEntity)
+                                        onLanguageSelected(language)
                                         openDialog.value = false
                                     }
                             ) {
                                 Text(
-                                    text = languageEntity.name,
+                                    text = language.name,
                                     style = MaterialTheme.typography.titleMedium,
                                     color = MaterialTheme.colorScheme.onBackground,
                                     modifier = Modifier

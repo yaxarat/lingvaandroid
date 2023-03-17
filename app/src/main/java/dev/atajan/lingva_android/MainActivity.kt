@@ -9,8 +9,8 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import dagger.hilt.android.AndroidEntryPoint
-import dev.atajan.lingva_android.ui.screens.TranslateScreenViewModel
-import dev.atajan.lingva_android.ui.screens.TranslationScreen
+import dev.atajan.lingva_android.translatefeature.screens.TranslateScreenViewModel
+import dev.atajan.lingva_android.translatefeature.screens.TranslationScreen
 import dev.atajan.lingva_android.ui.theme.LingvaAndroidTheme
 import dev.atajan.lingva_android.ui.theme.ThemingOptions
 import dev.atajan.lingva_android.ui.theme.canUseDynamicColor

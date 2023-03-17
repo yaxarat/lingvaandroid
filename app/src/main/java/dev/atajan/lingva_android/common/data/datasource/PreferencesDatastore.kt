@@ -1,4 +1,4 @@
-package dev.atajan.lingva_android.common.data.datastore
+package dev.atajan.lingva_android.common.data.datasource
 
 import android.content.Context
 import androidx.datastore.core.DataStore

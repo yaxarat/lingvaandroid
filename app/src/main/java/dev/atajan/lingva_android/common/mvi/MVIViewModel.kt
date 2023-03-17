@@ -29,7 +29,7 @@ abstract class MVIViewModel<State, Intention, SideEffect>(
     val sideEffects: SharedFlow<SideEffect> = _sideEffects.asSharedFlow()
     val middleWareList: List<MiddleWare<State, Intention>> = _middleWareList.toList()
 
-    private val actor = scope.actor<Intention>(capacity = Channel.UNLIMITED) {
+    private val actor = scope.actor(capacity = Channel.UNLIMITED) {
         channel.consumeEach { intention ->
             _states.value = reduce(
                 currentState = _states.value,

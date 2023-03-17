@@ -26,16 +26,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import dev.atajan.lingva_android.R
-import dev.atajan.lingva_android.common.data.api.entities.LanguageEntity
+import dev.atajan.lingva_android.common.domain.models.language.Language
 
 @Composable
 fun LanguageSelectionBar(
-    supportedLanguages: List<LanguageEntity>,
-    sourceLanguage: LanguageEntity,
-    targetLanguage: LanguageEntity,
+    supportedLanguages: List<Language>,
+    sourceLanguage: Language,
+    targetLanguage: Language,
     toggleErrorDialogState: (Boolean) -> Unit,
-    onNewSourceLanguageSelected: (LanguageEntity) -> Unit,
-    onNewTargetLanguageSelected: (LanguageEntity) -> Unit,
+    onNewSourceLanguageSelected: (Language) -> Unit,
+    onNewTargetLanguageSelected: (Language) -> Unit,
     middleIcon: ImageVector,
     onMiddleIconTap: () -> Unit,
     modifier: Modifier = Modifier

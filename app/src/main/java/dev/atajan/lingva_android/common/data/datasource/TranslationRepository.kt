@@ -5,8 +5,14 @@ import kotlinx.coroutines.flow.Flow
 
 interface TranslationRepository {
 
+    /**
+     * [Flow] of the translation result from [translate].
+     */
     val translationResult: Flow<TranslationRepositoryResponse>
 
+    /**
+     * Translates the [query] from [source] to [target].
+     */
     fun translate(
         source: String,
         target: String,

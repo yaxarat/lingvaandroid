@@ -6,10 +6,12 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dev.atajan.lingva_android.common.data.datasource.LanguagesRepository
 import dev.atajan.lingva_android.common.data.datasource.TranslationRepository
-import dev.atajan.lingva_android.usecases.GetSupportedLanguagesUseCase
-import dev.atajan.lingva_android.usecases.GetSupportedLanguagesUseCaseImpl
-import dev.atajan.lingva_android.usecases.GetTranslationUseCase
-import dev.atajan.lingva_android.usecases.GetTranslationUseCaseImpl
+import dev.atajan.lingva_android.usecases.FetchSupportedLanguagesUseCase
+import dev.atajan.lingva_android.usecases.ObserveTranslationResultUseCase
+import dev.atajan.lingva_android.usecases.TranslateUseCase
+import dev.atajan.lingva_android.usecases.ktorimpl.KtorFetchSupportedLanguagesUseCase
+import dev.atajan.lingva_android.usecases.ktorimpl.KtorObserveTranslationResultUseCase
+import dev.atajan.lingva_android.usecases.ktorimpl.KtorTranslateUseCase
 import javax.inject.Singleton
 
 @Module
@@ -18,13 +20,19 @@ object UseCaseModule {
 
     @Singleton
     @Provides
-    fun provideGetSupportedLanguagesUseCase(languagesRepository: LanguagesRepository): GetSupportedLanguagesUseCase {
-        return GetSupportedLanguagesUseCaseImpl(languagesRepository)
+    fun provideKtorFetchSupportedLanguagesUseCase(languagesRepository: LanguagesRepository): FetchSupportedLanguagesUseCase {
+        return KtorFetchSupportedLanguagesUseCase(languagesRepository)
     }
 
     @Singleton
     @Provides
-    fun provideGetTranslationUseCase(translationRepository: TranslationRepository): GetTranslationUseCase {
-        return GetTranslationUseCaseImpl(translationRepository)
+    fun provideKtorTranslateUseCase(translationRepository: TranslationRepository): TranslateUseCase {
+        return KtorTranslateUseCase(translationRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideKtorObserveTranslationResultUseCase(translationRepository: TranslationRepository): ObserveTranslationResultUseCase {
+        return KtorObserveTranslationResultUseCase(translationRepository)
     }
 }

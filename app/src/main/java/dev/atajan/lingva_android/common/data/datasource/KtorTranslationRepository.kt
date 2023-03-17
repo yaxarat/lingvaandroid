@@ -3,7 +3,7 @@ package dev.atajan.lingva_android.common.data.datasource
 import dev.atajan.lingva_android.common.data.api.KtorLingvaApi
 import dev.atajan.lingva_android.common.domain.errors.DTOToDomainModelMappingError
 import dev.atajan.lingva_android.common.domain.errors.LingvaApiError
-import dev.atajan.lingva_android.common.domain.models.Translation.Companion.toDomainModel
+import dev.atajan.lingva_android.common.domain.models.translation.Translation.Companion.toDomainModel
 import dev.atajan.lingva_android.common.domain.results.TranslationRepositoryResponse
 import dev.atajan.lingva_android.common.domain.results.TranslationRepositoryResponse.Failure
 import dev.atajan.lingva_android.common.domain.results.TranslationRepositoryResponse.Loading
