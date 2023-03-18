@@ -60,6 +60,7 @@ class TranslateScreenViewModel @Inject constructor(
     initialState = TranslationScreenState()
 ) {
     private val dataStore = application.applicationContext.dataStore
+
     private val clipboardManager = application.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
     private val stateLogger: MiddleWare<TranslationScreenState, TranslationScreenIntention> by lazy {

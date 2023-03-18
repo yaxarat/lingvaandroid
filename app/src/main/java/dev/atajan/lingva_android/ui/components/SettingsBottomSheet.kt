@@ -8,6 +8,7 @@ import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import dev.atajan.lingva_android.common.domain.models.language.Language
 import dev.atajan.lingva_android.ui.theme.ThemingOptions
@@ -17,7 +18,7 @@ import dev.atajan.lingva_android.ui.theme.ThemingOptions
 fun SettingsBottomSheet(
     modalBottomSheetState: ModalBottomSheetState,
     toggleTheme: (ThemingOptions) -> Unit,
-    getCurrentTheme: () -> ThemingOptions,
+    currentTheme: MutableState<ThemingOptions>,
     setDefaultSourceLanguage: (Language) -> Unit,
     setDefaultTargetLanguage: (Language) -> Unit,
     supportedLanguages: List<Language>,
@@ -35,7 +36,7 @@ fun SettingsBottomSheet(
             ) {
                 AppThemeSelectionRadioButtonRows(
                     toggleTheme = toggleTheme,
-                    getCurrentTheme = getCurrentTheme
+                    currentTheme = currentTheme
                 )
 
                 SelectDefaultLanguagesColumn(

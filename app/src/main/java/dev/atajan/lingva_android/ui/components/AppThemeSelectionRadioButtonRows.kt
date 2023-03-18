@@ -11,10 +11,7 @@ import androidx.compose.material.RadioButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -26,10 +23,9 @@ import dev.atajan.lingva_android.ui.theme.canUseDynamicColor
 @Composable
 fun AppThemeSelectionRadioButtonRows(
     toggleTheme: (ThemingOptions) -> Unit,
-    getCurrentTheme: () -> ThemingOptions
+    currentTheme: MutableState<ThemingOptions>
 ) {
     val context = LocalContext.current
-    var radioButtonState by remember { mutableStateOf(getCurrentTheme.invoke().name) }
 
     Text(
         text = context.getString(R.string.app_theme_setting_title),
@@ -51,10 +47,9 @@ fun AppThemeSelectionRadioButtonRows(
                                 .padding(vertical = 16.dp)
                         ) {
                             RadioButton(
-                                selected = radioButtonState == option.name,
+                                selected = currentTheme.value.name == option.name,
                                 onClick = {
                                     toggleTheme(ThemingOptions.valueOf(option.name))
-                                    radioButtonState = option.name
                                 },
                                 colors = RadioButtonDefaults.colors(
                                     selectedColor = MaterialTheme.colorScheme.primary,
@@ -80,10 +75,9 @@ fun AppThemeSelectionRadioButtonRows(
                             .padding(vertical = 16.dp)
                     ) {
                         RadioButton(
-                            selected = radioButtonState == option.name,
+                            selected = currentTheme.value.name == option.name,
                             onClick = {
                                 toggleTheme(ThemingOptions.valueOf(option.name))
-                                radioButtonState = option.name
                             },
                             colors = RadioButtonDefaults.colors(
                                 selectedColor = MaterialTheme.colorScheme.primary,

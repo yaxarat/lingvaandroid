@@ -1,5 +1,7 @@
 package dev.atajan.lingva_android.ui.theme
 
+import android.content.Context
+import android.content.res.Configuration
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -13,6 +15,14 @@ import androidx.compose.ui.platform.LocalContext
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 val canUseDynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+
+fun isSystemInNightMode(context: Context): Boolean {
+    return when (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+        Configuration.UI_MODE_NIGHT_YES -> true
+        Configuration.UI_MODE_NIGHT_NO -> false
+        else -> false
+    }
+}
 
 enum class ThemingOptions {
     LIGHT, DARK, YOU
