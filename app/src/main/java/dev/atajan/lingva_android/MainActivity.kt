@@ -12,11 +12,11 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import dev.atajan.lingva_android.translatefeature.screens.TranslateScreenViewModel
 import dev.atajan.lingva_android.translatefeature.screens.TranslationScreen
-import dev.atajan.lingva_android.ui.theme.LingvaAndroidTheme
-import dev.atajan.lingva_android.ui.theme.ThemingOptions
-import dev.atajan.lingva_android.ui.theme.canUseDynamicColor
-import dev.atajan.lingva_android.ui.theme.isSystemInNightMode
-import dev.atajan.lingva_android.ui.theme.selectedThemeFlow
+import dev.atajan.lingva_android.common.ui.theme.LingvaAndroidTheme
+import dev.atajan.lingva_android.common.ui.theme.ThemingOptions
+import dev.atajan.lingva_android.common.ui.theme.canUseDynamicColor
+import dev.atajan.lingva_android.common.ui.theme.isSystemInNightMode
+import dev.atajan.lingva_android.common.ui.theme.selectedThemeFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 

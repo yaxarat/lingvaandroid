@@ -2,52 +2,42 @@ package dev.atajan.lingva_android.quicktranslatefeature.screens
 
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.content.Context
-import androidx.lifecycle.viewModelScope
-import com.github.michaelbull.result.fold
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dev.atajan.lingva_android.common.data.datasource.DEFAULT_TARGET_LANGUAGE
-import dev.atajan.lingva_android.common.data.datasource.dataStore
 import dev.atajan.lingva_android.common.domain.models.language.Language
 import dev.atajan.lingva_android.common.domain.models.language.containsLanguageOrNull
-import dev.atajan.lingva_android.common.mvi.MVIViewModel
-import dev.atajan.lingva_android.common.mvi.MiddleWare
-import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreenViewModel.Intention
-import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreenViewModel.Intention.CopyTextToClipboard
-import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreenViewModel.Intention.OnTextToTranslateChange
-import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreenViewModel.Intention.SetDefaultTargetLanguage
-import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreenViewModel.Intention.SetNewSourceLanguage
-import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreenViewModel.Intention.SetNewTargetLanguage
-import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreenViewModel.Intention.ShowErrorDialog
-import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreenViewModel.Intention.SupportedLanguagesReceived
-import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreenViewModel.Intention.Translate
-import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreenViewModel.Intention.TranslationFailure
-import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreenViewModel.Intention.TranslationSuccess
-import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreenViewModel.SideEffect
-import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreenViewModel.State
-import dev.atajan.lingva_android.usecases.FetchSupportedLanguagesUseCase
-import dev.atajan.lingva_android.usecases.TranslateUseCase
+import dev.atajan.lingva_android.common.redux.MVIViewModel
+import dev.atajan.lingva_android.common.redux.MiddleWare
+import dev.atajan.lingva_android.common.usecases.FetchSupportedLanguagesUseCase
+import dev.atajan.lingva_android.common.usecases.TranslateUseCase
+import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention
+import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.CopyTextToClipboard
+import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.OnTextToTranslateChange
+import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.SetDefaultTargetLanguage
+import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.SetNewSourceLanguage
+import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.SetNewTargetLanguage
+import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.ShowErrorDialog
+import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.SupportedLanguagesReceived
+import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.Translate
+import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.TranslationFailure
+import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.TranslationSuccess
+import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenSideEffect
+import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenState
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class QuickTranslateScreenViewModel @Inject constructor(
-    @ApplicationContext application: Context,
     applicationScope: CoroutineScope,
+    private val dataStore: DataStore<Preferences>,
+    private val clipboardManager: ClipboardManager,
     private val getSupportedLanguages: FetchSupportedLanguagesUseCase,
     private val translate: TranslateUseCase,
-) : MVIViewModel<State, Intention, SideEffect>(
+) : MVIViewModel<QuickTranslateScreenState, QuickTranslateScreenIntention, QuickTranslateScreenSideEffect>(
     scope = applicationScope,
-    initialState = State()
+    initialState = QuickTranslateScreenState()
 ) {
-    private val dataStore = application.applicationContext.dataStore
-    private val clipboardManager = application.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
     init {
 //        viewModelScope.launch {
@@ -74,10 +64,10 @@ class QuickTranslateScreenViewModel @Inject constructor(
     }
 
     override fun reduce(
-        currentState: State,
-        intention: Intention,
-        middleWares: List<MiddleWare<State, Intention>>
-    ): State {
+        currentState: QuickTranslateScreenState,
+        intention: QuickTranslateScreenIntention,
+        middleWares: List<MiddleWare<QuickTranslateScreenState, QuickTranslateScreenIntention>>
+    ): QuickTranslateScreenState {
         return when (intention) {
             is SetDefaultTargetLanguage -> {
                 if (currentState.defaultTargetLanguage != intention.languageName) {
@@ -170,29 +160,4 @@ class QuickTranslateScreenViewModel @Inject constructor(
     ): Language? {
         return supportedLanguages.containsLanguageOrNull(lookUpLanguage)
     }
-
-
-    data class State(
-        val supportedLanguages: List<Language> = emptyList(),
-        val translatedText: String = "",
-        val sourceLanguage: Language = Language("auto", "Detect"),
-        val targetLanguage: Language = Language("es", "Spanish"),
-        val textToTranslate: String = "",
-        val errorDialogState: Boolean = false,
-        val defaultTargetLanguage: String = ""
-    )
-
-    sealed interface Intention {
-        data class OnTextToTranslateChange(val newValue: String) : Intention
-        data class SetDefaultTargetLanguage(val languageName: String) : Intention
-        data class SetNewSourceLanguage(val language: Language) : Intention
-        data class SetNewTargetLanguage(val language: Language) : Intention
-        data class ShowErrorDialog(val show: Boolean) : Intention
-        data class SupportedLanguagesReceived(val languages: List<Language>) : Intention
-        data class TranslationSuccess(val result: String) : Intention
-        object CopyTextToClipboard : Intention
-        object Translate : Intention
-        object TranslationFailure : Intention
-    }
-    sealed interface SideEffect
 }

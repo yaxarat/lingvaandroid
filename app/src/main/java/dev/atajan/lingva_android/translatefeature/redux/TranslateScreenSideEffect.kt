@@ -1,0 +1,3 @@
+package dev.atajan.lingva_android.translatefeature.redux
+
+sealed interface TranslateScreenSideEffect

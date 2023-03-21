@@ -32,15 +32,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import dev.atajan.lingva_android.R
-import dev.atajan.lingva_android.ui.components.ErrorNotificationDialog
-import dev.atajan.lingva_android.ui.components.LanguageSelectionBar
-import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreenViewModel.Intention.CopyTextToClipboard
-import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreenViewModel.Intention.OnTextToTranslateChange
-import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreenViewModel.Intention.SetNewSourceLanguage
-import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreenViewModel.Intention.SetNewTargetLanguage
-import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreenViewModel.Intention.ShowErrorDialog
-import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreenViewModel.Intention.Translate
-import dev.atajan.lingva_android.ui.theme.mediumRoundedCornerShape
+import dev.atajan.lingva_android.common.ui.components.ErrorNotificationDialog
+import dev.atajan.lingva_android.common.ui.components.LanguageSelectionBar
+import dev.atajan.lingva_android.common.ui.theme.mediumRoundedCornerShape
+import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.CopyTextToClipboard
+import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.OnTextToTranslateChange
+import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.SetNewSourceLanguage
+import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.SetNewTargetLanguage
+import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.ShowErrorDialog
+import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.Translate
 
 @ExperimentalMaterialApi
 @Composable

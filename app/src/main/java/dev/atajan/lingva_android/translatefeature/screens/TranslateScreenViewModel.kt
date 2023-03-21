@@ -2,45 +2,44 @@ package dev.atajan.lingva_android.translatefeature.screens
 
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.atajan.lingva_android.common.data.datasource.APP_THEME
 import dev.atajan.lingva_android.common.data.datasource.DEFAULT_SOURCE_LANGUAGE
 import dev.atajan.lingva_android.common.data.datasource.DEFAULT_TARGET_LANGUAGE
-import dev.atajan.lingva_android.common.data.datasource.dataStore
 import dev.atajan.lingva_android.common.domain.models.language.Language
 import dev.atajan.lingva_android.common.domain.models.language.containsLanguageOrNull
 import dev.atajan.lingva_android.common.domain.results.LanguagesRepositoryResponse
 import dev.atajan.lingva_android.common.domain.results.TranslationRepositoryResponse
-import dev.atajan.lingva_android.common.mvi.MVIViewModel
-import dev.atajan.lingva_android.common.mvi.MiddleWare
-import dev.atajan.lingva_android.common.mvi.stateLogger
-import dev.atajan.lingva_android.translatefeature.mvi.TranslationScreenIntention
-import dev.atajan.lingva_android.translatefeature.mvi.TranslationScreenIntention.ClearInputField
-import dev.atajan.lingva_android.translatefeature.mvi.TranslationScreenIntention.CopyTextToClipboard
-import dev.atajan.lingva_android.translatefeature.mvi.TranslationScreenIntention.DefaultSourceLanguageSelected
-import dev.atajan.lingva_android.translatefeature.mvi.TranslationScreenIntention.DefaultTargetLanguageSelected
-import dev.atajan.lingva_android.translatefeature.mvi.TranslationScreenIntention.OnTextToTranslateChange
-import dev.atajan.lingva_android.translatefeature.mvi.TranslationScreenIntention.SetDefaultSourceLanguage
-import dev.atajan.lingva_android.translatefeature.mvi.TranslationScreenIntention.SetDefaultTargetLanguage
-import dev.atajan.lingva_android.translatefeature.mvi.TranslationScreenIntention.SetNewSourceLanguage
-import dev.atajan.lingva_android.translatefeature.mvi.TranslationScreenIntention.SetNewTargetLanguage
-import dev.atajan.lingva_android.translatefeature.mvi.TranslationScreenIntention.ShowErrorDialog
-import dev.atajan.lingva_android.translatefeature.mvi.TranslationScreenIntention.SupportedLanguagesReceived
-import dev.atajan.lingva_android.translatefeature.mvi.TranslationScreenIntention.ToggleAppTheme
-import dev.atajan.lingva_android.translatefeature.mvi.TranslationScreenIntention.Translate
-import dev.atajan.lingva_android.translatefeature.mvi.TranslationScreenIntention.TranslationFailure
-import dev.atajan.lingva_android.translatefeature.mvi.TranslationScreenIntention.TranslationSuccess
-import dev.atajan.lingva_android.translatefeature.mvi.TranslationScreenIntention.TrySwapLanguages
-import dev.atajan.lingva_android.translatefeature.mvi.TranslationScreenSideEffect
-import dev.atajan.lingva_android.translatefeature.mvi.TranslationScreenState
-import dev.atajan.lingva_android.ui.theme.ThemingOptions
-import dev.atajan.lingva_android.usecases.FetchSupportedLanguagesUseCase
-import dev.atajan.lingva_android.usecases.ObserveTranslationResultUseCase
-import dev.atajan.lingva_android.usecases.TranslateWithInfoUseCase
+import dev.atajan.lingva_android.common.redux.MVIViewModel
+import dev.atajan.lingva_android.common.redux.MiddleWare
+import dev.atajan.lingva_android.common.redux.stateLogger
+import dev.atajan.lingva_android.common.ui.theme.ThemingOptions
+import dev.atajan.lingva_android.common.usecases.FetchSupportedLanguagesUseCase
+import dev.atajan.lingva_android.common.usecases.ObserveTranslationResultUseCase
+import dev.atajan.lingva_android.common.usecases.TranslateWithInfoUseCase
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.ClearInputField
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.CopyTextToClipboard
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.DefaultSourceLanguageSelected
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.DefaultTargetLanguageSelected
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.OnTextToTranslateChange
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.SetDefaultSourceLanguage
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.SetDefaultTargetLanguage
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.SetNewSourceLanguage
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.SetNewTargetLanguage
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.ShowErrorDialog
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.SupportedLanguagesReceived
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.ToggleAppTheme
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.Translate
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.TranslationFailure
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.TranslationSuccess
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.TrySwapLanguages
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenSideEffect
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
@@ -51,22 +50,20 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TranslateScreenViewModel @Inject constructor(
-    @ApplicationContext application: Context,
+    private val dataStore: DataStore<Preferences>,
+    private val clipboardManager: ClipboardManager,
     private val supportedLanguages: FetchSupportedLanguagesUseCase,
     private val translate: TranslateWithInfoUseCase,
     translationResult: ObserveTranslationResultUseCase,
     applicationScope: CoroutineScope,
-) : MVIViewModel<TranslationScreenState, TranslationScreenIntention, TranslationScreenSideEffect>(
+) : MVIViewModel<TranslateScreenState, TranslateScreenIntention, TranslateScreenSideEffect>(
     scope = applicationScope,
-    initialState = TranslationScreenState()
+    initialState = TranslateScreenState()
 ) {
-    private val dataStore = application.applicationContext.dataStore
 
-    private val clipboardManager = application.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-
-    private val stateLogger: MiddleWare<TranslationScreenState, TranslationScreenIntention> by lazy {
-        object : MiddleWare<TranslationScreenState, TranslationScreenIntention> {
-            override fun invoke(state: TranslationScreenState, intention: TranslationScreenIntention) {
+    private val stateLogger: MiddleWare<TranslateScreenState, TranslateScreenIntention> by lazy {
+        object : MiddleWare<TranslateScreenState, TranslateScreenIntention> {
+            override fun invoke(state: TranslateScreenState, intention: TranslateScreenIntention) {
                 this@TranslateScreenViewModel.stateLogger(
                     state = state.toString(),
                     intention = intention.toString()
@@ -126,10 +123,10 @@ class TranslateScreenViewModel @Inject constructor(
     }
 
     override fun reduce(
-        currentState: TranslationScreenState,
-        intention: TranslationScreenIntention,
-        middleWares: List<MiddleWare<TranslationScreenState, TranslationScreenIntention>>
-    ): TranslationScreenState {
+        currentState: TranslateScreenState,
+        intention: TranslateScreenIntention,
+        middleWares: List<MiddleWare<TranslateScreenState, TranslateScreenIntention>>
+    ): TranslateScreenState {
 
         middleWares.forEach {
             it.invoke(currentState, intention)

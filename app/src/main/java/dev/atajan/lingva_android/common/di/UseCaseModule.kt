@@ -6,14 +6,14 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dev.atajan.lingva_android.common.data.datasource.LanguagesRepository
 import dev.atajan.lingva_android.common.data.datasource.TranslationRepository
-import dev.atajan.lingva_android.usecases.FetchSupportedLanguagesUseCase
-import dev.atajan.lingva_android.usecases.ObserveTranslationResultUseCase
-import dev.atajan.lingva_android.usecases.TranslateUseCase
-import dev.atajan.lingva_android.usecases.TranslateWithInfoUseCase
-import dev.atajan.lingva_android.usecases.ktorimpl.KtorFetchSupportedLanguagesUseCase
-import dev.atajan.lingva_android.usecases.ktorimpl.KtorObserveTranslationResultUseCase
-import dev.atajan.lingva_android.usecases.ktorimpl.KtorTranslateUseCase
-import dev.atajan.lingva_android.usecases.ktorimpl.KtorTranslateWithInfoUseCase
+import dev.atajan.lingva_android.common.usecases.FetchSupportedLanguagesUseCase
+import dev.atajan.lingva_android.common.usecases.ObserveTranslationResultUseCase
+import dev.atajan.lingva_android.common.usecases.TranslateUseCase
+import dev.atajan.lingva_android.common.usecases.TranslateWithInfoUseCase
+import dev.atajan.lingva_android.common.usecases.ktorimpl.KtorFetchSupportedLanguagesUseCase
+import dev.atajan.lingva_android.common.usecases.ktorimpl.KtorObserveTranslationResultUseCase
+import dev.atajan.lingva_android.common.usecases.ktorimpl.KtorTranslateUseCase
+import dev.atajan.lingva_android.common.usecases.ktorimpl.KtorTranslateWithInfoUseCase
 import javax.inject.Singleton
 
 @Module
