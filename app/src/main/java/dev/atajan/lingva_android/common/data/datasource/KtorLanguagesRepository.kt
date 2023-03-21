@@ -10,7 +10,18 @@ import dev.atajan.lingva_android.common.domain.results.LanguagesRepositoryRespon
 
 class KtorLanguagesRepository(private val api: KtorLingvaApi) : LanguagesRepository {
 
+    // No need to hit remote on every check, we can cache the result.
+    private var supportedLanguagesReceived: LanguagesRepositoryResponse? = null
+
     override suspend fun fetchSupportedLanguages(): LanguagesRepositoryResponse {
+        return if (supportedLanguagesReceived != null && supportedLanguagesReceived is Success) {
+            supportedLanguagesReceived as Success
+        } else {
+            getFromRemote().also { supportedLanguagesReceived = it }
+        }
+    }
+
+    private suspend fun getFromRemote(): LanguagesRepositoryResponse {
         val supportedLanguagesDTO = try {
             api.getSupportedLanguages()
         } catch (error: LingvaApiError) {

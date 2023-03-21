@@ -9,9 +9,11 @@ import dev.atajan.lingva_android.common.data.datasource.TranslationRepository
 import dev.atajan.lingva_android.usecases.FetchSupportedLanguagesUseCase
 import dev.atajan.lingva_android.usecases.ObserveTranslationResultUseCase
 import dev.atajan.lingva_android.usecases.TranslateUseCase
+import dev.atajan.lingva_android.usecases.TranslateWithInfoUseCase
 import dev.atajan.lingva_android.usecases.ktorimpl.KtorFetchSupportedLanguagesUseCase
 import dev.atajan.lingva_android.usecases.ktorimpl.KtorObserveTranslationResultUseCase
 import dev.atajan.lingva_android.usecases.ktorimpl.KtorTranslateUseCase
+import dev.atajan.lingva_android.usecases.ktorimpl.KtorTranslateWithInfoUseCase
 import javax.inject.Singleton
 
 @Module
@@ -28,6 +30,12 @@ object UseCaseModule {
     @Provides
     fun provideKtorTranslateUseCase(translationRepository: TranslationRepository): TranslateUseCase {
         return KtorTranslateUseCase(translationRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideKtorTranslateWithInfoUseCase(translationRepository: TranslationRepository): TranslateWithInfoUseCase {
+        return KtorTranslateWithInfoUseCase(translationRepository)
     }
 
     @Singleton

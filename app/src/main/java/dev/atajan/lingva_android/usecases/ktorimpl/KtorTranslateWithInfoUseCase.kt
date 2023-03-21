@@ -2,8 +2,9 @@ package dev.atajan.lingva_android.usecases.ktorimpl
 
 import dev.atajan.lingva_android.common.data.datasource.TranslationRepository
 import dev.atajan.lingva_android.usecases.TranslateUseCase
+import dev.atajan.lingva_android.usecases.TranslateWithInfoUseCase
 
-class KtorTranslateUseCase(private val translationRepository: TranslationRepository) : TranslateUseCase {
+class KtorTranslateWithInfoUseCase(private val translationRepository: TranslationRepository) : TranslateWithInfoUseCase {
 
     override fun invoke(
         sourceLanguageCode: String,
@@ -14,7 +15,7 @@ class KtorTranslateUseCase(private val translationRepository: TranslationReposit
             source = sourceLanguageCode,
             target = targetLanguageCode,
             query = textToTranslate,
-            requireInfo = false
+            requireInfo = true
         )
     }
 }

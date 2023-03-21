@@ -5,7 +5,7 @@ import dev.atajan.lingva_android.common.domain.errors.DTOToDomainModelMappingErr
 
 data class Translation(val result: String) {
     companion object {
-        fun TranslationDTO.toDomainModel() : Translation {
+        fun TranslationDTO.toTranslationDomain() : Translation {
             return Translation(
                 result = translation ?: throw NullValue("translation can't be null")
             )

@@ -10,6 +10,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.atajan.lingva_android.common.data.datasource.DEFAULT_TARGET_LANGUAGE
 import dev.atajan.lingva_android.common.data.datasource.dataStore
 import dev.atajan.lingva_android.common.domain.models.language.Language
+import dev.atajan.lingva_android.common.domain.models.language.containsLanguageOrNull
 import dev.atajan.lingva_android.common.mvi.MVIViewModel
 import dev.atajan.lingva_android.common.mvi.MiddleWare
 import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreenViewModel.Intention
@@ -167,7 +168,7 @@ class QuickTranslateScreenViewModel @Inject constructor(
         supportedLanguages: List<Language>,
         lookUpLanguage: String
     ): Language? {
-        return supportedLanguages.find { it.name == lookUpLanguage }
+        return supportedLanguages.containsLanguageOrNull(lookUpLanguage)
     }
 
 

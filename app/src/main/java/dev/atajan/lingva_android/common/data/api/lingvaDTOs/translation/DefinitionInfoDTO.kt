@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Keep
 @Serializable
-data class DefinitionListDTO(
+data class DefinitionInfoDTO(
     val definition: String? = null,
     val example: String? = null,
     val synonyms: List<String>? = null,

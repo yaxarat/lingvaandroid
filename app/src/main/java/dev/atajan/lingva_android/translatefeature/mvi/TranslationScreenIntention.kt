@@ -1,6 +1,7 @@
 package dev.atajan.lingva_android.translatefeature.mvi
 
 import dev.atajan.lingva_android.common.domain.models.language.Language
+import dev.atajan.lingva_android.common.domain.models.translation.TranslationWithInfo
 import dev.atajan.lingva_android.ui.theme.ThemingOptions
 
 sealed interface TranslationScreenIntention {
@@ -13,7 +14,7 @@ sealed interface TranslationScreenIntention {
     data class SetNewTargetLanguage(val language: Language) : TranslationScreenIntention
     data class ShowErrorDialog(val show: Boolean) : TranslationScreenIntention
     data class SupportedLanguagesReceived(val languages: List<Language>) : TranslationScreenIntention
-    data class TranslationSuccess(val result: String) : TranslationScreenIntention
+    data class TranslationSuccess(val translationWithInfo: TranslationWithInfo) : TranslationScreenIntention
     object ClearInputField : TranslationScreenIntention
     data class ToggleAppTheme(val newTheme: ThemingOptions) : TranslationScreenIntention
     object CopyTextToClipboard : TranslationScreenIntention

@@ -7,4 +7,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class PronunciationDTO(
     val query: String? = null,
+    val translation: String? = null
 )

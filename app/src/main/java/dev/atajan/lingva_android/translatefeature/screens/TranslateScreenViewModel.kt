@@ -12,6 +12,7 @@ import dev.atajan.lingva_android.common.data.datasource.DEFAULT_SOURCE_LANGUAGE
 import dev.atajan.lingva_android.common.data.datasource.DEFAULT_TARGET_LANGUAGE
 import dev.atajan.lingva_android.common.data.datasource.dataStore
 import dev.atajan.lingva_android.common.domain.models.language.Language
+import dev.atajan.lingva_android.common.domain.models.language.containsLanguageOrNull
 import dev.atajan.lingva_android.common.domain.results.LanguagesRepositoryResponse
 import dev.atajan.lingva_android.common.domain.results.TranslationRepositoryResponse
 import dev.atajan.lingva_android.common.mvi.MVIViewModel
@@ -39,7 +40,7 @@ import dev.atajan.lingva_android.translatefeature.mvi.TranslationScreenState
 import dev.atajan.lingva_android.ui.theme.ThemingOptions
 import dev.atajan.lingva_android.usecases.FetchSupportedLanguagesUseCase
 import dev.atajan.lingva_android.usecases.ObserveTranslationResultUseCase
-import dev.atajan.lingva_android.usecases.TranslateUseCase
+import dev.atajan.lingva_android.usecases.TranslateWithInfoUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
@@ -52,7 +53,7 @@ import javax.inject.Inject
 class TranslateScreenViewModel @Inject constructor(
     @ApplicationContext application: Context,
     private val supportedLanguages: FetchSupportedLanguagesUseCase,
-    private val translate: TranslateUseCase,
+    private val translate: TranslateWithInfoUseCase,
     translationResult: ObserveTranslationResultUseCase,
     applicationScope: CoroutineScope,
 ) : MVIViewModel<TranslationScreenState, TranslationScreenIntention, TranslationScreenSideEffect>(
@@ -110,15 +111,16 @@ class TranslateScreenViewModel @Inject constructor(
 
         translationResult().onEach {
             when (it) {
-                is TranslationRepositoryResponse.Success -> {
-                    send(TranslationSuccess(it.translation.result))
+                is TranslationRepositoryResponse.TranslationWithInfoSuccess -> {
+                    send(TranslationSuccess(it.response))
                 }
                 is TranslationRepositoryResponse.Failure -> {
                     send(TranslationFailure)
                 }
-                else -> {
+                TranslationRepositoryResponse.Loading -> {
                     // Loading UI?
                 }
+                else -> { /* Do nothing */ }
             }
         }.launchIn(viewModelScope)
     }
@@ -157,18 +159,11 @@ class TranslateScreenViewModel @Inject constructor(
                 currentState
             }
             is TranslationSuccess -> {
-//                if (currentState.sourceLanguage.code == "auto") {
-//                    it.info?.detectedSource?.let { detectedSourceLanguageCode ->
-//                        supportedLanguages
-//                            .find { languageEntity ->
-//                                languageEntity.code == detectedSourceLanguageCode
-//                            }
-//                            ?.let { detectedSourceLanguage ->
-//                                send(SetNewSourceLanguage(detectedSourceLanguage))
-//                            }
-//                    }
-//                }
-                currentState.copy(translatedText = intention.result)
+                updateSourceLanguageIfNewDetected(
+                    currentSourceLanguageCode = currentState.sourceLanguage.code,
+                    detectedSourceLanguageCode = intention.translationWithInfo.info.detectedSource
+                )
+                currentState.copy(translatedText = intention.translationWithInfo.translation.result)
             }
             CopyTextToClipboard -> {
                 copyTextToClipboard(currentState.translatedText)
@@ -229,7 +224,7 @@ class TranslateScreenViewModel @Inject constructor(
         supportedLanguages: List<Language>,
         lookUpLanguage: String
     ): Language? {
-        return supportedLanguages.find { it.name == lookUpLanguage }
+        return supportedLanguages.containsLanguageOrNull(lookUpLanguage)
     }
 
     private fun requestTranslation(
@@ -270,6 +265,26 @@ class TranslateScreenViewModel @Inject constructor(
         viewModelScope.launch {
             dataStore.edit { preferences ->
                 preferences[DEFAULT_TARGET_LANGUAGE] = newLanguage.name
+            }
+        }
+    }
+
+    private fun updateSourceLanguageIfNewDetected(
+        currentSourceLanguageCode: String,
+        detectedSourceLanguageCode: String
+    ) {
+        viewModelScope.launch {
+            if (currentSourceLanguageCode == "auto") {
+                when (val result = supportedLanguages()) {
+                    is LanguagesRepositoryResponse.Success -> {
+                        result.languageList
+                            .containsLanguageOrNull(detectedSourceLanguageCode)
+                            ?.let { send(SetNewSourceLanguage(it))}
+                    }
+                    is LanguagesRepositoryResponse.Failure -> {
+                        send(ShowErrorDialog(true))
+                    }
+                }
             }
         }
     }

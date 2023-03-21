@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 @Keep
 @Serializable
 data class DefinitionDTO(
-    val list: List<DefinitionListDTO>? = null,
+    val list: List<DefinitionInfoDTO>? = null,
     val type: String? = null,
 )

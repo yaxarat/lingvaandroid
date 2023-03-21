@@ -6,7 +6,8 @@ import kotlinx.serialization.Serializable
 @Keep
 @Serializable
 data class InfoDTO(
-    val definition: List<DefinitionDTO>? = null,
+    val detectedSource: String? = null,
+    val definitions: List<DefinitionDTO>? = null,
     val examples: List<String>? = null,
     val extraTranslation: List<ExtraTranslationDTO>? = null,
     val pronunciation: PronunciationDTO? = null,
