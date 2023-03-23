@@ -52,7 +52,10 @@ fun QuickTranslateScreen(
     val scrollState = rememberScrollState(0)
     val quickTranslateScreenState by viewModel.states.collectAsState()
 
-    viewModel.send(OnTextToTranslateChange(textToTranslate))
+    viewModel.apply {
+        send(OnTextToTranslateChange(textToTranslate))
+        send(Translate)
+    }
     
     Column(
         modifier = Modifier
@@ -88,7 +91,7 @@ fun QuickTranslateScreen(
                 .padding(all = 16.dp)
         ) {
             OutlinedTextField(
-                value = quickTranslateScreenState.textToTranslate,
+                value = textToTranslate,
                 onValueChange = { },
                 label = {
                     Text(

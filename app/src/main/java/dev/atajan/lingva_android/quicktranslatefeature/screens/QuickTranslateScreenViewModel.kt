@@ -4,12 +4,17 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.atajan.lingva_android.common.data.datasource.DEFAULT_TARGET_LANGUAGE
 import dev.atajan.lingva_android.common.domain.models.language.Language
 import dev.atajan.lingva_android.common.domain.models.language.containsLanguageOrNull
+import dev.atajan.lingva_android.common.domain.results.LanguagesRepositoryResponse
+import dev.atajan.lingva_android.common.domain.results.TranslationRepositoryResponse
 import dev.atajan.lingva_android.common.redux.MVIViewModel
 import dev.atajan.lingva_android.common.redux.MiddleWare
 import dev.atajan.lingva_android.common.usecases.FetchSupportedLanguagesUseCase
+import dev.atajan.lingva_android.common.usecases.ObserveTranslationResultUseCase
 import dev.atajan.lingva_android.common.usecases.TranslateUseCase
 import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention
 import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.CopyTextToClipboard
@@ -25,14 +30,20 @@ import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScree
 import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenSideEffect
 import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenState
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class QuickTranslateScreenViewModel @Inject constructor(
     applicationScope: CoroutineScope,
-    private val dataStore: DataStore<Preferences>,
+    translationResult: ObserveTranslationResultUseCase,
     private val clipboardManager: ClipboardManager,
-    private val getSupportedLanguages: FetchSupportedLanguagesUseCase,
+    private val dataStore: DataStore<Preferences>,
+    private val supportedLanguages: FetchSupportedLanguagesUseCase,
     private val translate: TranslateUseCase,
 ) : MVIViewModel<QuickTranslateScreenState, QuickTranslateScreenIntention, QuickTranslateScreenSideEffect>(
     scope = applicationScope,
@@ -40,27 +51,12 @@ class QuickTranslateScreenViewModel @Inject constructor(
 ) {
 
     init {
-//        viewModelScope.launch {
-//            getSupportedLanguages().fold(
-//                success = {
-//                    send(SupportedLanguagesReceived(it.languages))
-//                },
-//                failure = {
-//                    send(ShowErrorDialog(true))
-//                }
-//            )
-//
-//            dataStore.data.mapNotNull {
-//                it[DEFAULT_TARGET_LANGUAGE]
-//            }
-//                .distinctUntilChanged()
-//                .onEach {
-//                    send(SetDefaultTargetLanguage(it))
-//                }
-//                .launchIn(this)
-//
-//            send(Translate)
-//        }
+        observeTranslationResults(translationResult)
+        viewModelScope.launch {
+            // These operations need to be sequential
+            getSupportedLanguages(this)
+            observeDefaultLanguages(this)
+        }
     }
 
     override fun reduce(
@@ -93,8 +89,7 @@ class QuickTranslateScreenViewModel @Inject constructor(
                 requestTranslation(
                     sourceLanguageCode = currentState.sourceLanguage.code,
                     targetLanguageCode = currentState.targetLanguage.code,
-                    textToTranslate = currentState.textToTranslate,
-                    supportedLanguages = currentState.supportedLanguages
+                    textToTranslate = currentState.textToTranslate
                 )
                 currentState
             }
@@ -110,42 +105,60 @@ class QuickTranslateScreenViewModel @Inject constructor(
         }
     }
 
+    private fun getSupportedLanguages(scope: CoroutineScope) {
+        scope.launch {
+            supportedLanguages().let { result ->
+                when (result) {
+                    is LanguagesRepositoryResponse.Success -> {
+                        send(SupportedLanguagesReceived(result.languageList))
+                    }
+                    is LanguagesRepositoryResponse.Failure -> {
+                        send(ShowErrorDialog(true))
+                    }
+                }
+            }
+        }
+    }
+
+    private fun observeDefaultLanguages(scope: CoroutineScope) {
+        dataStore.data.mapNotNull {
+            it[DEFAULT_TARGET_LANGUAGE]
+        }
+            .distinctUntilChanged()
+            .onEach { send(SetDefaultTargetLanguage(it)) }
+            .launchIn(scope)
+    }
+
+    private fun observeTranslationResults(translationResult: ObserveTranslationResultUseCase) {
+        translationResult().onEach {
+            when (it) {
+                is TranslationRepositoryResponse.TranslationSuccess -> {
+                    send(TranslationSuccess(it.response.result))
+                }
+                is TranslationRepositoryResponse.Failure -> {
+                    send(TranslationFailure)
+                }
+                TranslationRepositoryResponse.Loading -> {
+                    // Loading UI?
+                }
+                else -> {
+                /* Do nothing */ }
+            }
+        }.launchIn(viewModelScope)
+    }
+
     private fun requestTranslation(
         sourceLanguageCode: String,
         targetLanguageCode: String,
         textToTranslate: String,
-        supportedLanguages: List<Language>
     ) {
-//        viewModelScope.launch {
-//            translate(
-//                source = sourceLanguageCode,
-//                target = targetLanguageCode,
-//                query = textToTranslate
-//            ).fold(
-//                success = {
-//                    send(TranslationSuccess(it.translation))
-//
-//                    if (sourceLanguageCode == "auto") {
-//                        it.info?.detectedSource?.let { detectedSourceLanguageCode ->
-//                            supportedLanguages
-//                                .find { languageEntity ->
-//                                    languageEntity.code == detectedSourceLanguageCode
-//                                }
-//                                ?.let { detectedSourceLanguage ->
-//                                    send(
-//                                        SetNewSourceLanguage(
-//                                            detectedSourceLanguage
-//                                        )
-//                                    )
-//                                }
-//                        }
-//                    }
-//                },
-//                failure = {
-//                    send(TranslationFailure)
-//                }
-//            )
-//        }
+        viewModelScope.launch {
+            translate(
+                sourceLanguageCode = sourceLanguageCode,
+                targetLanguageCode = targetLanguageCode,
+                textToTranslate = textToTranslate
+            )
+        }
     }
 
     private fun copyTextToClipboard(translatedText: String) {

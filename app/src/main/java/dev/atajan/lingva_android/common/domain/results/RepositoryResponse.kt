@@ -9,9 +9,11 @@ sealed interface LanguagesRepositoryResponse {
     data class Failure(val errorMessage: String) : LanguagesRepositoryResponse
 }
 
+/**
+ * TODO: Get TranslationWithInfo as a response and filter it to Translation model with extension function
+ */
 sealed interface TranslationRepositoryResponse {
     data class TranslationSuccess(val response: Translation) : TranslationRepositoryResponse
-
     data class TranslationWithInfoSuccess(val response: TranslationWithInfo) : TranslationRepositoryResponse
     data class Failure(val errorMessage: String) : TranslationRepositoryResponse
     object Loading : TranslationRepositoryResponse

@@ -50,12 +50,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TranslateScreenViewModel @Inject constructor(
-    private val dataStore: DataStore<Preferences>,
+    applicationScope: CoroutineScope,
+    translationResult: ObserveTranslationResultUseCase,
     private val clipboardManager: ClipboardManager,
+    private val dataStore: DataStore<Preferences>,
     private val supportedLanguages: FetchSupportedLanguagesUseCase,
     private val translate: TranslateWithInfoUseCase,
-    translationResult: ObserveTranslationResultUseCase,
-    applicationScope: CoroutineScope,
 ) : MVIViewModel<TranslateScreenState, TranslateScreenIntention, TranslateScreenSideEffect>(
     scope = applicationScope,
     initialState = TranslateScreenState()
@@ -74,52 +74,9 @@ class TranslateScreenViewModel @Inject constructor(
 
     init {
         this.provideMiddleWares(stateLogger)
-
-        viewModelScope.launch {
-            supportedLanguages().let { result ->
-                when (result) {
-                    is LanguagesRepositoryResponse.Success -> {
-                        send(SupportedLanguagesReceived(result.languageList))
-                    }
-                    is LanguagesRepositoryResponse.Failure -> {
-                        send(ShowErrorDialog(true))
-                    }
-                }
-            }
-        }
-
-        dataStore.data.mapNotNull {
-            it[DEFAULT_SOURCE_LANGUAGE]
-        }
-            .distinctUntilChanged()
-            .onEach {
-                send(SetDefaultSourceLanguage(it))
-            }
-            .launchIn(viewModelScope)
-
-        dataStore.data.mapNotNull {
-            it[DEFAULT_TARGET_LANGUAGE]
-        }
-            .distinctUntilChanged()
-            .onEach {
-                send(SetDefaultTargetLanguage(it))
-            }
-            .launchIn(viewModelScope)
-
-        translationResult().onEach {
-            when (it) {
-                is TranslationRepositoryResponse.TranslationWithInfoSuccess -> {
-                    send(TranslationSuccess(it.response))
-                }
-                is TranslationRepositoryResponse.Failure -> {
-                    send(TranslationFailure)
-                }
-                TranslationRepositoryResponse.Loading -> {
-                    // Loading UI?
-                }
-                else -> { /* Do nothing */ }
-            }
-        }.launchIn(viewModelScope)
+        getSupportedLanguages()
+        observeDefaultLanguages()
+        observeTranslationResults(translationResult)
     }
 
     override fun reduce(
@@ -215,6 +172,58 @@ class TranslateScreenViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun getSupportedLanguages() {
+        viewModelScope.launch {
+            supportedLanguages().let { result ->
+                when (result) {
+                    is LanguagesRepositoryResponse.Success -> {
+                        send(SupportedLanguagesReceived(result.languageList))
+                    }
+                    is LanguagesRepositoryResponse.Failure -> {
+                        send(ShowErrorDialog(true))
+                    }
+                }
+            }
+        }
+    }
+
+    private fun observeDefaultLanguages() {
+        dataStore.data.mapNotNull {
+            it[DEFAULT_SOURCE_LANGUAGE]
+        }
+            .distinctUntilChanged()
+            .onEach {
+                send(SetDefaultSourceLanguage(it))
+            }
+            .launchIn(viewModelScope)
+
+        dataStore.data.mapNotNull {
+            it[DEFAULT_TARGET_LANGUAGE]
+        }
+            .distinctUntilChanged()
+            .onEach {
+                send(SetDefaultTargetLanguage(it))
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeTranslationResults(translationResult: ObserveTranslationResultUseCase) {
+        translationResult().onEach {
+            when (it) {
+                is TranslationRepositoryResponse.TranslationWithInfoSuccess -> {
+                    send(TranslationSuccess(it.response))
+                }
+                is TranslationRepositoryResponse.Failure -> {
+                    send(TranslationFailure)
+                }
+                TranslationRepositoryResponse.Loading -> {
+                    // Loading UI?
+                }
+                else -> { /* Do nothing */ }
+            }
+        }.launchIn(viewModelScope)
     }
 
     private fun getDefaultLanguageIfProvided(
