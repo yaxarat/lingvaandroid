@@ -8,16 +8,15 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import dagger.hilt.android.AndroidEntryPoint
-import dev.atajan.lingva_android.ui.screens.QuickTranslateScreen
-import dev.atajan.lingva_android.ui.screens.QuickTranslateScreenViewModel
-import dev.atajan.lingva_android.ui.theme.LingvaAndroidTheme
-import dev.atajan.lingva_android.ui.theme.ThemingOptions
-import dev.atajan.lingva_android.ui.theme.canUseDynamicColor
-import dev.atajan.lingva_android.ui.theme.selectedThemeFlow
+import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreen
+import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreenViewModel
+import dev.atajan.lingva_android.common.ui.theme.LingvaAndroidTheme
+import dev.atajan.lingva_android.common.ui.theme.ThemingOptions
+import dev.atajan.lingva_android.common.ui.theme.canUseDynamicColor
+import dev.atajan.lingva_android.common.ui.theme.selectedThemeFlow
 
 @ExperimentalMaterialApi
 @AndroidEntryPoint

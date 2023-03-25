@@ -1,0 +1,3 @@
+package dev.atajan.lingva_android.quicktranslatefeature.redux
+
+sealed interface QuickTranslateScreenSideEffect
