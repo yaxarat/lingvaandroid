@@ -53,7 +53,6 @@ import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.CopyTextToClipboard
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.DefaultSourceLanguageSelected
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.DefaultTargetLanguageSelected
-import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.OnTextToTranslateChange
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.SetNewSourceLanguage
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.SetNewTargetLanguage
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.ShowErrorDialog
@@ -106,9 +105,9 @@ fun TranslationScreen(
                 .padding(all = 16.dp)
         ) {
             OutlinedTextField(
-                value = translationScreenState.textToTranslate,
+                value = viewModel.textToTranslate,
                 onValueChange = { newValue: String ->
-                    viewModel.send(OnTextToTranslateChange(newValue))
+                    viewModel.onTextToTranslateChange(newValue)
                 },
                 label = {
                     Text(
