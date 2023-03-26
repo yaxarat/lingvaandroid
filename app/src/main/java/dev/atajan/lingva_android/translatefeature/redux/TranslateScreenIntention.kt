@@ -5,7 +5,6 @@ import dev.atajan.lingva_android.common.domain.models.translation.TranslationWit
 import dev.atajan.lingva_android.common.ui.theme.ThemingOptions
 
 sealed interface TranslateScreenIntention {
-    data class OnTextToTranslateChanged(val newValue: String) : TranslateScreenIntention
     data class DefaultSourceLanguageSelected(val language: Language) : TranslateScreenIntention
     data class DefaultTargetLanguageSelected(val language: Language) : TranslateScreenIntention
     data class SetDefaultTargetLanguage(val languageName: String) : TranslateScreenIntention
