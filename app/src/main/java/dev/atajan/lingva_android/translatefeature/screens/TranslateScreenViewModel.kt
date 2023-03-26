@@ -84,8 +84,10 @@ class TranslateScreenViewModel @Inject constructor(
 
     init {
         this.provideMiddleWares(stateLogger)
-        getSupportedLanguages()
-        observeDefaultLanguages()
+        viewModelScope.launch {
+            getSupportedLanguages(this)
+            observeDefaultLanguages(this)
+        }
         observeTranslationResults(translationResult)
     }
 
@@ -190,8 +192,8 @@ class TranslateScreenViewModel @Inject constructor(
         textToTranslate = newValue
     }
 
-    private fun getSupportedLanguages() {
-        viewModelScope.launch {
+    private fun getSupportedLanguages(scope: CoroutineScope) {
+        scope.launch {
             supportedLanguages().let { result ->
                 when (result) {
                     is LanguagesRepositoryResponse.Success -> {
@@ -205,7 +207,7 @@ class TranslateScreenViewModel @Inject constructor(
         }
     }
 
-    private fun observeDefaultLanguages() {
+    private fun observeDefaultLanguages(scope: CoroutineScope) {
         dataStore.data.mapNotNull {
             it[DEFAULT_SOURCE_LANGUAGE]
         }
@@ -213,7 +215,7 @@ class TranslateScreenViewModel @Inject constructor(
             .onEach {
                 send(SetDefaultSourceLanguage(it))
             }
-            .launchIn(viewModelScope)
+            .launchIn(scope)
 
         dataStore.data.mapNotNull {
             it[DEFAULT_TARGET_LANGUAGE]
@@ -222,7 +224,7 @@ class TranslateScreenViewModel @Inject constructor(
             .onEach {
                 send(SetDefaultTargetLanguage(it))
             }
-            .launchIn(viewModelScope)
+            .launchIn(scope)
     }
 
     private fun observeTranslationResults(translationResult: ObserveTranslationResultUseCase) {
@@ -246,7 +248,7 @@ class TranslateScreenViewModel @Inject constructor(
         supportedLanguages: List<Language>,
         lookUpLanguage: String
     ): Language? {
-        return supportedLanguages.containsLanguageOrNull(lookUpLanguage)
+        return supportedLanguages.find { it.name == lookUpLanguage }
     }
 
     private fun requestTranslation(
