@@ -44,6 +44,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import dev.atajan.lingva_android.R
 import dev.atajan.lingva_android.common.ui.components.ErrorNotificationDialog
+import dev.atajan.lingva_android.common.ui.components.LanguageSelectionAndSettingsBar
 import dev.atajan.lingva_android.common.ui.components.LanguageSelectionBar
 import dev.atajan.lingva_android.common.ui.components.SettingsBottomSheet
 import dev.atajan.lingva_android.common.ui.components.TitleBar
@@ -82,8 +83,17 @@ fun TranslationScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        TitleBar(
-            title = context.getString(R.string.app_name),
+        LanguageSelectionAndSettingsBar(
+            supportedLanguages = translationScreenState.supportedLanguages,
+            sourceLanguage = translationScreenState.sourceLanguage,
+            targetLanguage = translationScreenState.targetLanguage,
+            toggleErrorDialogState = {
+                viewModel.send(ShowErrorDialog(it))
+            },
+            middleIcon = Icons.Rounded.SwapHoriz,
+            onMiddleIconTap = { viewModel.send(TrySwapLanguages) },
+            onNewSourceLanguageSelected = { viewModel.send(SetNewSourceLanguage(it)) },
+            onNewTargetLanguageSelected = { viewModel.send(SetNewTargetLanguage(it)) },
             onEndIconTap = {
                 scope.launch {
                     if (modalBottomSheetState.isVisible) {
@@ -106,9 +116,7 @@ fun TranslationScreen(
         ) {
             OutlinedTextField(
                 value = viewModel.textToTranslate,
-                onValueChange = { newValue: String ->
-                    viewModel.onTextToTranslateChange(newValue)
-                },
+                onValueChange = { viewModel.onTextToTranslateChange(it)},
                 label = {
                     Text(
                         text = context.getString(R.string.source_text),
@@ -133,7 +141,7 @@ fun TranslationScreen(
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.Bottom
             ) {
-                AnimatedVisibility(translationScreenState.textToTranslate.isNotEmpty()) {
+                AnimatedVisibility(viewModel.textToTranslate.isNotEmpty()) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
@@ -176,7 +184,7 @@ fun TranslationScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.75f)
+                    .fillMaxHeight()
                     .padding(all = 16.dp)
             ) {
                 Card(
@@ -222,20 +230,6 @@ fun TranslationScreen(
                 }
             }
         }
-
-        LanguageSelectionBar(
-            modifier = Modifier.padding(all = 16.dp),
-            supportedLanguages = translationScreenState.supportedLanguages,
-            sourceLanguage = translationScreenState.sourceLanguage,
-            targetLanguage = translationScreenState.targetLanguage,
-            toggleErrorDialogState = {
-                viewModel.send(ShowErrorDialog(it))
-            },
-            middleIcon = Icons.Rounded.SwapHoriz,
-            onMiddleIconTap = { viewModel.send(TrySwapLanguages) },
-            onNewSourceLanguageSelected = { viewModel.send(SetNewSourceLanguage(it)) },
-            onNewTargetLanguageSelected = { viewModel.send(SetNewTargetLanguage(it)) }
-        )
     }
 
     SettingsBottomSheet(

@@ -7,7 +7,6 @@ data class TranslateScreenState(
     val translatedText: String = "",
     val sourceLanguage: Language = Language("auto", "Detect"),
     val targetLanguage: Language = Language("es", "Spanish"),
-    val textToTranslate: String = "",
     val errorDialogState: Boolean = false,
     val defaultSourceLanguage: String = "",
     val defaultTargetLanguage: String = "",

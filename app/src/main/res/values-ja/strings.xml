@@ -5,7 +5,7 @@
     <string name="material_you_descriptor">デバイスの壁紙とテーマに基づく</string>
     <string name="error_dialog_body">エラーが発生しました。後でもう一度やり直してください。</string>
     <string name="error_dialog_dismiss_button">わかった</string>
-    <string name="default_settings_title">デフォルトの設定</string>
+    <string name="default_languages_title">デフォルト言語</string>
     <string name="default_language_source">ソース言語：</string>
     <string name="default_language_target">目標とする言語：</string>
     <string name="tap_to_select">ここをタップして選択</string>

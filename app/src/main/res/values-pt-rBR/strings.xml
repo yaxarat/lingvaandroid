@@ -5,7 +5,7 @@
     <string name="material_you_descriptor">Com base no papel de parede e no tema do seu dispositivo</string>
     <string name="error_dialog_body">Algo deu errado. Por favor, tente novamente mais tarde.</string>
     <string name="error_dialog_dismiss_button">Ok</string>
-    <string name="default_settings_title">Configurações padrão</string>
+    <string name="default_languages_title">Idiomas padrão</string>
     <string name="default_language_source">Idioma de origem:</string>
     <string name="default_language_target">Idioma de destino:</string>
     <string name="tap_to_select">Toque aqui para selecionar</string>

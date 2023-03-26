@@ -45,15 +45,13 @@ fun LanguageSelectionBar(
     val targetLanguagesPopUpShown = remember { mutableStateOf(false) }
 
     Row(
-        modifier = modifier
-            .height(50.dp)
-            .fillMaxSize(),
+        modifier = modifier,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Surface(
             modifier = Modifier
-                .fillMaxHeight()
-                .width(130.dp)
+                .weight(1f)
+                .fillMaxSize()
                 .clickable {
                     if (supportedLanguages.isNotEmpty()) {
                         sourceLanguagesPopUpShown.value = true
@@ -99,8 +97,8 @@ fun LanguageSelectionBar(
 
         Surface(
             modifier = Modifier
-                .fillMaxHeight()
-                .width(130.dp)
+                .weight(1f)
+                .fillMaxSize()
                 .clickable {
                     if (supportedLanguages.isNotEmpty()) {
                         targetLanguagesPopUpShown.value = true

@@ -171,6 +171,6 @@ class QuickTranslateScreenViewModel @Inject constructor(
         supportedLanguages: List<Language>,
         lookUpLanguage: String
     ): Language? {
-        return supportedLanguages.containsLanguageOrNull(lookUpLanguage)
+        return supportedLanguages.find { it.name == lookUpLanguage }
     }
 }

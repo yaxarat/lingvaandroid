@@ -5,7 +5,7 @@
     <string name="material_you_descriptor">Based on your device wallpaper and theme</string>
     <string name="error_dialog_body">Something went wrong. Please try again later.</string>
     <string name="error_dialog_dismiss_button">Okay</string>
-    <string name="default_settings_title">Default settings</string>
+    <string name="default_languages_title">Default Languages</string>
     <string name="default_language_source">Source Language:</string>
     <string name="default_language_target">Target Language:</string>
     <string name="tap_to_select">Tap here to select</string>

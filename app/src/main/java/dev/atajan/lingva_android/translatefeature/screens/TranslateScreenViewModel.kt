@@ -5,7 +5,6 @@ import android.content.ClipboardManager
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -30,7 +29,6 @@ import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.CopyTextToClipboard
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.DefaultSourceLanguageSelected
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.DefaultTargetLanguageSelected
-import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.OnTextToTranslateChanged
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.SetDefaultSourceLanguage
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.SetDefaultTargetLanguage
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.SetNewSourceLanguage
@@ -47,7 +45,6 @@ import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -87,9 +84,10 @@ class TranslateScreenViewModel @Inject constructor(
 
     init {
         this.provideMiddleWares(stateLogger)
-        saveMutableStateToState()
-        getSupportedLanguages()
-        observeDefaultLanguages()
+        viewModelScope.launch {
+            getSupportedLanguages(this)
+            observeDefaultLanguages(this)
+        }
         observeTranslationResults(translationResult)
     }
 
@@ -118,7 +116,7 @@ class TranslateScreenViewModel @Inject constructor(
                 requestTranslation(
                     sourceLanguageCode = currentState.sourceLanguage.code,
                     targetLanguageCode = currentState.targetLanguage.code,
-                    textToTranslate = currentState.textToTranslate
+                    textToTranslate = textToTranslate
                 )
                 currentState
             }
@@ -147,10 +145,12 @@ class TranslateScreenViewModel @Inject constructor(
                     currentState
                 }
             }
-            is OnTextToTranslateChanged -> currentState.copy(textToTranslate = intention.newValue)
             is SetNewSourceLanguage -> currentState.copy(sourceLanguage = intention.language)
             is SetNewTargetLanguage -> currentState.copy(targetLanguage = intention.language)
-            ClearInputField -> currentState.copy(textToTranslate = "")
+            ClearInputField -> {
+                textToTranslate = ""
+                currentState
+            }
             is ToggleAppTheme -> {
                 toggleAppTheme(newTheme = intention.newTheme)
                 currentState
@@ -192,14 +192,8 @@ class TranslateScreenViewModel @Inject constructor(
         textToTranslate = newValue
     }
 
-    private fun saveMutableStateToState() {
-        snapshotFlow { textToTranslate }
-            .mapLatest { OnTextToTranslateChanged(it) }
-            .launchIn(viewModelScope)
-    }
-
-    private fun getSupportedLanguages() {
-        viewModelScope.launch {
+    private fun getSupportedLanguages(scope: CoroutineScope) {
+        scope.launch {
             supportedLanguages().let { result ->
                 when (result) {
                     is LanguagesRepositoryResponse.Success -> {
@@ -213,7 +207,7 @@ class TranslateScreenViewModel @Inject constructor(
         }
     }
 
-    private fun observeDefaultLanguages() {
+    private fun observeDefaultLanguages(scope: CoroutineScope) {
         dataStore.data.mapNotNull {
             it[DEFAULT_SOURCE_LANGUAGE]
         }
@@ -221,7 +215,7 @@ class TranslateScreenViewModel @Inject constructor(
             .onEach {
                 send(SetDefaultSourceLanguage(it))
             }
-            .launchIn(viewModelScope)
+            .launchIn(scope)
 
         dataStore.data.mapNotNull {
             it[DEFAULT_TARGET_LANGUAGE]
@@ -230,7 +224,7 @@ class TranslateScreenViewModel @Inject constructor(
             .onEach {
                 send(SetDefaultTargetLanguage(it))
             }
-            .launchIn(viewModelScope)
+            .launchIn(scope)
     }
 
     private fun observeTranslationResults(translationResult: ObserveTranslationResultUseCase) {
@@ -254,7 +248,7 @@ class TranslateScreenViewModel @Inject constructor(
         supportedLanguages: List<Language>,
         lookUpLanguage: String
     ): Language? {
-        return supportedLanguages.containsLanguageOrNull(lookUpLanguage)
+        return supportedLanguages.find { it.name == lookUpLanguage }
     }
 
     private fun requestTranslation(

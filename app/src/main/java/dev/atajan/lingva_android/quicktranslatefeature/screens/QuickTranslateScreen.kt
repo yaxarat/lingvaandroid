@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
@@ -63,7 +64,10 @@ fun QuickTranslateScreen(
             .background(MaterialTheme.colorScheme.background)
     ) {
         LanguageSelectionBar(
-            modifier = Modifier.padding(all = 16.dp),
+            modifier = Modifier
+                .height(80.dp)
+                .fillMaxSize()
+                .padding(all = 16.dp),
             supportedLanguages = quickTranslateScreenState.supportedLanguages,
             sourceLanguage = quickTranslateScreenState.sourceLanguage,
             targetLanguage = quickTranslateScreenState.targetLanguage,

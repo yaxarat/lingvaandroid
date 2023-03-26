@@ -5,7 +5,7 @@
     <string name="material_you_descriptor">In base allo sfondo e al tema del tuo dispositivo</string>
     <string name="error_dialog_body">Qualcosa è andato storto. Per favore riprova più tardi.</string>
     <string name="error_dialog_dismiss_button">Bene</string>
-    <string name="default_settings_title">Impostazioni predefinite</string>
+    <string name="default_languages_title">Lingue predefinite</string>
     <string name="default_language_source">Linguaggio del codice:</string>
     <string name="default_language_target">Lingua di destinazione:</string>
     <string name="tap_to_select">Tocca qui per selezionare</string>

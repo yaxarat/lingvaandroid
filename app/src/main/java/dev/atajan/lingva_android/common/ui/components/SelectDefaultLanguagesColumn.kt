@@ -36,7 +36,7 @@ fun SelectDefaultLanguagesColumn(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = context.getString(R.string.default_settings_title),
+            text = context.getString(R.string.default_languages_title),
             color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(16.dp)

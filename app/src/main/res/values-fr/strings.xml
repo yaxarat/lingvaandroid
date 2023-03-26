@@ -5,7 +5,7 @@
     <string name="material_you_descriptor">Basé sur le fond d\'écran et le thème de votre appareil</string>
     <string name="error_dialog_body">Quelque chose s\'est mal passé. Veuillez réessayer plus tard.</string>
     <string name="error_dialog_dismiss_button">D\'accord</string>
-    <string name="default_settings_title">Paramètres par défaut</string>
+    <string name="default_languages_title">Langues par défaut</string>
     <string name="default_language_source">Langue originelle:</string>
     <string name="default_language_target">Langue cible:</string>
     <string name="tap_to_select">Appuyez ici pour sélectionner</string>
