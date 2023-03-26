@@ -6,5 +6,6 @@ sealed class DTOToDomainModelMappingError(override val message: String) : Except
 
 sealed class LingvaApiError(override val message: String) : Exception() {
     object BadEndpoints : LingvaApiError("All endpoints failed")
+    object BadCustomEndpoint : LingvaApiError("Invalid custom endpoint")
     object TranslationFailure : LingvaApiError("Error during translation request")
 }

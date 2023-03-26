@@ -1,6 +1,8 @@
 package dev.atajan.lingva_android.common.di
 
 import android.util.Log
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -71,11 +73,13 @@ object LingvaApiModule {
     @Provides
     fun provideLingvaApi(
         androidHttpClient: HttpClient,
-        translationProviders: List<String>
+        dataStore: DataStore<Preferences>,
+        endpoints: List<String>
     ): LingvaApi {
         return KtorLingvaApi(
             androidHttpClient = androidHttpClient,
-            endpoints = translationProviders
+            dataStore = dataStore,
+            endpoints = endpoints
         )
     }
 }

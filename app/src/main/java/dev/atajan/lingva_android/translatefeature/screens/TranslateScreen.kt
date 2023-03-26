@@ -32,9 +32,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,9 +48,7 @@ import androidx.compose.ui.unit.dp
 import dev.atajan.lingva_android.R
 import dev.atajan.lingva_android.common.ui.components.ErrorNotificationDialog
 import dev.atajan.lingva_android.common.ui.components.LanguageSelectionAndSettingsBar
-import dev.atajan.lingva_android.common.ui.components.LanguageSelectionBar
 import dev.atajan.lingva_android.common.ui.components.SettingsBottomSheet
-import dev.atajan.lingva_android.common.ui.components.TitleBar
 import dev.atajan.lingva_android.common.ui.theme.ThemingOptions
 import dev.atajan.lingva_android.common.ui.theme.mediumRoundedCornerShape
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.ClearInputField
@@ -60,6 +61,7 @@ import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.ToggleAppTheme
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.Translate
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.TrySwapLanguages
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.UpdateCustomLingvaServerUrl
 import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
@@ -77,6 +79,7 @@ fun TranslationScreen(
         confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded }
     )
     val translationScreenState by viewModel.states.collectAsState()
+    val customLingvaServerUrl = remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -249,8 +252,14 @@ fun TranslationScreen(
         defaultTargetLanguage = translationScreenState.defaultTargetLanguage,
         toggleErrorDialogState = {
             viewModel.send(ShowErrorDialog(it))
-        }
+        },
+        customLingvaServerUrl = customLingvaServerUrl,
+        context = context,
     )
+
+    LaunchedEffect(!modalBottomSheetState.isVisible) {
+        viewModel.send(UpdateCustomLingvaServerUrl(customLingvaServerUrl.value))
+    }
 
     ErrorNotificationDialog(translationScreenState.errorDialogState) {
         viewModel.send(ShowErrorDialog(false))

@@ -1,5 +1,6 @@
 package dev.atajan.lingva_android.common.ui.components
 
+import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,7 +14,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import dev.atajan.lingva_android.R
 import dev.atajan.lingva_android.common.domain.models.language.Language
@@ -26,8 +26,8 @@ fun SelectDefaultLanguagesColumn(
     setDefaultTargetLanguage: (Language) -> Unit,
     supportedLanguages: List<Language>,
     toggleErrorDialogState: (Boolean) -> Unit,
+    context: Context
 ) {
-    val context = LocalContext.current
     val sourceLanguagesPopUpShown = remember { mutableStateOf(false) }
     val targetLanguagesPopUpShown = remember { mutableStateOf(false) }
 
@@ -35,13 +35,6 @@ fun SelectDefaultLanguagesColumn(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(
-            text = context.getString(R.string.default_languages_title),
-            color = MaterialTheme.colorScheme.primary,
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(16.dp)
-        )
-
         Row(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically,
@@ -86,7 +79,7 @@ fun SelectDefaultLanguagesColumn(
                 modifier = Modifier.padding(
                     start = 16.dp,
                     top = 16.dp,
-                    bottom = 32.dp,
+                    bottom = 16.dp,
                 )
             )
 
@@ -95,12 +88,7 @@ fun SelectDefaultLanguagesColumn(
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.labelLarge,
                 modifier = Modifier
-                    .padding(
-                        start = 16.dp,
-                        top = 16.dp,
-                        end = 16.dp,
-                        bottom = 32.dp,
-                    )
+                    .padding(16.dp)
                     .clickable {
                         if (supportedLanguages.isNotEmpty()) {
                             targetLanguagesPopUpShown.value = true
