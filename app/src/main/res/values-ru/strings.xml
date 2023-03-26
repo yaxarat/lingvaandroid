@@ -5,7 +5,7 @@
     <string name="material_you_descriptor">На основе обоев и темы вашего устройства</string>
     <string name="error_dialog_body">Что-то пошло не так. Пожалуйста, попробуйте позже.</string>
     <string name="error_dialog_dismiss_button">Хорошо</string>
-    <string name="default_settings_title">Настройки по умолчанию</string>
+    <string name="default_languages_title">Языки по умолчанию</string>
     <string name="default_language_source">Исходный язык:</string>
     <string name="default_language_target">Язык перевода:</string>
     <string name="tap_to_select">Нажмите здесь, чтобы выбрать</string>

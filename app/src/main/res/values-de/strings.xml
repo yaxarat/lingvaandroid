@@ -6,7 +6,7 @@
     <string name="material_you_descriptor">Basierend auf dem Hintergrundbild und Thema Ihres Geräts</string>
     <string name="error_dialog_body">Etwas ist schief gelaufen. Bitte versuchen Sie es später erneut.</string>
     <string name="error_dialog_dismiss_button">Okay</string>
-    <string name="default_settings_title">Standardeinstellungen</string>
+    <string name="default_languages_title">Standardsprachen</string>
     <string name="default_language_source">Ausgangssprache:</string>
     <string name="default_language_target">Zielsprache:</string>
     <string name="tap_to_select">Tippen Sie hier, um auszuwählen</string>

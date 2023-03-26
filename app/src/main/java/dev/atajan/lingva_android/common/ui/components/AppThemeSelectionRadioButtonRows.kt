@@ -42,9 +42,7 @@ fun AppThemeSelectionRadioButtonRows(
                         Row(
                             horizontalArrangement = Arrangement.Start,
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 16.dp)
+                            modifier = Modifier.fillMaxWidth()
                         ) {
                             RadioButton(
                                 selected = currentTheme.value.name == option.name,
@@ -55,8 +53,7 @@ fun AppThemeSelectionRadioButtonRows(
                                     selectedColor = MaterialTheme.colorScheme.primary,
                                     unselectedColor = MaterialTheme.colorScheme.onBackground,
                                     disabledColor = MaterialTheme.colorScheme.error
-                                ),
-                                modifier = Modifier.padding(horizontal = 16.dp)
+                                )
                             )
 
                             Text(
@@ -70,9 +67,7 @@ fun AppThemeSelectionRadioButtonRows(
                     Row(
                         horizontalArrangement = Arrangement.Start,
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 16.dp)
+                        modifier = Modifier.fillMaxWidth()
                     ) {
                         RadioButton(
                             selected = currentTheme.value.name == option.name,
@@ -83,8 +78,7 @@ fun AppThemeSelectionRadioButtonRows(
                                 selectedColor = MaterialTheme.colorScheme.primary,
                                 unselectedColor = MaterialTheme.colorScheme.onBackground,
                                 disabledColor = MaterialTheme.colorScheme.error
-                            ),
-                            modifier = Modifier.padding(horizontal = 16.dp)
+                            )
                         )
 
                         Text(
