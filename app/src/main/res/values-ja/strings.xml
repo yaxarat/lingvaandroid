@@ -4,13 +4,17 @@
     <string name="app_theme_setting_title">アプリのテーマ</string>
     <string name="material_you_descriptor">デバイスの壁紙とテーマに基づく</string>
     <string name="error_dialog_body">エラーが発生しました。後でもう一度やり直してください。</string>
-    <string name="error_dialog_dismiss_button">わかった</string>
+    <string name="error_dialog_dismiss_button">オッケー</string>
     <string name="default_languages_title">デフォルト言語</string>
     <string name="default_language_source">ソース言語：</string>
     <string name="default_language_target">目標とする言語：</string>
     <string name="tap_to_select">ここをタップして選択</string>
     <string name="detect_language">探知</string>
-    
+    <string name="advanced_settings_title">詳細設定</string>
+    <string name="custom_translation_server_address">カスタム翻訳サーバーURL</string>
+    <string name="custom_lingva_instance_address">カスタムlingvaサーバーURL</string>
+
+    <!--  Accessibility strings  -->
     <string name="swap_icon_ax">ソース言語とターゲット言語を入れ替える</string>
     <string name="setting_icon_ax">設定</string>
     <string name="delete_icon_ax">入力テキストをクリア</string>

@@ -15,10 +15,9 @@ private const val PREFERENCE_NAME: String = "settings"
  * Corresponding key type function to define a key for each value that you need to store.
  */
 val APP_THEME: Preferences.Key<String> = stringPreferencesKey("app_theme")
-
 val DEFAULT_SOURCE_LANGUAGE: Preferences.Key<String> = stringPreferencesKey("default_source_language")
-
 val DEFAULT_TARGET_LANGUAGE: Preferences.Key<String> = stringPreferencesKey("default_target_language")
+val CUSTOM_LINGVA_ENDPOINT: Preferences.Key<String> = stringPreferencesKey("custom_lingva_endpoint")
 
 /**
  * Use the property delegate to create an instance of Datastore<Preferences>.

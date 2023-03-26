@@ -11,8 +11,11 @@
     <string name="default_language_target">Zielsprache:</string>
     <string name="tap_to_select">Tippen Sie hier, um auszuwählen</string>
     <string name="detect_language">Erkennen</string>
+    <string name="advanced_settings_title">Erweiterte Einstellungen</string>
+    <string name="custom_translation_server_address">Benutzerdefinierte Übersetzungsserver-URL</string>
+    <string name="custom_lingva_instance_address">Benutzerdefinierte Lingva-Server-URL</string>
 
-
+    <!--  Accessibility strings  -->
     <string name="swap_icon_ax">Ausgangs- und Zielsprache tauschen</string>
     <string name="setting_icon_ax">Einstellung</string>
     <string name="delete_icon_ax">Eingabetext löschen</string>

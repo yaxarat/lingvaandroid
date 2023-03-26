@@ -11,6 +11,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.atajan.lingva_android.common.data.datasource.APP_THEME
+import dev.atajan.lingva_android.common.data.datasource.CUSTOM_LINGVA_ENDPOINT
 import dev.atajan.lingva_android.common.data.datasource.DEFAULT_SOURCE_LANGUAGE
 import dev.atajan.lingva_android.common.data.datasource.DEFAULT_TARGET_LANGUAGE
 import dev.atajan.lingva_android.common.domain.models.language.Language
@@ -25,6 +26,7 @@ import dev.atajan.lingva_android.common.usecases.FetchSupportedLanguagesUseCase
 import dev.atajan.lingva_android.common.usecases.ObserveTranslationResultUseCase
 import dev.atajan.lingva_android.common.usecases.TranslateWithInfoUseCase
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.ClearCustomLingvaServerUrl
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.ClearInputField
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.CopyTextToClipboard
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.DefaultSourceLanguageSelected
@@ -40,6 +42,7 @@ import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.TranslationFailure
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.TranslationSuccess
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.TrySwapLanguages
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.UpdateCustomLingvaServerUrl
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenSideEffect
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenState
 import kotlinx.coroutines.CoroutineScope
@@ -121,7 +124,7 @@ class TranslateScreenViewModel @Inject constructor(
                 currentState
             }
             TranslationFailure -> {
-                // TODO: should probably show & log the error
+                send(ShowErrorDialog(true))
                 currentState
             }
             is TranslationSuccess -> {
@@ -185,11 +188,27 @@ class TranslateScreenViewModel @Inject constructor(
                     currentState
                 }
             }
+            ClearCustomLingvaServerUrl -> {
+                updateCustomLingvaServer("")
+                currentState
+            }
+            is UpdateCustomLingvaServerUrl -> {
+                updateCustomLingvaServer(intention.url)
+                currentState
+            }
         }
     }
 
     fun onTextToTranslateChange(newValue: String) {
         textToTranslate = newValue
+    }
+
+    private fun updateCustomLingvaServer(url: String) {
+        viewModelScope.launch {
+            dataStore.edit { preferences ->
+                preferences[CUSTOM_LINGVA_ENDPOINT] = url
+            }
+        }
     }
 
     private fun getSupportedLanguages(scope: CoroutineScope) {

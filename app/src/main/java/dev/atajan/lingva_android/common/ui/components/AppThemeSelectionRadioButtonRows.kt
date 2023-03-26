@@ -1,10 +1,10 @@
 package dev.atajan.lingva_android.common.ui.components
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.RadioButton
 import androidx.compose.material.RadioButtonDefaults
@@ -14,8 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import dev.atajan.lingva_android.R
 import dev.atajan.lingva_android.common.ui.theme.ThemingOptions
 import dev.atajan.lingva_android.common.ui.theme.canUseDynamicColor
@@ -23,17 +21,9 @@ import dev.atajan.lingva_android.common.ui.theme.canUseDynamicColor
 @Composable
 fun AppThemeSelectionRadioButtonRows(
     toggleTheme: (ThemingOptions) -> Unit,
-    currentTheme: MutableState<ThemingOptions>
+    currentTheme: MutableState<ThemingOptions>,
+    context: Context
 ) {
-    val context = LocalContext.current
-
-    Text(
-        text = context.getString(R.string.app_theme_setting_title),
-        color = MaterialTheme.colorScheme.primary,
-        style = MaterialTheme.typography.titleLarge,
-        modifier = Modifier.padding(16.dp)
-    )
-
     Column(modifier = Modifier.selectableGroup()) {
         ThemingOptions.values()
             .forEach { option ->
