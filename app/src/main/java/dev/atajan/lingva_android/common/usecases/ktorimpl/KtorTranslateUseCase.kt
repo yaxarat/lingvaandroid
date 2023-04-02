@@ -13,8 +13,7 @@ class KtorTranslateUseCase(private val translationRepository: TranslationReposit
         translationRepository.translate(
             source = sourceLanguageCode,
             target = targetLanguageCode,
-            query = textToTranslate,
-            requireInfo = false
+            query = textToTranslate
         )
     }
 }

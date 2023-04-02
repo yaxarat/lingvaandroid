@@ -1,5 +1,6 @@
 package dev.atajan.lingva_android.common.data.api
 
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import dev.atajan.lingva_android.common.data.api.lingvaDTOs.language.LanguagesDTO
@@ -11,7 +12,9 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.http.appendPathSegments
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class KtorLingvaApi @Inject constructor(
@@ -26,13 +29,16 @@ class KtorLingvaApi @Inject constructor(
         query: String
     ): TranslationDTO {
         val customEndpoint = getCustomEndpoint()
+        val encodedQuery = withContext(Dispatchers.IO) {
+            escapeQuery(query.trim())
+        }
 
         return if (customEndpoint.isNotEmpty()) {
             try {
                 requestToEndpoint(
                     source = source,
                     target = target,
-                    query = query,
+                    query = encodedQuery,
                     endpoint = customEndpoint
                 )
             } catch (e: Exception) {
@@ -42,7 +48,7 @@ class KtorLingvaApi @Inject constructor(
             attemptTranslationRequest(
                 source = source,
                 target = target,
-                query = query
+                query = encodedQuery
             )
         }
     }
@@ -59,7 +65,8 @@ class KtorLingvaApi @Inject constructor(
         query: String,
         endpointIndex: Int = 0
     ): TranslationDTO {
-
+        Log.d("yaxar", "$endpointIndex")
+        Log.d("yaxar", "endpoints: ${endpoints.size}")
         // Throw only when all fallback endpoints have been exhausted
         if (endpointIndex > endpoints.lastIndex) throw BadEndpoints
 
@@ -86,11 +93,13 @@ class KtorLingvaApi @Inject constructor(
         query: String,
         endpoint: String
     ): TranslationDTO {
-        return androidHttpClient.get(endpoint) {
+        val response = androidHttpClient.get(endpoint) {
             url {
-                appendPathSegments(source, target, escapeQuery(query))
+                appendPathSegments(source, target, query)
             }
-        }.body()
+        }
+
+        if (response.status.value !in 200..299) throw BadEndpoints else return response.body()
     }
 
     private suspend fun attemptSupportedLanguagesRequest(endpointIndex: Int = 0): LanguagesDTO {

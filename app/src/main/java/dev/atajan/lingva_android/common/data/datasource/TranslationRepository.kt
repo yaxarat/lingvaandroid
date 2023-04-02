@@ -20,7 +20,6 @@ interface TranslationRepository {
     fun translate(
         source: String,
         target: String,
-        query: String,
-        requireInfo: Boolean = false
+        query: String
     )
 }

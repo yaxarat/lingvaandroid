@@ -16,5 +16,9 @@ data class TranslationWithInfo(
                 info = info?.toTranslationInfoDomain() ?: throw NullValue("translation info can't be null")
             )
         }
+
+        fun TranslationWithInfo.toTranslation() : Translation {
+            return Translation(this.translation.result)
+        }
     }
 }

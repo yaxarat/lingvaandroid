@@ -24,7 +24,7 @@ import dev.atajan.lingva_android.common.redux.stateLogger
 import dev.atajan.lingva_android.common.ui.theme.ThemingOptions
 import dev.atajan.lingva_android.common.usecases.FetchSupportedLanguagesUseCase
 import dev.atajan.lingva_android.common.usecases.ObserveTranslationResultUseCase
-import dev.atajan.lingva_android.common.usecases.TranslateWithInfoUseCase
+import dev.atajan.lingva_android.common.usecases.TranslateUseCase
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.ClearCustomLingvaServerUrl
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.ClearInputField
@@ -60,7 +60,7 @@ class TranslateScreenViewModel @Inject constructor(
     private val clipboardManager: ClipboardManager,
     private val dataStore: DataStore<Preferences>,
     private val supportedLanguages: FetchSupportedLanguagesUseCase,
-    private val translate: TranslateWithInfoUseCase,
+    private val translate: TranslateUseCase,
 ) : MVIViewModel<TranslateScreenState, TranslateScreenIntention, TranslateScreenSideEffect>(
     scope = applicationScope,
     initialState = TranslateScreenState()
@@ -249,7 +249,7 @@ class TranslateScreenViewModel @Inject constructor(
     private fun observeTranslationResults(translationResult: ObserveTranslationResultUseCase) {
         translationResult().onEach {
             when (it) {
-                is TranslationRepositoryResponse.TranslationWithInfoSuccess -> {
+                is TranslationRepositoryResponse.Success -> {
                     send(TranslationSuccess(it.response))
                 }
                 is TranslationRepositoryResponse.Failure -> {
@@ -258,7 +258,6 @@ class TranslateScreenViewModel @Inject constructor(
                 TranslationRepositoryResponse.Loading -> {
                     // Loading UI?
                 }
-                else -> { /* Do nothing */ }
             }
         }.launchIn(viewModelScope)
     }
