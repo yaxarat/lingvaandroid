@@ -1,6 +1,7 @@
-package dev.atajan.lingva_android.common.data.datasource
+package dev.atajan.lingva_android.common.data.datasource.impl
 
 import dev.atajan.lingva_android.common.data.api.KtorLingvaApi
+import dev.atajan.lingva_android.common.data.datasource.TranslationRepository
 import dev.atajan.lingva_android.common.domain.errors.DTOToDomainModelMappingError
 import dev.atajan.lingva_android.common.domain.errors.LingvaApiError
 import dev.atajan.lingva_android.common.domain.models.translation.TranslationWithInfo.Companion.toTranslationWithInfoDomain

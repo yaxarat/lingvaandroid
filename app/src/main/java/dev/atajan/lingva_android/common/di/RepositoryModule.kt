@@ -5,12 +5,14 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dev.atajan.lingva_android.common.data.api.KtorLingvaApi
-import dev.atajan.lingva_android.common.data.datasource.KtorLanguagesRepository
-import dev.atajan.lingva_android.common.data.datasource.KtorTranslationRepository
+import dev.atajan.lingva_android.common.data.datasource.impl.KtorLanguagesRepository
+import dev.atajan.lingva_android.common.data.datasource.impl.KtorTranslationRepository
 import dev.atajan.lingva_android.common.data.datasource.LanguagesRepository
 import dev.atajan.lingva_android.common.data.datasource.TranslationRepository
 import kotlinx.coroutines.CoroutineScope
 import javax.inject.Singleton
+import dev.atajan.lingva_android.common.data.datasource.AudioRepository
+import dev.atajan.lingva_android.common.data.datasource.impl.KtorAudioRepository
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -29,6 +31,18 @@ object RepositoryModule {
         applicationScope: CoroutineScope
     ): TranslationRepository {
         return KtorTranslationRepository(
+            api = api,
+            applicationScope = applicationScope
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun provideAudioRepository(
+        api: KtorLingvaApi,
+        applicationScope: CoroutineScope
+    ): AudioRepository {
+        return KtorAudioRepository(
             api = api,
             applicationScope = applicationScope
         )

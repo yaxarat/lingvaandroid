@@ -6,7 +6,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.atajan.lingva_android.common.data.datasource.DEFAULT_TARGET_LANGUAGE
+import dev.atajan.lingva_android.common.data.datasource.impl.DEFAULT_TARGET_LANGUAGE
 import dev.atajan.lingva_android.common.domain.models.language.Language
 import dev.atajan.lingva_android.common.domain.models.translation.TranslationWithInfo.Companion.toTranslation
 import dev.atajan.lingva_android.common.domain.results.LanguagesRepositoryResponse
