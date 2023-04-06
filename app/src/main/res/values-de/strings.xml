@@ -21,4 +21,5 @@
     <string name="delete_icon_ax">Eingabetext löschen</string>
     <string name="translate_icon_ax">Übersetzen</string>
     <string name="copy_icon_ax">Kopieren</string>
+    <string name="text_to_speech_icon_ax">Übersetzten Text abspielen</string>
 </resources>

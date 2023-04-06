@@ -20,4 +20,5 @@
     <string name="delete_icon_ax">Очистить вводимый текст</string>
     <string name="translate_icon_ax">Перевести</string>
     <string name="copy_icon_ax">Копировать</string>
+    <string name="text_to_speech_icon_ax">Воспроизвести переведенный текст</string>
 </resources>

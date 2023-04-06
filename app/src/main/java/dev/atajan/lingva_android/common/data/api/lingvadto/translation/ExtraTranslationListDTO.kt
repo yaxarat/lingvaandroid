@@ -1,4 +1,4 @@
-package dev.atajan.lingva_android.common.data.api.lingvaDTOs.translation
+package dev.atajan.lingva_android.common.data.api.lingvadto.translation
 
 import androidx.annotation.Keep
 import kotlinx.serialization.Serializable

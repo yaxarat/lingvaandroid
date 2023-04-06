@@ -20,4 +20,5 @@
     <string name="delete_icon_ax">Limpar texto de entrada</string>
     <string name="translate_icon_ax">Traduzir</string>
     <string name="copy_icon_ax">cópia de</string>
+    <string name="text_to_speech_icon_ax">Reproduzir texto traduzido</string>
 </resources>

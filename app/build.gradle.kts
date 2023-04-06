@@ -63,11 +63,11 @@ kotlin.sourceSets.all {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.9.0")
+    implementation("androidx.core:core-ktx:1.10.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.8.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.0")
-    implementation("androidx.activity:activity-compose:1.6.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
+    implementation("androidx.activity:activity-compose:1.7.0")
 
     // Accompanist
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.17.0")
@@ -85,20 +85,20 @@ dependencies {
     implementation("io.ktor:ktor-client-content-negotiation-jvm:2.1.2")
 
     // Compose
-    implementation("androidx.compose.ui:ui:1.3.3")
-    implementation("androidx.compose.material:material:1.3.3")
-    implementation("androidx.compose.animation:animation:1.3.3")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.3.3")
-    implementation("androidx.compose.material3:material3:1.1.0-alpha08")
+    implementation("androidx.compose.ui:ui:1.4.1")
+    implementation("androidx.compose.material:material:1.4.1")
+    implementation("androidx.compose.animation:animation:1.4.1")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.4.1")
+    implementation("androidx.compose.material3:material3:1.1.0-beta02")
 
     // note that due to the very large size of this dependency you should make sure to use
     // R8 / ProGuard to remove unused icons from your application.
-    implementation("androidx.compose.material:material-icons-extended:1.3.3")
+    implementation("androidx.compose.material:material-icons-extended:1.4.1")
 
     // Hilt
     implementation("com.google.dagger:hilt-android:2.44")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
 
     testImplementation("junit:junit:4.13.2")
-    debugImplementation("androidx.compose.ui:ui-tooling:1.3.3")
+    debugImplementation("androidx.compose.ui:ui-tooling:1.4.1")
 }

@@ -15,3 +15,7 @@ internal val TRANSLATION_PROVIDERS by lazy {
         GARUDALINUX
     )
 }
+
+internal const val SUPPORTED_LANGUAGE_PATH_SEGMENT = "languages/?:(source|target)"
+
+internal const val AUDIO_PATH_SEGMENT = "audio/"

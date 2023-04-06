@@ -1,6 +1,6 @@
 package dev.atajan.lingva_android.common.domain.models.language
 
-import dev.atajan.lingva_android.common.data.api.lingvaDTOs.language.LanguageDTO
+import dev.atajan.lingva_android.common.data.api.lingvadto.language.LanguageDTO
 import dev.atajan.lingva_android.common.domain.errors.DTOToDomainModelMappingError.NullValue
 
 data class Language(

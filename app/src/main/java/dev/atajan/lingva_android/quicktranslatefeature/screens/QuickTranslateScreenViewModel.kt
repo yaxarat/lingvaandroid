@@ -6,9 +6,9 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.atajan.lingva_android.common.data.datasource.DEFAULT_TARGET_LANGUAGE
+import dev.atajan.lingva_android.common.data.datasource.impl.DEFAULT_TARGET_LANGUAGE
 import dev.atajan.lingva_android.common.domain.models.language.Language
-import dev.atajan.lingva_android.common.domain.models.language.containsLanguageOrNull
+import dev.atajan.lingva_android.common.domain.models.translation.TranslationWithInfo.Companion.toTranslation
 import dev.atajan.lingva_android.common.domain.results.LanguagesRepositoryResponse
 import dev.atajan.lingva_android.common.domain.results.TranslationRepositoryResponse
 import dev.atajan.lingva_android.common.redux.MVIViewModel
@@ -132,8 +132,11 @@ class QuickTranslateScreenViewModel @Inject constructor(
     private fun observeTranslationResults(translationResult: ObserveTranslationResultUseCase) {
         translationResult().onEach {
             when (it) {
-                is TranslationRepositoryResponse.TranslationSuccess -> {
-                    send(TranslationSuccess(it.response.result))
+                is TranslationRepositoryResponse.Success -> {
+                    val responseWithInfo = it.response
+                    val pureTranslationResult = responseWithInfo.toTranslation().result
+
+                    send(TranslationSuccess(pureTranslationResult))
                 }
                 is TranslationRepositoryResponse.Failure -> {
                     send(TranslationFailure)
@@ -141,8 +144,6 @@ class QuickTranslateScreenViewModel @Inject constructor(
                 TranslationRepositoryResponse.Loading -> {
                     // Loading UI?
                 }
-                else -> {
-                /* Do nothing */ }
             }
         }.launchIn(viewModelScope)
     }

@@ -1,7 +1,8 @@
 package dev.atajan.lingva_android.common.data.api
 
-import dev.atajan.lingva_android.common.data.api.lingvaDTOs.language.LanguagesDTO
-import dev.atajan.lingva_android.common.data.api.lingvaDTOs.translation.TranslationDTO
+import dev.atajan.lingva_android.common.data.api.lingvadto.audio.AudioDTO
+import dev.atajan.lingva_android.common.data.api.lingvadto.language.LanguagesDTO
+import dev.atajan.lingva_android.common.data.api.lingvadto.translation.TranslationDTO
 
 interface LingvaApi {
 
@@ -12,4 +13,9 @@ interface LingvaApi {
     ): TranslationDTO
 
     suspend fun getSupportedLanguages(): LanguagesDTO
+
+    suspend fun getAudio(
+        language: String,
+        query: String
+    ): AudioDTO
 }
