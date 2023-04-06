@@ -1,1 +1,1 @@
-An Android client for the Lingala Translator. <a href='https://github.com/TheDavidDelta/lingva-translate'>Lingva translator</a> is an open-source translator with over a hundred languages available.
+An unofficial Android client for Lingva Translate. <a href='https://github.com/TheDavidDelta/lingva-translate'>Lingva translator</a> is an open-source translator with over one hundred languages available.
