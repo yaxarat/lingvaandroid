@@ -1,6 +1,6 @@
 package dev.atajan.lingva_android.common.domain.models.audio
 
-import dev.atajan.lingva_android.common.data.api.lingvaDTOs.audio.AudioDTO
+import dev.atajan.lingva_android.common.data.api.lingvadto.audio.AudioDTO
 import dev.atajan.lingva_android.common.domain.errors.DTOToDomainModelMappingError.NullValue
 
 data class Audio(val audioByteArray: ByteArray) {

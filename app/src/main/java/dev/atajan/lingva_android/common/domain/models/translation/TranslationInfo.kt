@@ -1,6 +1,6 @@
 package dev.atajan.lingva_android.common.domain.models.translation
 
-import dev.atajan.lingva_android.common.data.api.lingvaDTOs.translation.InfoDTO
+import dev.atajan.lingva_android.common.data.api.lingvadto.translation.InfoDTO
 
 /**
  * Although the API returns more information about the translation,
