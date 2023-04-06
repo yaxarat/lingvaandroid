@@ -22,4 +22,6 @@ sealed interface TranslateScreenIntention {
     object TrySwapLanguages : TranslateScreenIntention
     data class UpdateCustomLingvaServerUrl(val url: String) : TranslateScreenIntention
     object ClearCustomLingvaServerUrl : TranslateScreenIntention
+
+    object ReadTextOutLoud : TranslateScreenIntention
 }

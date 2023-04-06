@@ -6,29 +6,29 @@ import javax.inject.Inject
 
 class NativeAudioPlayer @Inject constructor() : AudioPlayer {
 
-    private val mediaPlayer = MediaPlayer()
-
+    private var mediaPlayer: MediaPlayer? = null
     private var temporaryAudioFile: File? = null
 
-    init {
-        mediaPlayer.setOnCompletionListener {
+    override fun playAudio(audio: ByteArray) {
+        mediaPlayer = MediaPlayer()
+        temporaryAudioFile = createTempAudioFile(audio)
+
+        mediaPlayer?.setOnCompletionListener {
             releaseMediaPlayer()
+        }
+
+        temporaryAudioFile?.let { file ->
+            mediaPlayer?.apply {
+                setDataSource(file.absolutePath)
+                prepare()
+                start()
+            }
         }
     }
 
-    override fun playAudio(audio: ByteArray) {
-        temporaryAudioFile = createTempAudioFile(audio)
-            .also {
-                with(mediaPlayer) {
-                    setDataSource(it.absolutePath)
-                    prepare()
-                    start()
-                }
-            }
-    }
-
     override fun releaseMediaPlayer() {
-        mediaPlayer.release()
+        mediaPlayer?.release()
+        mediaPlayer = null
         temporaryAudioFile?.delete()
         temporaryAudioFile = null
     }

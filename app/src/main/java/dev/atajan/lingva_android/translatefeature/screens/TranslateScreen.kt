@@ -26,6 +26,7 @@ import androidx.compose.material.icons.rounded.ContentCopy
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.SwapHoriz
 import androidx.compose.material.icons.rounded.Translate
+import androidx.compose.material.icons.rounded.VolumeUp
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -51,10 +52,12 @@ import dev.atajan.lingva_android.common.ui.components.LanguageSelectionAndSettin
 import dev.atajan.lingva_android.common.ui.components.SettingsBottomSheet
 import dev.atajan.lingva_android.common.ui.theme.ThemingOptions
 import dev.atajan.lingva_android.common.ui.theme.mediumRoundedCornerShape
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.ClearInputField
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.CopyTextToClipboard
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.DefaultSourceLanguageSelected
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.DefaultTargetLanguageSelected
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.ReadTextOutLoud
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.SetNewSourceLanguage
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.SetNewTargetLanguage
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.ShowErrorDialog
@@ -217,18 +220,37 @@ fun TranslationScreen(
                     horizontalAlignment = Alignment.End,
                     verticalArrangement = Arrangement.Bottom
                 ) {
-                    IconButton(
-                        onClick = {
-                            viewModel.send(CopyTextToClipboard)
-                        },
-                        modifier = Modifier
-                            .padding(bottom = 16.dp),
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Icon(
-                            imageVector = Icons.Rounded.ContentCopy,
-                            contentDescription = context.getString(R.string.copy_icon_ax),
-                            tint = MaterialTheme.colorScheme.primary,
-                        )
+                        IconButton(
+                            onClick = {
+                                viewModel.send(ReadTextOutLoud)
+                            },
+                            modifier = Modifier
+                                .padding(bottom = 16.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.VolumeUp,
+                                contentDescription = context.getString(R.string.text_to_speech_icon_ax),
+                                tint = MaterialTheme.colorScheme.primary,
+                            )
+                        }
+
+                        IconButton(
+                            onClick = {
+                                viewModel.send(CopyTextToClipboard)
+                            },
+                            modifier = Modifier
+                                .padding(bottom = 16.dp),
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.ContentCopy,
+                                contentDescription = context.getString(R.string.copy_icon_ax),
+                                tint = MaterialTheme.colorScheme.primary,
+                            )
+                        }
                     }
                 }
             }
