@@ -13,4 +13,6 @@ sealed interface QuickTranslateScreenIntention {
     object CopyTextToClipboard : QuickTranslateScreenIntention
     object Translate : QuickTranslateScreenIntention
     object TranslationFailure : QuickTranslateScreenIntention
+
+    object ReadTextOutLoud : QuickTranslateScreenIntention
 }
