@@ -35,6 +35,7 @@ import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.CopyTextToClipboard
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.DefaultSourceLanguageSelected
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.DefaultTargetLanguageSelected
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.DisplayPronunciation
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.ReadTextOutLoud
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.SetDefaultSourceLanguage
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.SetDefaultTargetLanguage
@@ -144,7 +145,10 @@ class TranslateScreenViewModel @Inject constructor(
                     detectedSourceLanguageCode = intention.translationWithInfo.info.detectedSource
                 )
 
-                currentState.copy(translatedText = intention.translationWithInfo.translation.result)
+                currentState.copy(
+                    translatedText = intention.translationWithInfo.translation.result,
+                    translatedTextPronunciation = intention.translationWithInfo.info.pronunciation,
+                )
             }
             CopyTextToClipboard -> {
                 copyTextToClipboard(currentState.translatedText)
@@ -214,6 +218,13 @@ class TranslateScreenViewModel @Inject constructor(
                     query = currentState.translatedText
                 )
                 currentState
+            }
+            DisplayPronunciation -> {
+                if (!currentState.translatedTextPronunciation.isEmpty()) {
+                    currentState.copy(displayPronunciation = !currentState.displayPronunciation)
+                } else {
+                    currentState
+                }
             }
         }
     }
