@@ -1,5 +1,5 @@
 # Lentil Translate 
-An unofficial Android client for [Lingva Translate ](https://lingva.ml/)
+An unofficial Android client for [Lingva Translate](https://github.com/TheDavidDelta/lingva-translate)
 
 > If you want to try on the web client:
 https://lingva.ml
