@@ -1,0 +1,7 @@
+# Changelog
+What's New in 1.3.0:
+* Fixed Keyboard Bug: We have resolved a frustrating bug where text insertion and deletion were not smooth.
+* Audio Playback Feature: We have added an audio playback feature that allows you to listen to translations.
+* Pronunciation Feature: We have added a pronunciation feature. Custom Lingva
+* Endpoint Feature: We have introduced a custom Lingva endpoint feature.
+* Fixed Other Bugs: We have also addressed other minor bugs, including inconsistent settings.
