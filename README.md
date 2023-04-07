@@ -20,7 +20,10 @@ height="80">](https://play.google.com/store/apps/details?id=dev.atajan.lingva_an
 • `It's privacy respecting.`
    > Check our [privacy policy](https://github.com/yaxarat/lingvaandroid/blob/main/PrivacyPolicy.md)
 
-• `Audio output for your translations.`
+• `Audio playbacks for your translations.`
 
 • `Supports multiple themes, including Material You.`
+
+• `Custom Lingva
+ endpoints.`
 
