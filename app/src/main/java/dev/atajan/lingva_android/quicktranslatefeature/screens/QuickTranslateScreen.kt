@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,6 +22,7 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowRightAlt
 import androidx.compose.material.icons.rounded.ContentCopy
+import androidx.compose.material.icons.rounded.VolumeUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -36,12 +38,15 @@ import dev.atajan.lingva_android.R
 import dev.atajan.lingva_android.common.ui.components.ErrorNotificationDialog
 import dev.atajan.lingva_android.common.ui.components.LanguageSelectionBar
 import dev.atajan.lingva_android.common.ui.theme.mediumRoundedCornerShape
+import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention
 import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.CopyTextToClipboard
 import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.OnTextToTranslateChange
+import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.ReadTextOutLoud
 import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.SetNewSourceLanguage
 import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.SetNewTargetLanguage
 import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.ShowErrorDialog
 import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.Translate
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention
 
 @ExperimentalMaterialApi
 @Composable
@@ -150,18 +155,37 @@ fun QuickTranslateScreen(
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.Bottom
             ) {
-                IconButton(
-                    onClick = {
-                        viewModel.send(CopyTextToClipboard)
-                    },
-                    modifier = Modifier
-                        .padding(bottom = 16.dp),
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Icon(
-                        imageVector = Icons.Rounded.ContentCopy,
-                        contentDescription = context.getString(R.string.copy_icon_ax),
-                        tint = MaterialTheme.colorScheme.primary,
-                    )
+                    IconButton(
+                        onClick = {
+                            viewModel.send(ReadTextOutLoud)
+                        },
+                        modifier = Modifier
+                            .padding(bottom = 16.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.VolumeUp,
+                            contentDescription = context.getString(R.string.text_to_speech_icon_ax),
+                            tint = MaterialTheme.colorScheme.primary,
+                        )
+                    }
+
+                    IconButton(
+                        onClick = {
+                            viewModel.send(CopyTextToClipboard)
+                        },
+                        modifier = Modifier
+                            .padding(bottom = 16.dp),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.ContentCopy,
+                            contentDescription = context.getString(R.string.copy_icon_ax),
+                            tint = MaterialTheme.colorScheme.primary,
+                        )
+                    }
                 }
             }
         }

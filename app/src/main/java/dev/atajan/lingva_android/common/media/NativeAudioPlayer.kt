@@ -10,6 +10,7 @@ class NativeAudioPlayer @Inject constructor() : AudioPlayer {
     private var temporaryAudioFile: File? = null
 
     override fun playAudio(audio: ByteArray) {
+        if (mediaPlayer != null) releaseMediaPlayer()
         mediaPlayer = MediaPlayer()
         temporaryAudioFile = createTempAudioFile(audio)
 
