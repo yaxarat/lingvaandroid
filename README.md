@@ -27,3 +27,18 @@ height="80">](https://play.google.com/store/apps/details?id=dev.atajan.lingva_an
 • `Custom Lingva
  endpoints.`
 
+## Screenshots
+<div align="center"> 
+
+ <div> 
+
+ <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="30%" /> 
+
+ <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="30%" /> 
+
+ <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="30%" /> 
+
+
+ </div> 
+
+ </div>
