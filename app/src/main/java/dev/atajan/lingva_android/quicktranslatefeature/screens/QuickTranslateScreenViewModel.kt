@@ -9,16 +9,21 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.atajan.lingva_android.common.data.datasource.impl.DEFAULT_TARGET_LANGUAGE
 import dev.atajan.lingva_android.common.domain.models.language.Language
 import dev.atajan.lingva_android.common.domain.models.translation.TranslationWithInfo.Companion.toTranslation
+import dev.atajan.lingva_android.common.domain.results.AudioRepositoryResponse
 import dev.atajan.lingva_android.common.domain.results.LanguagesRepositoryResponse
 import dev.atajan.lingva_android.common.domain.results.TranslationRepositoryResponse
 import dev.atajan.lingva_android.common.redux.MVIViewModel
 import dev.atajan.lingva_android.common.redux.MiddleWare
 import dev.atajan.lingva_android.common.usecases.FetchSupportedLanguagesUseCase
+import dev.atajan.lingva_android.common.usecases.ObserveAudioDataUseCase
 import dev.atajan.lingva_android.common.usecases.ObserveTranslationResultUseCase
+import dev.atajan.lingva_android.common.usecases.PlayByteArrayAudioUseCase
+import dev.atajan.lingva_android.common.usecases.RequestAudioDataUseCase
 import dev.atajan.lingva_android.common.usecases.TranslateUseCase
 import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention
 import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.CopyTextToClipboard
 import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.OnTextToTranslateChange
+import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.ReadTextOutLoud
 import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.SetDefaultTargetLanguage
 import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.SetNewSourceLanguage
 import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.SetNewTargetLanguage
@@ -29,6 +34,7 @@ import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScree
 import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.TranslationSuccess
 import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenSideEffect
 import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenState
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
@@ -41,10 +47,13 @@ import javax.inject.Inject
 class QuickTranslateScreenViewModel @Inject constructor(
     applicationScope: CoroutineScope,
     translationResult: ObserveTranslationResultUseCase,
+    audioData: ObserveAudioDataUseCase,
     private val clipboardManager: ClipboardManager,
     private val dataStore: DataStore<Preferences>,
     private val supportedLanguages: FetchSupportedLanguagesUseCase,
     private val translate: TranslateUseCase,
+    private val playByteArrayAudio: PlayByteArrayAudioUseCase,
+    private val requestAudioData: RequestAudioDataUseCase,
 ) : MVIViewModel<QuickTranslateScreenState, QuickTranslateScreenIntention, QuickTranslateScreenSideEffect>(
     scope = applicationScope,
     initialState = QuickTranslateScreenState()
@@ -54,9 +63,10 @@ class QuickTranslateScreenViewModel @Inject constructor(
         observeTranslationResults(translationResult)
         viewModelScope.launch {
             // These operations need to be sequential
-            getSupportedLanguages(this)
+            getSupportedLanguages()
             observeDefaultLanguages(this)
         }
+        observeAudioData(audioData)
     }
 
     override fun reduce(
@@ -102,19 +112,24 @@ class QuickTranslateScreenViewModel @Inject constructor(
             is OnTextToTranslateChange -> {
                 currentState.copy(textToTranslate = intention.newValue)
             }
+            ReadTextOutLoud -> {
+                requestAudioData(
+                    language = currentState.targetLanguage.code,
+                    query = currentState.translatedText
+                )
+                currentState
+            }
         }
     }
 
-    private fun getSupportedLanguages(scope: CoroutineScope) {
-        scope.launch {
-            supportedLanguages().let { result ->
-                when (result) {
-                    is LanguagesRepositoryResponse.Success -> {
-                        send(SupportedLanguagesReceived(result.languageList))
-                    }
-                    is LanguagesRepositoryResponse.Failure -> {
-                        send(ShowErrorDialog(true))
-                    }
+    private suspend fun getSupportedLanguages() {
+        supportedLanguages().let { result ->
+            when (result) {
+                is LanguagesRepositoryResponse.Success -> {
+                    send(SupportedLanguagesReceived(result.languageList))
+                }
+                is LanguagesRepositoryResponse.Failure -> {
+                    send(ShowErrorDialog(true))
                 }
             }
         }
@@ -173,5 +188,18 @@ class QuickTranslateScreenViewModel @Inject constructor(
         lookUpLanguage: String
     ): Language? {
         return supportedLanguages.find { it.name == lookUpLanguage }
+    }
+
+    private fun observeAudioData(audioRepository: ObserveAudioDataUseCase) {
+        audioRepository().onEach {
+            when (it) {
+                is AudioRepositoryResponse.Success -> {
+                    playByteArrayAudio(it.audio.audioByteArray)
+                }
+                is AudioRepositoryResponse.Failure -> {
+                    send(ShowErrorDialog(true))
+                }
+            }
+        }.launchIn(viewModelScope)
     }
 }

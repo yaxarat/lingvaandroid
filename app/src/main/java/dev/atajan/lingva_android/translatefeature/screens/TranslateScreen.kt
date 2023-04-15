@@ -24,6 +24,7 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ContentCopy
 import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.SpeakerNotes
 import androidx.compose.material.icons.rounded.SwapHoriz
 import androidx.compose.material.icons.rounded.Translate
 import androidx.compose.material.icons.rounded.VolumeUp
@@ -52,11 +53,11 @@ import dev.atajan.lingva_android.common.ui.components.LanguageSelectionAndSettin
 import dev.atajan.lingva_android.common.ui.components.SettingsBottomSheet
 import dev.atajan.lingva_android.common.ui.theme.ThemingOptions
 import dev.atajan.lingva_android.common.ui.theme.mediumRoundedCornerShape
-import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.ClearInputField
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.CopyTextToClipboard
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.DefaultSourceLanguageSelected
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.DefaultTargetLanguageSelected
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.DisplayPronunciation
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.ReadTextOutLoud
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.SetNewSourceLanguage
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.SetNewTargetLanguage
@@ -205,7 +206,11 @@ fun TranslationScreen(
                 ) {
                     SelectionContainer {
                         Text(
-                            translationScreenState.translatedText,
+                            text = if (translationScreenState.displayPronunciation) {
+                                translationScreenState.translatedTextPronunciation
+                            } else {
+                                translationScreenState.translatedText
+                            },
                             color = MaterialTheme.colorScheme.onBackground,
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier
@@ -228,8 +233,7 @@ fun TranslationScreen(
                             onClick = {
                                 viewModel.send(ReadTextOutLoud)
                             },
-                            modifier = Modifier
-                                .padding(bottom = 16.dp)
+                            modifier = Modifier.padding(bottom = 16.dp)
                         ) {
                             Icon(
                                 imageVector = Icons.Rounded.VolumeUp,
@@ -240,10 +244,22 @@ fun TranslationScreen(
 
                         IconButton(
                             onClick = {
+                                viewModel.send(DisplayPronunciation)
+                            },
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.SpeakerNotes,
+                                contentDescription = context.getString(R.string.text_to_speech_icon_ax),
+                                tint = MaterialTheme.colorScheme.primary,
+                            )
+                        }
+
+                        IconButton(
+                            onClick = {
                                 viewModel.send(CopyTextToClipboard)
                             },
-                            modifier = Modifier
-                                .padding(bottom = 16.dp),
+                            modifier = Modifier.padding(bottom = 16.dp),
                         ) {
                             Icon(
                                 imageVector = Icons.Rounded.ContentCopy,

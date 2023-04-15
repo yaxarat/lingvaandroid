@@ -24,4 +24,5 @@ sealed interface TranslateScreenIntention {
     object ClearCustomLingvaServerUrl : TranslateScreenIntention
 
     object ReadTextOutLoud : TranslateScreenIntention
+    object DisplayPronunciation : TranslateScreenIntention
 }
