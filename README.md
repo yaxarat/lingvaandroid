@@ -26,6 +26,8 @@ height="80">](https://play.google.com/store/apps/details?id=dev.atajan.lingva_an
 
 • `Custom Lingva
  endpoints.`
+ 
+---
 
 ## Screenshots
 <div align="center"> 
