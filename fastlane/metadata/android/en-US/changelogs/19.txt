@@ -1,0 +1,3 @@
+# Changelog
+What's New in 1.3.1:
+* Fixed crashes seen in Android devices with API level 30 or below.
