@@ -1,10 +1,7 @@
-# Lentil Translate Android
-An un official Android client for the Lingva Translate
+# Lentil Translate 
+An unofficial Android client for [Lingva Translate](https://github.com/TheDavidDelta/lingva-translate)
 
-For more information about Lingva Translate:
-https://github.com/TheDavidDelta/lingva-translate
-
-To try on the web client:
+> If you want to try on the web client:
 https://lingva.ml
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
@@ -14,10 +11,36 @@ height="80">](https://f-droid.org/packages/dev.atajan.lingva_android)
 alt="Get it on Google Play"
 height="80">](https://play.google.com/store/apps/details?id=dev.atajan.lingva_android)
 
-## Supports Multiple Themes, Including Material You
-Lentil Dark | Lentil Light
-:-------------------------:|:-------------------------:
-![](./fastlane/metadata/android/en-US/images/phoneScreenshots/1.png)  |  ![](./fastlane/metadata/android/en-US/images/phoneScreenshots/2.png)
+---
 
-### Material You
-![](./fastlane/metadata/android/en-US/images/phoneScreenshots/3.png)
+## Features
+
+• `It's open source.`
+
+• `It's privacy respecting.`
+   > Check our [privacy policy](https://github.com/yaxarat/lingvaandroid/blob/main/PrivacyPolicy.md)
+
+• `Audio playbacks for your translations.`
+
+• `Supports multiple themes, including Material You.`
+
+• `Custom Lingva
+ endpoints.`
+ 
+---
+
+## Screenshots
+<div align="center"> 
+
+ <div> 
+
+ <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="30%" /> 
+
+ <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="30%" /> 
+
+ <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="30%" /> 
+
+
+ </div> 
+
+ </div>
