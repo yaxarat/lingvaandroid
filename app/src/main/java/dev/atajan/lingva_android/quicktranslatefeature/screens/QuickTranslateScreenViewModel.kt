@@ -34,7 +34,6 @@ import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScree
 import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.TranslationSuccess
 import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenSideEffect
 import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenState
-import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn

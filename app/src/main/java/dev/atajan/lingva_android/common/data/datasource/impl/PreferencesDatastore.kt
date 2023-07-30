@@ -3,6 +3,7 @@ package dev.atajan.lingva_android.common.data.datasource.impl
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 
@@ -18,6 +19,7 @@ val APP_THEME: Preferences.Key<String> = stringPreferencesKey("app_theme")
 val DEFAULT_SOURCE_LANGUAGE: Preferences.Key<String> = stringPreferencesKey("default_source_language")
 val DEFAULT_TARGET_LANGUAGE: Preferences.Key<String> = stringPreferencesKey("default_target_language")
 val CUSTOM_LINGVA_ENDPOINT: Preferences.Key<String> = stringPreferencesKey("custom_lingva_endpoint")
+val LIVE_TRANSLATE_ENABLED: Preferences.Key<Boolean> = booleanPreferencesKey("live_translate_enabled")
 
 /**
  * Use the property delegate to create an instance of Datastore<Preferences>.

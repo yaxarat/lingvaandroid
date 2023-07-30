@@ -11,12 +11,12 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import dagger.hilt.android.AndroidEntryPoint
-import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreen
-import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreenViewModel
 import dev.atajan.lingva_android.common.ui.theme.LingvaAndroidTheme
 import dev.atajan.lingva_android.common.ui.theme.ThemingOptions
 import dev.atajan.lingva_android.common.ui.theme.canUseDynamicColor
 import dev.atajan.lingva_android.common.ui.theme.selectedThemeFlow
+import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreen
+import dev.atajan.lingva_android.quicktranslatefeature.screens.QuickTranslateScreenViewModel
 
 @ExperimentalMaterialApi
 @AndroidEntryPoint

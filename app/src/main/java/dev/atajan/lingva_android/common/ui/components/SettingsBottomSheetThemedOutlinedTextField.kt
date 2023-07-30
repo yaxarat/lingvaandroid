@@ -12,19 +12,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import dev.atajan.lingva_android.common.constants.LINGVA
 
 @Composable
 fun SettingsBottomSheetOutlinedTextField(
     label: String,
     currentTextFieldValue: MutableState<String>,
+    hint: String,
     onValueChange: (String) -> Unit,
 ) {
+    // TODO: add URL validation
     OutlinedTextField(
         value = currentTextFieldValue.value,
         placeholder = {
             Text(
-                text = "https://lingva.ml/api/v1/",
+                text = if (hint.isEmpty()) "Default: $LINGVA" else "Currently: $hint",
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = ContentAlpha.disabled)
             )
         },
@@ -38,7 +42,10 @@ fun SettingsBottomSheetOutlinedTextField(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Default),
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Uri,
+            imeAction = ImeAction.Default
+        ),
         textStyle = MaterialTheme.typography.labelLarge,
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = MaterialTheme.colorScheme.primary.copy(alpha = ContentAlpha.high),

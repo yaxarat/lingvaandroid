@@ -38,7 +38,6 @@ import dev.atajan.lingva_android.R
 import dev.atajan.lingva_android.common.ui.components.ErrorNotificationDialog
 import dev.atajan.lingva_android.common.ui.components.LanguageSelectionBar
 import dev.atajan.lingva_android.common.ui.theme.mediumRoundedCornerShape
-import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention
 import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.CopyTextToClipboard
 import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.OnTextToTranslateChange
 import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.ReadTextOutLoud
@@ -46,7 +45,6 @@ import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScree
 import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.SetNewTargetLanguage
 import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.ShowErrorDialog
 import dev.atajan.lingva_android.quicktranslatefeature.redux.QuickTranslateScreenIntention.Translate
-import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention
 
 @ExperimentalMaterialApi
 @Composable

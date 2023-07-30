@@ -5,14 +5,14 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dev.atajan.lingva_android.common.data.api.KtorLingvaApi
-import dev.atajan.lingva_android.common.data.datasource.impl.KtorLanguagesRepository
-import dev.atajan.lingva_android.common.data.datasource.impl.KtorTranslationRepository
+import dev.atajan.lingva_android.common.data.datasource.AudioRepository
 import dev.atajan.lingva_android.common.data.datasource.LanguagesRepository
 import dev.atajan.lingva_android.common.data.datasource.TranslationRepository
+import dev.atajan.lingva_android.common.data.datasource.impl.KtorAudioRepository
+import dev.atajan.lingva_android.common.data.datasource.impl.KtorLanguagesRepository
+import dev.atajan.lingva_android.common.data.datasource.impl.KtorTranslationRepository
 import kotlinx.coroutines.CoroutineScope
 import javax.inject.Singleton
-import dev.atajan.lingva_android.common.data.datasource.AudioRepository
-import dev.atajan.lingva_android.common.data.datasource.impl.KtorAudioRepository
 
 @Module
 @InstallIn(SingletonComponent::class)

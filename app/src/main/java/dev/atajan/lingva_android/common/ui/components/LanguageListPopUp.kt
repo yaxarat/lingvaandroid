@@ -1,6 +1,7 @@
 package dev.atajan.lingva_android.common.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,8 +12,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
@@ -38,6 +39,11 @@ fun LanguageListPopUp(
                         .background(
                             color = MaterialTheme.colorScheme.background,
                             RoundedCornerShape(16.dp)
+                        )
+                        .border(
+                            width = 3.dp,
+                            color = MaterialTheme.colorScheme.primary,
+                            shape = RoundedCornerShape(16.dp)
                         )
                 ) {
                     LazyColumn(modifier = Modifier.padding(8.dp)) {
