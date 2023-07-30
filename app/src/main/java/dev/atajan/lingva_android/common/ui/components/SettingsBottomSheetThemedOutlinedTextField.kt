@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import dev.atajan.lingva_android.common.constants.LINGVA
 
 @Composable
 fun SettingsBottomSheetOutlinedTextField(
@@ -27,7 +28,7 @@ fun SettingsBottomSheetOutlinedTextField(
         value = currentTextFieldValue.value,
         placeholder = {
             Text(
-                text = if (hint.isEmpty()) "Default: https://lingva.ml/api/v1/" else "Currently: $hint",
+                text = if (hint.isEmpty()) "Default: $LINGVA" else "Currently: $hint",
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = ContentAlpha.disabled)
             )
         },
