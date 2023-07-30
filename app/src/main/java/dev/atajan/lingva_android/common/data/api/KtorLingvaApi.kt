@@ -1,6 +1,5 @@
 package dev.atajan.lingva_android.common.data.api
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import dev.atajan.lingva_android.common.constants.AUDIO_PATH_SEGMENT
@@ -101,7 +100,6 @@ class KtorLingvaApi @Inject constructor(
                 endpoint = endpoints[endpointIndex]
             )
         } catch (e: Exception) {
-            Log.d("yaxar", "$e")
             attemptTranslationRequest(
                 source = source,
                 target = target,

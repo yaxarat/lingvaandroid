@@ -13,6 +13,7 @@
     <string name="advanced_settings_title">詳細設定</string>
     <string name="custom_translation_server_address">カスタム翻訳サーバーURL</string>
     <string name="custom_lingva_instance_address">カスタムlingvaサーバーURL</string>
+    <string name="toggle_live_translate">ライブ翻訳を切り替える</string>
 
     <!--  Accessibility strings  -->
     <string name="swap_icon_ax">ソース言語とターゲット言語を入れ替える</string>

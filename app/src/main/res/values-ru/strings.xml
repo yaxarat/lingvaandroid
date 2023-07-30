@@ -13,6 +13,7 @@
     <string name="advanced_settings_title">Расширенные настройки</string>
     <string name="custom_translation_server_address">URL-адрес пользовательского сервера перевода</string>
     <string name="custom_lingva_instance_address">URL-адрес пользовательского сервера Lingva</string>
+    <string name="toggle_live_translate">Переключить живой перевод</string>
 
     <!--  Accessibility strings  -->
     <string name="swap_icon_ax">Поменять местами исходный и целевой языки</string>

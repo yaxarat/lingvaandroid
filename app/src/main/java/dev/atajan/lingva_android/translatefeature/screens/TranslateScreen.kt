@@ -65,7 +65,8 @@ import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.ToggleAppTheme
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.Translate
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.TrySwapLanguages
-import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.UpdateCustomLingvaServerUrl
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.UserToggleLiveTranslate
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.UserUpdateCustomLingvaServerUrl
 import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
@@ -84,6 +85,7 @@ fun TranslationScreen(
     )
     val translationScreenState by viewModel.states.collectAsState()
     val customLingvaServerUrl = remember { mutableStateOf("") }
+    val textToTranslate by viewModel.textToTranslate.collectAsState()
 
     Column(
         modifier = Modifier
@@ -122,8 +124,10 @@ fun TranslationScreen(
                 .padding(all = 16.dp)
         ) {
             OutlinedTextField(
-                value = viewModel.textToTranslate,
-                onValueChange = { viewModel.onTextToTranslateChange(it)},
+                value = textToTranslate,
+                onValueChange = {
+                    viewModel.onTextToTranslateChange(it)
+                },
                 label = {
                     Text(
                         text = context.getString(R.string.source_text),
@@ -148,7 +152,7 @@ fun TranslationScreen(
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.Bottom
             ) {
-                AnimatedVisibility(viewModel.textToTranslate.isNotEmpty()) {
+                AnimatedVisibility(textToTranslate.isNotEmpty()) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
@@ -292,11 +296,17 @@ fun TranslationScreen(
             viewModel.send(ShowErrorDialog(it))
         },
         customLingvaServerUrl = customLingvaServerUrl,
+        liveTranslateEnabled = translationScreenState.liveTranslationEnabled,
+        onToggleLiveTranslate = { viewModel.send(UserToggleLiveTranslate(it)) },
+        currentCustomLingvaServerUrl = translationScreenState.customLingvaServerUrl,
         context = context,
     )
 
     LaunchedEffect(!modalBottomSheetState.isVisible) {
-        viewModel.send(UpdateCustomLingvaServerUrl(customLingvaServerUrl.value))
+        if (customLingvaServerUrl.value.isNotEmpty()) {
+            viewModel.send(UserUpdateCustomLingvaServerUrl(customLingvaServerUrl.value))
+            customLingvaServerUrl.value = ""
+        }
     }
 
     ErrorNotificationDialog(translationScreenState.errorDialogState) {

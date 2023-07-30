@@ -2,9 +2,6 @@ package dev.atajan.lingva_android.translatefeature.screens
 
 import android.content.ClipData
 import android.content.ClipboardManager
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -14,6 +11,7 @@ import dev.atajan.lingva_android.common.data.datasource.impl.APP_THEME
 import dev.atajan.lingva_android.common.data.datasource.impl.CUSTOM_LINGVA_ENDPOINT
 import dev.atajan.lingva_android.common.data.datasource.impl.DEFAULT_SOURCE_LANGUAGE
 import dev.atajan.lingva_android.common.data.datasource.impl.DEFAULT_TARGET_LANGUAGE
+import dev.atajan.lingva_android.common.data.datasource.impl.LIVE_TRANSLATE_ENABLED
 import dev.atajan.lingva_android.common.domain.models.language.Language
 import dev.atajan.lingva_android.common.domain.models.language.containsLanguageOrNull
 import dev.atajan.lingva_android.common.domain.results.AudioRepositoryResponse
@@ -37,8 +35,10 @@ import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.DefaultTargetLanguageSelected
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.DisplayPronunciation
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.ReadTextOutLoud
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.SetCustomLingvaServerUrl
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.SetDefaultSourceLanguage
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.SetDefaultTargetLanguage
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.SetLiveTranslate
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.SetNewSourceLanguage
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.SetNewTargetLanguage
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.ShowErrorDialog
@@ -48,12 +48,20 @@ import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.TranslationFailure
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.TranslationSuccess
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.TrySwapLanguages
-import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.UpdateCustomLingvaServerUrl
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.UserToggleLiveTranslate
+import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenIntention.UserUpdateCustomLingvaServerUrl
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenSideEffect
 import dev.atajan.lingva_android.translatefeature.redux.TranslateScreenState
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -91,19 +99,22 @@ class TranslateScreenViewModel @Inject constructor(
      * Rough state management fix for text field:
      * https://medium.com/androiddevelopers/effective-state-management-for-textfield-in-compose-d6e5b070fbe5
      */
-    var textToTranslate by mutableStateOf("")
+    var textToTranslate = MutableStateFlow("")
         private set
+
+    private var liveTranslateJob: Job? = null
 
     init {
         this.provideMiddleWares(stateLogger)
 
-        // TODO: Figure out the weirdness surrounding this
         viewModelScope.launch {
             getSupportedLanguages()
             observeDefaultLanguages(this)
         }
+        observeIfCustomLingvaServerSet()
         observeTranslationResults(translationResult)
         observeAudioData(audioData)
+        observeIfLiveTranslateEnabled()
     }
 
     override fun reduce(
@@ -131,7 +142,7 @@ class TranslateScreenViewModel @Inject constructor(
                 requestTranslation(
                     sourceLanguageCode = currentState.sourceLanguage.code,
                     targetLanguageCode = currentState.targetLanguage.code,
-                    textToTranslate = textToTranslate
+                    textToTranslate = textToTranslate.value
                 )
                 currentState
             }
@@ -167,7 +178,7 @@ class TranslateScreenViewModel @Inject constructor(
             is SetNewSourceLanguage -> currentState.copy(sourceLanguage = intention.language)
             is SetNewTargetLanguage -> currentState.copy(targetLanguage = intention.language)
             ClearInputField -> {
-                textToTranslate = ""
+                viewModelScope.launch { textToTranslate.emit("") }
                 currentState
             }
             is ToggleAppTheme -> {
@@ -208,9 +219,12 @@ class TranslateScreenViewModel @Inject constructor(
                 updateCustomLingvaServer("")
                 currentState
             }
-            is UpdateCustomLingvaServerUrl -> {
+            is UserUpdateCustomLingvaServerUrl -> {
                 updateCustomLingvaServer(intention.url)
                 currentState
+            }
+            is SetCustomLingvaServerUrl -> {
+                currentState.copy(customLingvaServerUrl = intention.url)
             }
             ReadTextOutLoud -> {
                 requestAudioData(
@@ -226,11 +240,29 @@ class TranslateScreenViewModel @Inject constructor(
                     currentState
                 }
             }
+
+            is UserToggleLiveTranslate -> {
+                updateLiveTranslatePreference(intention.enabled)
+                currentState
+            }
+
+            is SetLiveTranslate -> {
+                liveTranslate(intention.enabled)
+                currentState.copy(liveTranslationEnabled = intention.enabled)
+            }
         }
     }
 
     fun onTextToTranslateChange(newValue: String) {
-        textToTranslate = newValue
+        viewModelScope.launch { textToTranslate.emit(newValue) }
+    }
+
+    private fun updateLiveTranslatePreference(newValue: Boolean) {
+        viewModelScope.launch {
+            dataStore.edit { preferences ->
+                preferences[LIVE_TRANSLATE_ENABLED] = newValue
+            }
+        }
     }
 
     private fun updateCustomLingvaServer(url: String) {
@@ -370,5 +402,43 @@ class TranslateScreenViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
+    }
+
+    private fun observeIfCustomLingvaServerSet() {
+        dataStore.data
+            .mapNotNull { it[CUSTOM_LINGVA_ENDPOINT] }
+            .distinctUntilChanged()
+            .onEach {
+                send(SetCustomLingvaServerUrl(it))
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeIfLiveTranslateEnabled() {
+        dataStore.data
+            .map { it[LIVE_TRANSLATE_ENABLED] }
+            .distinctUntilChanged()
+            .onEach { enabled ->
+                if (enabled == null || enabled == true) {
+                    send(SetLiveTranslate(enabled = true))
+                } else {
+                    send(SetLiveTranslate(enabled = false))
+                }
+            }
+            .launchIn(viewModelScope)
+    }
+
+    @OptIn(FlowPreview::class)
+    private fun liveTranslate(enable: Boolean) {
+        liveTranslateJob = if (enable) {
+            textToTranslate
+                .drop(1)
+                .debounce(300)
+                .onEach { send(Translate) }
+                .launchIn(viewModelScope)
+        } else {
+            liveTranslateJob?.cancel("live translate has been toggled off")
+            null
+        }
     }
 }
