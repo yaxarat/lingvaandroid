@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import dev.atajan.lingva_android.common.constants.LINGVA
+import dev.atajan.lingva_android.common.data.api.constants.LINGVA
 
 @Composable
 fun SettingsBottomSheetOutlinedTextField(
