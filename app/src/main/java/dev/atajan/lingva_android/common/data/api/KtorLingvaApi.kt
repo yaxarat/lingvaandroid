@@ -2,8 +2,8 @@ package dev.atajan.lingva_android.common.data.api
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import dev.atajan.lingva_android.common.constants.AUDIO_PATH_SEGMENT
-import dev.atajan.lingva_android.common.constants.SUPPORTED_LANGUAGE_PATH_SEGMENT
+import dev.atajan.lingva_android.common.data.api.constants.AUDIO_PATH_SEGMENT
+import dev.atajan.lingva_android.common.data.api.constants.SUPPORTED_LANGUAGE_PATH_SEGMENT
 import dev.atajan.lingva_android.common.data.api.lingvadto.audio.AudioDTO
 import dev.atajan.lingva_android.common.data.api.lingvadto.language.LanguagesDTO
 import dev.atajan.lingva_android.common.data.api.lingvadto.translation.TranslationDTO

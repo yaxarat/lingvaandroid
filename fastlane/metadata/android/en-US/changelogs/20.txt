@@ -1,3 +1,3 @@
 # Changelog
-What's New in 1.3.1:
+What's New in 1.3.2:
 *New feature! Live translate toggle added. It's enabled by default but can be toggled off in the settings. Bug that didn't show currently set custom endpoint has been fixed. More contrast to language selection dialog.
