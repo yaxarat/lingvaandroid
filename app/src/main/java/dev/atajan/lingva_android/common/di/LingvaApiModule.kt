@@ -7,9 +7,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dev.atajan.lingva_android.common.data.api.constants.TRANSLATION_PROVIDERS
 import dev.atajan.lingva_android.common.data.api.KtorLingvaApi
 import dev.atajan.lingva_android.common.data.api.LingvaApi
+import dev.atajan.lingva_android.common.data.api.constants.TRANSLATION_PROVIDERS
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation

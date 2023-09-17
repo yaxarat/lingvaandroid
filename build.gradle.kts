@@ -1,7 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    // TODO: cosolidate to buildSrc
-    val kotlin_compiler_version = "1.8.10"
 
     repositories {
         google()
@@ -9,10 +7,10 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:7.3.1")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_compiler_version")
+        classpath("com.android.tools.build:gradle:7.4.2")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.10")
         classpath("com.google.dagger:hilt-android-gradle-plugin:2.44")
-        classpath ("org.jetbrains.kotlin:kotlin-serialization:$kotlin_compiler_version")
+        classpath ("org.jetbrains.kotlin:kotlin-serialization:1.8.10")
     }
 }
 
