@@ -434,7 +434,11 @@ class TranslateScreenViewModel @Inject constructor(
             textToTranslate
                 .drop(1)
                 .debounce(300)
-                .onEach { send(Translate) }
+                .onEach {
+                    if (it.isNotEmpty() && it.isNotBlank()) {
+                        viewModelScope.launch { send(Translate)}
+                    }
+                }
                 .launchIn(viewModelScope)
         } else {
             liveTranslateJob?.cancel("live translate has been toggled off")
