@@ -16,3 +16,7 @@ data class Language(
         }
     }
 }
+
+internal fun List<Language>.containsLanguageOrNull(languageCode: String): Language? {
+    return this.find { it.code == languageCode }
+}
